@@ -1,0 +1,166 @@
+{
+  "_status": "DRAFT - NOT CANONICAL. Design sketch for physics#2. Not consumed by any build or gate. Values carry a provenance label; only measured_* values were observed, and none is a PHYSICS hardware result. PHYSICS_BOOT_NATIVE_PASS is pending.",
+  "contract_id": "CONTRACT-NATIVE-DGX-SPARK-GB10-DRAFT",
+  "version": "0.1.0-draft",
+  "canonical": false,
+  "target_platform": "nvidia-dgx-spark-gb10",
+  "milestone": "PHYSICS_BOOT_NATIVE (pending)",
+  "design_doc": "docs/native-frame-authority.md",
+  "provenance_legend": {
+    "measured_native_uefi": "Observed by native AIENOS code on Machine 1 after firmware (aien-dev/aienos evidence/m2_first_boot_2026-09-24.md).",
+    "measured_linux": "Observed read-only under Linux 7.0.0-1019-nvidia on Machine 1 (/proc/iomem, dmesg, /proc/meminfo) on 2026-09-26, or aien-dev/aienos evidence/gb10_linux_readonly_2026-09-25.md. Linux view, not a native proof.",
+    "assumed": "Not measured by this project; must be confirmed before native qualification.",
+    "derived": "Arithmetic over other values.",
+    "owner_decision": "Policy value the owner must set."
+  },
+  "architecture": {
+    "arch": { "value": "aarch64", "provenance": "measured_native_uefi" },
+    "entry_exception_level": { "value": "EL2", "provenance": "measured_native_uefi" },
+    "cpu_count": { "value": 20, "provenance": "measured_native_uefi", "note": "MADT: 10 efficiency class 0, 10 efficiency class 1" },
+    "boot_cpu_midr": { "value": "0x410fd871", "provenance": "measured_native_uefi" },
+    "pa_bits": { "value": 40, "provenance": "assumed", "note": "placeholder; read ID_AA64MMFR0_EL1.PARange natively. Only SMMU OAS (40-bit) is measured." }
+  },
+  "memory_profile_schema": {
+    "source": "ATLAS translates the UEFI memory map before ExitBootServices into a binary PHYSMEM1 profile, passes pointer+length+SHA-256 in the boot descriptor; PHYSICS validates at ingress (design doc section 2).",
+    "frame_size_bytes": 4096,
+    "header": {
+      "size_bytes": 64,
+      "fields": {
+        "0x00": "magic u64 = 'PHYSMEM1'",
+        "0x08": "version u32 = 1, flags u32 = 0",
+        "0x10": "frame_shift u32 = 12, pa_bits u32",
+        "0x18": "dram_count u32, rsv_count u32",
+        "0x20": "dram_offset u64",
+        "0x28": "rsv_offset u64",
+        "0x30": "profile_bytes u64",
+        "0x38": "cpu_count u32, reserved u32 = 0"
+      }
+    },
+    "dram_range": { "size_bytes": 16, "fields": ["base u64", "size u64"], "rules": ["base,size 4 KiB aligned", "size != 0", "base+size no carry", "end <= 2^pa_bits", "strictly ascending, non-overlapping, non-adjacent"] },
+    "reservation": { "size_bytes": 32, "fields": ["base u64", "size u64", "class u32", "flags u32", "source_tag u64"], "rules": ["size != 0", "base+size no carry", "rounded outward to 4 KiB", "known class", "MMIO_APERTURE outside all DRAM ranges", "every other class inside the DRAM union", "overlap between reservations allowed (union)"] }
+  },
+  "limits": {
+    "max_dram_ranges": { "value": 64, "provenance": "derived", "note": "36 conventional regions measured; ATLAS merges adjacent RAM-class descriptors" },
+    "max_reservations": { "value": 192, "provenance": "derived", "note": "184 UEFI descriptors measured + Atlas/Physics/derived carves" },
+    "max_candidate_ranges": { "value": 256, "provenance": "derived", "note": "max_dram_ranges + max_reservations" },
+    "max_managed_frames": { "value": 33554432, "provenance": "derived", "note": "128 GiB envelope / 4 KiB" },
+    "max_l2_summary_words": { "value": 129, "provenance": "derived" },
+    "max_metadata_bytes": { "value": 8388608, "provenance": "owner_decision", "note": "about 2x the worst case" },
+    "max_profile_bytes": { "value": 65536, "provenance": "owner_decision" }
+  },
+  "frame_authority": {
+    "representation": "range-segmented hierarchical bitmap (leaf + L1 + L2 summaries)",
+    "bit_polarity": "0 = free, 1 = granted; padding bits pinned to 1",
+    "grant_order": "lowest-address free frame in the managed set",
+    "zero_policy": { "value": "zero-on-grant", "provenance": "owner_decision" },
+    "worst_case_metadata": {
+      "provenance": "derived",
+      "managed_frames": 33554432,
+      "candidate_ranges": 256,
+      "leaf_words": 524544,
+      "leaf_bytes": 4196352,
+      "l1_bytes": 65568,
+      "l2_bytes": 1032,
+      "range_table_bytes": 8192,
+      "reservation_table_bytes": 6144,
+      "header_bytes": 64,
+      "total_bytes_aligned_64": 4277440,
+      "region_bytes": 4280320,
+      "region_frames": 1045
+    }
+  },
+  "reservation_classes": [
+    { "id": "0x01", "name": "ATLAS_IMAGE", "origin": "profile" },
+    { "id": "0x02", "name": "ATLAS_HANDOFF", "origin": "profile" },
+    { "id": "0x10", "name": "PHYSICS_IMAGE", "origin": "profile" },
+    { "id": "0x11", "name": "PHYSICS_STACKS", "origin": "profile" },
+    { "id": "0x12", "name": "PHYSICS_STATE", "origin": "profile" },
+    { "id": "0x13", "name": "PHYSICS_FRAME_METADATA", "origin": "derived", "carve": "base of lowest-address candidate range that fits; last" },
+    { "id": "0x14", "name": "PHYSICS_TRANSLATION_TABLES", "origin": "derived", "carve": "base of lowest-address candidate range that fits", "size_bytes": { "value": null, "provenance": "owner_decision" } },
+    { "id": "0x20", "name": "FW_RUNTIME", "origin": "profile", "uefi_types": ["EfiRuntimeServicesCode", "EfiRuntimeServicesData"] },
+    { "id": "0x21", "name": "FW_ACPI", "origin": "profile", "uefi_types": ["EfiACPIReclaimMemory", "EfiACPIMemoryNVS"] },
+    { "id": "0x22", "name": "FW_RESERVED", "origin": "profile", "uefi_types": ["EfiReservedMemoryType", "EfiUnusableMemory", "EfiPalCode"] },
+    { "id": "0x23", "name": "FW_BOOT_TABLES", "origin": "profile", "note": "TPM event log, ESRT, MOKvar, RNG seed, SMBIOS, MEMRESERVE" },
+    { "id": "0x24", "name": "SECURE_WORLD", "origin": "profile", "provenance": "assumed" },
+    { "id": "0x30", "name": "MMIO_APERTURE", "origin": "profile", "rule": "outside every DRAM range; not in the frame index" },
+    { "id": "0x40", "name": "DMA_SMMU_TABLES", "origin": "derived", "carve": "base of lowest-address candidate range that fits", "size_bytes": { "value": null, "provenance": "owner_decision" } },
+    { "id": "0x41", "name": "INTERRUPT_TABLES", "origin": "derived", "carve": "base of lowest-address candidate range that fits", "size_bytes": { "value": null, "provenance": "owner_decision" } },
+    { "id": "0x50", "name": "ACCEL_COHERENT_POOL", "origin": "derived", "carve": "top of highest-address candidate range that fits", "size_bytes": { "value": 0, "provenance": "owner_decision" }, "rule": "ordinary coherent DRAM frames; no VRAM/HBM semantics" },
+    { "id": "0x60", "name": "OMEGA_SHARED_OBJECT_SPACE", "origin": "derived", "carve": "top of highest-address candidate range that fits", "size_bytes": { "value": 0, "provenance": "owner_decision" } }
+  ],
+  "observed_profile_fingerprint": {
+    "_note": "Cross-check values, not inputs. PHYSICS derives everything from the runtime profile; these only let a gate flag a surprising machine.",
+    "uefi_descriptor_count": { "value": 184, "provenance": "measured_native_uefi" },
+    "uefi_conventional_regions": { "value": 36, "provenance": "measured_native_uefi" },
+    "uefi_conventional_kib": { "value": 130073720, "provenance": "measured_native_uefi" },
+    "uefi_largest_conventional": { "base": "0x323800000", "pages": 30776318, "end": "0x207D3FE000", "provenance": "measured_native_uefi (end derived)" },
+    "dram_envelope": { "base": "0x80000000", "end": "0x2080000000", "size_bytes": 137438953472, "provenance": "measured_linux" },
+    "numa_nodes": { "value": 1, "provenance": "measured_linux", "note": "faked by Linux; no SRAT proximity" },
+    "linux_system_ram_ranges": {
+      "provenance": "measured_linux",
+      "ranges": [
+        ["0x80080000", "0x83D60000"],
+        ["0x83D70000", "0x86560000"],
+        ["0x87020000", "0x87080000"],
+        ["0xD5A00000", "0xDE000000"],
+        ["0xE0020000", "0xFA000000"],
+        ["0xFA002000", "0xFFD00000"],
+        ["0xFFD20000", "0x280000000"],
+        ["0x323800000", "0x207DF70000"]
+      ],
+      "total_bytes": 133297463296
+    },
+    "linux_top_level_reserved_in_envelope": {
+      "provenance": "measured_linux",
+      "ranges": [
+        ["0x80000000", "0x80080000"], ["0x83D60000", "0x83D70000"], ["0x86560000", "0x87020000"],
+        ["0x87080000", "0x88101000"], ["0x88200000", "0x8A100000"], ["0x8B080000", "0x8E080000"],
+        ["0x90000000", "0x933E0000"], ["0x93400000", "0xB0000000"], ["0xB9600000", "0xB9800000"],
+        ["0xC2E00000", "0xD5A00000"], ["0xE0000000", "0xE0020000"], ["0xFA000000", "0xFA002000"],
+        ["0xFFD00000", "0xFFD20000"], ["0x280000000", "0x323800000"], ["0x207DF70000", "0x2080000000"]
+      ],
+      "total_bytes": 3742904320
+    },
+    "linux_unlisted_holes_in_envelope": {
+      "provenance": "measured_linux (absent from /proc/iomem); classification unknown",
+      "ranges": [
+        ["0x88101000", "0x88200000"], ["0x8A100000", "0x8B080000"], ["0x8E080000", "0x90000000"],
+        ["0x933E0000", "0x93400000"], ["0xB0000000", "0xB9600000"], ["0xB9800000", "0xC2E00000"],
+        ["0xDE000000", "0xE0000000"]
+      ]
+    }
+  },
+  "mmio_apertures_observed": {
+    "provenance": "measured_linux",
+    "entries": [
+      { "name": "GICD", "base": "0x06800000", "size_bytes": 65536 },
+      { "name": "GIC_ITS", "base": "0x06840000", "size_bytes": null },
+      { "name": "GICR", "base": "0x06880000", "end": "0x06D80000" },
+      { "name": "SMMUv3.1", "base": "0x13000000", "size_bytes": 131072 },
+      { "name": "SMMUv3.0", "base": "0x13800000", "size_bytes": 131072 },
+      { "name": "SMMUv3.2", "base": "0x14900000", "size_bytes": 131072 },
+      { "name": "GB10_BAR0", "base": "0x24000000", "size_bytes": 67108864, "note": "register aperture, not memory" },
+      { "name": "ECAM_SEG15", "base": "0x29000000", "buses": "0-1" },
+      { "name": "ECAM_SEG0_14", "base": "0xF300000000", "stride": "0x10000000" },
+      { "name": "PCI_WINDOWS", "base": "0x3D00000000", "note": "several 56 GiB windows up to 0xC8FFFFFFFF" }
+    ]
+  },
+  "smmu": {
+    "version": { "value": "SMMUv3", "provenance": "measured_linux" },
+    "instances": { "value": 3, "provenance": "measured_linux" },
+    "output_address_bits": { "value": 40, "provenance": "measured_linux" },
+    "stream_table": { "value": "2-level, 25 SID bits", "provenance": "measured_linux" },
+    "gb10_stream_id": { "value": null, "provenance": "unknown" }
+  },
+  "accelerator_memory_model": {
+    "model": { "value": "unified coherent LPDDR5x shared by CPU and GPU", "provenance": "assumed" },
+    "discrete_vram": { "value": false, "provenance": "assumed" },
+    "semantic_rule": "Frame authority has no VRAM/HBM class. Accelerator visibility is a capability attribute (SMMU mapping), plus the optional ACCEL_COHERENT_POOL carve of ordinary DRAM."
+  },
+  "qualification": {
+    "receipt_namespace": "receipts/native/CONTRACT-NATIVE-DGX-SPARK-GB10-DRAFT/",
+    "evidence_classes": ["emulation_native_profile", "native_hardware"],
+    "PHYSICS_BOOT_NATIVE_PASS": "pending",
+    "qemu_m2_contract_untouched": "CONTRACT-QEMU-VIRT-AARCH64-M2"
+  }
+}
