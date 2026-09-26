@@ -2,8 +2,8 @@
   "milestone": "MILESTONE 3 — PHYSICS_EFFECTS",
   "status": "QUALIFIED / QEMU PASS",
   "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M3",
-  "generated_at": "2026-09-26T07:27:49Z",
-  "git_commit": "e2d6d7dc5cea31d1ff12428b533723f4e367d365",
+  "generated_at": "2026-09-26T07:28:37Z",
+  "git_commit": "766f8fd6b898f4df793ffa809f031040ba0912fa",
   "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
   "qemu_flags": "-M virt -cpu cortex-a57 -m 128M -nographic -accel tcg,thread=single",
   "artifacts": {
