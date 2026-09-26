@@ -1,0 +1,79 @@
+{
+  "milestone": "MILESTONE 16 — BLACKWELL_NATIVE_PATH_KNOWN",
+  "status": "QUALIFIED / PASS",
+  "ratification": "COMPLETE / BLACKWELL_NATIVE_PATH_KNOWN",
+  "qualification_scope": "Empirical characterization and independent demonstration of native Blackwell GB10 command submission path on NVIDIA DGX Spark",
+  "target_platform": "NVIDIA DGX Spark Grace Blackwell GB10",
+  "contract_id": "CONTRACT-PHYSICS-BLACKWELL-NATIVE-PATH-M16",
+  "generated_at": "2026-09-26T11:20:01Z",
+  "source_parent_commit": "102b42c91c9886dff4e0353cb396e4026999663a",
+  "hardware_observed": {
+    "gpu_pci_bdf": "000f:01:00.0",
+    "vendor_device_id": "10de:2e12",
+    "iommu_group": 20,
+    "bar0_physical_aperture": "0x24000000 - 0x27ffffff (64 MiB)",
+    "usermode_doorbell_aperture": "0x24bb0000 (offset 0xbb0000 in BAR0, class 0xC661 HOPPER_USERMODE_A)",
+    "doorbell_register_offset": "0x90 (NVC361_NOTIFY_CHANNEL_PENDING)",
+    "gpfifo_channel_classes": ["0xC96F (BLACKWELL_CHANNEL_GPFIFO_A)", "0xCAB5 (BLACKWELL_DMA_COPY_B)", "0xCEC0 (BLACKWELL_COMPUTE_B)"]
+  },
+  "critical_submission_path": {
+    "host_buffer": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "Coherent unified LPDDR5x mapped host memory aperture"
+    },
+    "gpfifo_entry": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "8-byte GPFIFO ring entries (low 32-bit GPU VA, high 32-bit length in words and upper VA bits) at 0x200202000"
+    },
+    "pushbuffer_method_stream": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "NVC06F_DMA_SEC_OP_INC_METHOD packets (SET_OBJECT method 0x000, MEM_OP_A method 0x28, SEM_ADDR_LO method 0x5c)"
+    },
+    "channel_token": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "Opaque 32-bit workSubmitToken returned by RM control 0xc36f0108"
+    },
+    "usermode_notify_doorbell": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "ARM64 store instruction 'str w2, [x0]' to BAR0 offset 0xbb0090 (+0x90 in HOPPER_USERMODE_A)"
+    },
+    "gpu_consumption": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "Causally verified via negative perturbation: withholding doorbell blocks execution; issuing doorbell triggers execution"
+    },
+    "completion_fence_write": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "Attributed to Blackwell method 0x5c (SEM_ADDR_LO) writing coherent marker with SEM_EXECUTE_OPERATION_RELEASE (0x1) and MEM_OP_D flushes"
+    },
+    "cpu_observes_result": {
+      "status": "OBSERVED",
+      "epistemic_level": "OBSERVED",
+      "mechanism": "Coherent memory marker polled directly by CPU across NVLink-C2C interconnect"
+    }
+  },
+  "minimum_sovereign_transaction": {
+    "status": "PASS",
+    "binary": "sovereign_submit",
+    "description": "Direct C submission without proprietary userspace runtimes (no CUDA stream/kernel/memcpy APIs in transaction critical path)",
+    "submitted_payload": "0x77777777",
+    "observed_completion": "0x77777777"
+  },
+  "controlled_causality_test": {
+    "status": "PASS",
+    "binary": "causality_test",
+    "negative_control_doorbell_withheld": "PASS (marker strictly 0 after 100ms)",
+    "positive_control_doorbell_rung": "PASS (marker immediately updated to 0xbeefcafe)"
+  },
+  "raw_evidence": {
+    "directory": "physics/research/m16/run-20260926-10",
+    "evidence_sha256": "5068e2274fa1dc9401365a2f085bc2187f63230b4909d0ac1bceee804ea230a6"
+  },
+  "m17_unblocked": true
+}
