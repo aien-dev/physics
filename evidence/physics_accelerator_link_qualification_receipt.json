@@ -7,9 +7,9 @@
   "hardware_boundary_qualified": true,
   "m16_dependency_satisfied": true,
   "contract_id": "CONTRACT-PHYSICS-ACCELERATOR-LINK-M15",
-  "generated_at": "2026-09-26T10:26:19Z",
+  "generated_at": "2026-09-26T10:26:36Z",
   "source_parent_commit": "8ee14a3d1ddd497becb0fd092215db4640cfc98a",
-  "qualified_implementation_commit": "b1ef69d884c160641e50bddf0cbb43777c9b90d4",
+  "qualified_implementation_commit": "b5444bbf21fcdf9e55ceb86689717b7f7c779a65",
   "host": {
     "os": "Linux",
     "arch": "aarch64",
