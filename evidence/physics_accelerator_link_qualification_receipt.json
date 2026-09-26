@@ -1,0 +1,53 @@
+{
+  "milestone": "MILESTONE 15 — PHYSICS_ACCELERATOR_LINK",
+  "status": "QUALIFIED / PASS",
+  "contract_id": "CONTRACT-PHYSICS-ACCELERATOR-LINK-M15",
+  "generated_at": "2026-09-26T09:27:58Z",
+  "source_parent_commit": "8ee14a3d1ddd497becb0fd092215db4640cfc98a",
+  "qualified_implementation_commit": "b2c5f3c7a6b84f1693a8a6113b741f56fa7c3ec2",
+  "host": {
+    "os": "Linux",
+    "arch": "aarch64",
+    "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  },
+  "artifacts": {
+    "m15/physics_accel.c": { "sha256": "1d2b3c032aa9a9abf043090889d4fcfd72694c0a3c3c6233d72561c8d2621238" },
+    "m15/physics_accel.h": { "sha256": "0c00d2aeb5f5dbfabd47d41eda8d08c9edee9fdbfae03621b3b7e5829e76ff08" },
+    "m15/build/m15tool":   { "sha256": "96d5c069372c428d6995a6cc7a1df9178cd32822e5c3fecfdde649d32051814d" }
+  },
+  "accelerator_link_properties": {
+    "target_platform": "NVIDIA DGX Spark Grace Blackwell",
+    "coherent_dram_envelope": "[0x80000000, 0x2080000000) 128 GiB LPDDR5x",
+    "smmu_translation": "ARM SMMUv3 Stage 1 IOVA translation with 4-level walk and 40-bit OAS",
+    "dma_sandboxing": "Fail-closed containment for F_TRANSLATION and F_PERMISSION faults",
+    "queue_authority": "Fixed-capacity circular rings (64 slots) with exclusive head/tail pointer governance",
+    "doorbell_mediation": "Physics mediates all MMIO doorbell transactions; unprivileged doorbells denied",
+    "fault_isolation": "Non-disruptive device recovery and queue revocation without host OS disruption",
+    "receipt_ledger": "192-byte immutable EffectReceipt with rolling SHA-256 seal chain"
+  },
+  "qualification_gates": {
+    "total": 10,
+    "passed": 10,
+    "gates": {
+      "PHYSICS_ACCEL_MEM_BOUNDS_PASS": "PASS",
+      "PHYSICS_ACCEL_SMMU_TRANSLATION_PASS": "PASS",
+      "PHYSICS_ACCEL_DMA_SANDBOX_PASS": "PASS",
+      "PHYSICS_ACCEL_QUEUE_AUTHORITY_PASS": "PASS",
+      "PHYSICS_ACCEL_DEVICE_LIFECYCLE_PASS": "PASS",
+      "PHYSICS_ACCEL_RESET_RECOVERY_PASS": "PASS",
+      "PHYSICS_ACCEL_RECEIPT_CHAIN_PASS": "PASS",
+      "PHYSICS_ACCEL_OMEGA_INGRESS_PASS": "PASS",
+      "PHYSICS_ACCEL_ZERO_TOOLCHAIN_PASS": "PASS",
+      "PHYSICS_ACCEL_RECEIPT_PASS": "PASS"
+    }
+  },
+  "sovereignty_accounting": {
+    "llvm_dependency": false,
+    "gnu_as_dependency": false,
+    "gcc_asm_dependency": false,
+    "jit_compiler_dependency": false,
+    "python_dependency": false,
+    "cuda_runtime_dependency": false,
+    "cuda_driver_dependency": false
+  }
+}
