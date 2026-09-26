@@ -11,3 +11,5 @@ test_physics.elf
 run_unit_test.py
 build/
 tools/m2tool
+m16/m16_requalify
+m16/m16_concurrent
