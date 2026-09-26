@@ -1,0 +1,151 @@
+{
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M3",
+  "version": "3.0.0",
+  "target_platform": "qemu-virt-aarch64",
+  "milestone": "PHYSICS_EFFECTS",
+  "architecture": {
+    "arch": "aarch64",
+    "endianness": "little",
+    "expected_entry_exception_level": "EL1",
+    "expected_entry_el_value": "0x04",
+    "physics_target_exception_level": "EL1"
+  },
+  "memory_map": {
+    "dram_base": "0x40000000",
+    "dram_size_bytes": 134217728,
+    "dram_end": "0x48000000",
+    "atlas_entry_base": "0x00000000",
+    "boot_descriptor_address": "0x401FE000",
+    "boot_descriptor_size_bytes": 64,
+    "physics_payload_base": "0x40200000",
+    "physics_image_base": "0x40200000",
+    "physics_image_size_bytes": 16384,
+    "physics_vector_table_base": "0x40204000",
+    "physics_vector_table_size_bytes": 2048,
+    "kernel_stack_base": "0x40204800",
+    "kernel_stack_top": "0x40208800",
+    "kernel_stack_size_bytes": 16384,
+    "boot_state_base": "0x40208800",
+    "boot_state_size_bytes": 2048,
+    "capability_table_base": "0x40209000",
+    "capability_table_size_bytes": 4096,
+    "capability_capacity": 32,
+    "capability_record_size_bytes": 128,
+    "receipt_ledger_base": "0x4020A000",
+    "receipt_ledger_size_bytes": 8192,
+    "receipt_capacity": 32,
+    "receipt_record_size_bytes": 192,
+    "replay_cache_base": "0x4020C000",
+    "replay_cache_size_bytes": 4096,
+    "replay_capacity": 32,
+    "replay_record_size_bytes": 64,
+    "static_data_base": "0x4020D000",
+    "static_data_size_bytes": 12288,
+    "free_frame_base": "0x40210000",
+    "total_free_frames": 32240,
+    "uart_mmio_base": "0x09000000",
+    "uart_flags_offset": 24,
+    "uart_txff_mask": 32
+  },
+  "anti_bloat_bounds": {
+    "max_text_bytes": 32768,
+    "max_total_image_bytes": 65536
+  },
+  "disjoint_regions": [
+    {
+      "name": "PHYSICS_IMAGE",
+      "start": "0x40200000",
+      "end": "0x40204000",
+      "size_bytes": 16384
+    },
+    {
+      "name": "PHYSICS_VECTOR_TABLE",
+      "start": "0x40204000",
+      "end": "0x40204800",
+      "size_bytes": 2048
+    },
+    {
+      "name": "PHYSICS_KERNEL_STACK",
+      "start": "0x40204800",
+      "end": "0x40208800",
+      "size_bytes": 16384
+    },
+    {
+      "name": "PHYSICS_BOOT_STATE",
+      "start": "0x40208800",
+      "end": "0x40209000",
+      "size_bytes": 2048
+    },
+    {
+      "name": "PHYSICS_CAPABILITY_TABLE",
+      "start": "0x40209000",
+      "end": "0x4020A000",
+      "size_bytes": 4096
+    },
+    {
+      "name": "PHYSICS_RECEIPT_LEDGER",
+      "start": "0x4020A000",
+      "end": "0x4020C000",
+      "size_bytes": 8192
+    },
+    {
+      "name": "PHYSICS_REPLAY_CACHE",
+      "start": "0x4020C000",
+      "end": "0x4020D000",
+      "size_bytes": 4096
+    },
+    {
+      "name": "PHYSICS_STATIC_DATA",
+      "start": "0x4020D000",
+      "end": "0x40210000",
+      "size_bytes": 12288
+    },
+    {
+      "name": "FREE_FRAME_REGION",
+      "start": "0x40210000",
+      "end": "0x48000000",
+      "size_bytes": 132055040
+    }
+  ],
+  "physics_entry_abi": {
+    "x0": "0x401FE000",
+    "x1_payload_size": 18432,
+    "x2_cookie": "0x5048595349435330",
+    "entry_point": "0x40200000",
+    "x1_payload_size_enforced": true
+  },
+  "boot_descriptor_contract": {
+    "expected_address": "0x401FE000",
+    "size_bytes": 64,
+    "magic": "0x4D424453435F3031",
+    "version": 1,
+    "length": 64,
+    "flags_reserved": 0,
+    "ram_base": "0x40000000",
+    "ram_size": "0x08000000",
+    "dram_end": "0x48000000",
+    "uart_base": "0x09000000",
+    "physics_base": "0x40200000",
+    "physics_size": 18432
+  },
+  "vector_table_spec": {
+    "base_address": "0x40204000",
+    "alignment_bytes": 2048,
+    "table_span_bytes": 2048,
+    "num_slots": 16,
+    "slot_stride_bytes": 128
+  },
+  "root_capability_spec": {
+    "anchor_address": "0x40209000",
+    "generation": 1,
+    "slot": 0,
+    "principal_id": "0x0000000000000001",
+    "resource_type": "0x00000001",
+    "allowed_ops": "0xFFFFFFFF",
+    "bound_base": "0x40210000",
+    "bound_size": "0x07DF0000",
+    "revocation_state": 1,
+    "attenuation_depth": 0,
+    "atlas_provenance_digest": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "milestone": "MILESTONE 3 — PHYSICS_EFFECTS",
+  "status": "QUALIFIED / QEMU PASS",
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M3",
+  "generated_at": "2026-09-26T07:27:49Z",
+  "git_commit": "e2d6d7dc5cea31d1ff12428b533723f4e367d365",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "qemu_flags": "-M virt -cpu cortex-a57 -m 128M -nographic -accel tcg,thread=single",
+  "artifacts": {
+    "physics.bin": {
+      "sha256": "b7afe3306b52d36b8e1ad494aef026a3fb3dda041c2cd11bb3484482cd34068c",
+      "size_bytes": 18432,
+      "max_budget_bytes": 65536
+    },
+    "atlas_m3.bin": {
+      "sha256": "95b9262c6116a2127ca82cb63d6be1de072fc807a78d6f3852b9ccc38d6b10d2",
+      "size_bytes": 1568
+    },
+    "machine_contract.json": {
+      "sha256": "78bd266579927b2e28e2cff1c18d1e85deb140aea9bcfcedf0f08cf370bf1760"
+    },
+    "milestone-3-spec.md": {
+      "sha256": "e50a43b55d0263aee32c52c3a79e3d6ca2e92cb1328de0bd023f7b9e1e881572"
+    },
+    "capability.s": {
+      "sha256": "2893294289efd618ff96f80d81b5970d76989421ed5cd3443027d0ce3ca41820"
+    },
+    "effect_broker.s": {
+      "sha256": "c52d9ffd2b5af62dc64db9c16add495eac80c7c09bd2fd87eb94522172a8b97f"
+    },
+    "receipt_ledger.s": {
+      "sha256": "046b63479ad342b2226def8b0ef4a6272b3ae332fbe6f0e317d9ed2e94632045"
+    },
+    "m3tool.c": {
+      "sha256": "0ce94003c7c3dda7e8010a6b03d20dce70f7abeb8d4a3342063e975eb9259589"
+    },
+    "run_m3_gates.sh": {
+      "sha256": "d546b1413e6eea0d0ac43729b1d1ad6bd952079992dc622f483f42f50d99ff50"
+    }
+  },
+  "accounting": {
+    "physics_elf_text_bytes": 10624,
+    "max_text_budget_bytes": 32768,
+    "text_budget_utilization_pct": 32.42,
+    "physics_bin_total_bytes": 18432,
+    "max_image_budget_bytes": 65536,
+    "image_budget_utilization_pct": 28.12
+  },
+  "qualification_gates": {
+    "total": 19,
+    "passed": 19,
+    "gates": {
+      "PHYSICS_CAP_LEDGER_PASS": "PASS",
+      "PHYSICS_CAP_ROOT_PRIVATE_PASS": "PASS",
+      "PHYSICS_CAP_ATTENUATION_PASS": "PASS",
+      "PHYSICS_CAP_NO_AMBIENT_AUTHORITY_PASS": "PASS",
+      "PHYSICS_CAP_GENERATION_PASS": "PASS",
+      "PHYSICS_CAP_REVOCATION_PASS": "PASS",
+      "PHYSICS_CAP_DESCENDANT_REVOCATION_PASS": "PASS",
+      "PHYSICS_EFFECT_ADMISSION_PASS": "PASS",
+      "PHYSICS_EFFECT_BOUNDS_PASS": "PASS",
+      "PHYSICS_EFFECT_FORGED_CAP_REFUSAL_PASS": "PASS",
+      "PHYSICS_EFFECT_STALE_CAP_REFUSAL_PASS": "PASS",
+      "PHYSICS_EFFECT_REVOKED_CAP_REFUSAL_PASS": "PASS",
+      "PHYSICS_EFFECT_WRONG_PRINCIPAL_REFUSAL_PASS": "PASS",
+      "PHYSICS_EFFECT_REPLAY_PASS": "PASS",
+      "PHYSICS_EFFECT_REPLAY_CONFLICT_PASS": "PASS",
+      "PHYSICS_RECEIPT_IDENTITY_PASS": "PASS",
+      "PHYSICS_RECEIPT_CHAIN_PASS": "PASS",
+      "PHYSICS_RECEIPT_EXHAUSTION_PASS": "PASS",
+      "PHYSICS_EFFECTS_QEMU_PASS": "PASS"
+    }
+  }
+}
