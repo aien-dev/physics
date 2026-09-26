@@ -15,6 +15,7 @@ echo "[*] Building m15tool..."
 "$CC" $CFLAGS -o "$OUT_DIR/m15tool" \
     "$M15_DIR/tools/m15tool.c" \
     "$M15_DIR/physics_accel.c" \
+    "$M15_DIR/physics_accel_native.c" \
     "$ROOT_DIR/sha256_clean.c"
 
 echo "[*] Build successful: $OUT_DIR/m15tool"

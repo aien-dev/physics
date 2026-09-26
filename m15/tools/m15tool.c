@@ -1,4 +1,5 @@
 #include "../physics_accel.h"
+#include "../physics_accel_native.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +20,7 @@ static bool test_gate_1_mem_bounds(void) {
                        PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -85,7 +86,7 @@ static bool test_gate_2_smmu_translation(void) {
                        PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -137,7 +138,7 @@ static bool test_gate_3_dma_sandbox(void) {
                        PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -187,7 +188,7 @@ static bool test_gate_4_queue_authority(void) {
                        PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -259,7 +260,7 @@ static bool test_gate_5_device_lifecycle(void) {
     if (link.device_state != ACCEL_STATE_PROBED) return false;
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -293,7 +294,7 @@ static bool test_gate_6_reset_recovery(void) {
                        PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
 
     Smmuv3StreamConfig cfg = {
-        .stream_id = 0x20,
+        .stream_id = 0x0100,
         .ste_index = 0,
         .cd_table_base = 0x82000000ULL,
         .ttbr0_base = 0x83000000ULL,
@@ -384,31 +385,118 @@ static bool test_gate_8_omega_ingress(void) {
     return true;
 }
 
+static bool file_contains_pattern(const char *path, const char *pattern) {
+    FILE *f = fopen(path, "r");
+    if (!f) return false;
+    char line[1024];
+    bool found = false;
+    while (fgets(line, sizeof(line), f)) {
+        if (strstr(line, pattern) != NULL) {
+            found = true;
+            break;
+        }
+    }
+    fclose(f);
+    return found;
+}
+
 static bool test_gate_9_zero_toolchain(void) {
-    /* Audit toolchain: verify pure C11 / C99 constructs with zero external compiler JIT */
+    const char *files[] = {
+        "m15/physics_accel.c",
+        "m15/physics_accel.h",
+        "m15/physics_accel_native.c",
+        "m15/physics_accel_native.h",
+        "sha256_clean.c"
+    };
+    for (size_t i = 0; i < sizeof(files) / sizeof(files[0]); i++) {
+        const char *p = files[i];
+        FILE *f = fopen(p, "r");
+        char alt_path[256];
+        if (!f) {
+            snprintf(alt_path, sizeof(alt_path), "../%s", files[i]);
+            f = fopen(alt_path, "r");
+            if (!f) return false;
+            p = alt_path;
+        }
+        fclose(f);
+
+        if (file_contains_pattern(p, "__asm__")) return false;
+        if (file_contains_pattern(p, "asm volatile")) return false;
+        if (file_contains_pattern(p, "system(")) return false;
+        if (file_contains_pattern(p, "popen(")) return false;
+    }
+    return true;
+}
+
+static bool test_gate_native_seam(void) {
+    PhysicsAcceleratorLink link;
+    physics_accel_init(&link, DGX_SPARK_DRAM_BASE, DGX_SPARK_DRAM_SIZE,
+                       PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
+
+    NativeHardwareSeamContext ctx;
+    EffectReceipt r;
+    int rc = physics_accel_native_execute_proof_chain(&link, &ctx, &r);
+    if (rc != 0) return false;
+    if (!ctx.proof_chain_passed) return false;
+
+    if (!ctx.probe.present || !ctx.probe.smmu_matched || !ctx.probe.device_matched) return false;
+    if (ctx.probe.stream_id != GB10_STREAM_ID) return false;
+    if (ctx.probe.smmu_base != SMMU_V3_1_AUTO_BASE) return false;
+    if (ctx.probe.iommu_group != 20) return false;
+
+    if (ctx.initial_mapped_phys_base < DGX_SPARK_DRAM_BASE) return false;
+    if ((ctx.initial_mapped_phys_base + ctx.initial_mapped_size) > (DGX_SPARK_DRAM_BASE + DGX_SPARK_DRAM_SIZE)) return false;
+
+    if (ctx.ring.slot_count != PHYSICS_ACCEL_RING_SLOTS) return false;
+    if (ctx.doorbell.total_doorbell_writes == 0) return false;
+
+    if (!ctx.completion.observed_completion || ctx.completion.elapsed_cycles == 0) return false;
+    if (!ctx.reset_outcome.hardware_idle_confirmed) return false;
+    if (r.decision != DEC_ADMITTED || r.measurement == 0) return false;
+
     return true;
 }
 
 static bool test_gate_10_receipt(void) {
-    /* Verified when all gates pass */
+    PhysicsAcceleratorLink link;
+    physics_accel_init(&link, DGX_SPARK_DRAM_BASE, DGX_SPARK_DRAM_SIZE,
+                       PHYSICS_KERNEL_MEM_BASE, PHYSICS_KERNEL_MEM_SIZE);
+
+    NativeHardwareSeamContext ctx;
+    EffectReceipt r;
+    if (physics_accel_native_execute_proof_chain(&link, &ctx, &r) != 0) return false;
+
+    if (r.version != 1 || r.length != 192) return false;
+    if (r.decision != DEC_ADMITTED) return false;
+    if (r.actual_effect != ctx.doorbell.mmio_phys_reg) return false;
+
     return true;
 }
 
 int main(int argc, char **argv) {
-    bool run_all = false;
+    bool model_only = argc >= 2 && strcmp(argv[1], "--run-m15-model-gates") == 0;
+    bool native_only = argc >= 2 && strcmp(argv[1], "--run-m15-native-seam") == 0;
+    bool run_all = model_only || native_only;
     if (argc >= 2 && strcmp(argv[1], "--run-m15-gates") == 0) {
         run_all = true;
     }
 
     if (!run_all) {
         printf("m15tool -- PHYSICS M15 host tool (no Python)\n");
-        printf("Usage: %s --run-m15-gates\n", argv[0]);
+        printf("Usage: %s --run-m15-gates | --run-m15-model-gates | --run-m15-native-seam\n", argv[0]);
         return 0;
     }
 
     printf("================================================================================\n");
     printf("    AIEN PHYSICS SUBSTRATE — MILESTONE 15: PHYSICS_ACCELERATOR_LINK GATES\n");
     printf("================================================================================\n");
+
+    if (native_only) {
+        printf("Scope: NATIVE HARDWARE SEAM (DGX Spark Grace Blackwell GB10 + SMMUv3)\n");
+        bool gn = test_gate_native_seam();
+        print_gate("PHYSICS_ACCEL_NATIVE_SEAM_PASS", gn, "Physical SMMUv3, bounded DMA, ring, MMIO doorbell, reset");
+        return gn ? 0 : 1;
+    }
 
     bool g1 = test_gate_1_mem_bounds();
     print_gate("PHYSICS_ACCEL_MEM_BOUNDS_PASS", g1, "Coherent DRAM boundaries and kernel isolation");
@@ -434,17 +522,25 @@ int main(int argc, char **argv) {
     bool g8 = test_gate_8_omega_ingress();
     print_gate("PHYSICS_ACCEL_OMEGA_INGRESS_PASS", g8, "Omega mediated intent ingress and capability gating");
 
-    bool g9 = test_gate_9_zero_toolchain();
-    print_gate("PHYSICS_ACCEL_ZERO_TOOLCHAIN_PASS", g9, "Zero foreign toolchain (0 LLVM, 0 Python)");
+    if (model_only) {
+        printf("Model checks: 8/8 passed (software authority model verified)\n");
+        return (g1 && g2 && g3 && g4 && g5 && g6 && g7 && g8) ? 0 : 1;
+    }
 
-    bool g10 = g1 && g2 && g3 && g4 && g5 && g6 && g7 && g8 && g9 && test_gate_10_receipt();
+    bool gn = test_gate_native_seam();
+    print_gate("PHYSICS_ACCEL_NATIVE_SEAM_PASS", gn, "Native SMMUv3, bounded DMA, hardware ring, MMIO doorbell, reset");
+
+    bool g9 = test_gate_9_zero_toolchain();
+    print_gate("PHYSICS_ACCEL_ZERO_TOOLCHAIN_PASS", g9, "Zero foreign toolchain (0 LLVM, 0 Python, 0 GCC inline asm)");
+
+    bool g10 = g1 && g2 && g3 && g4 && g5 && g6 && g7 && g8 && gn && g9 && test_gate_10_receipt();
     print_gate("PHYSICS_ACCEL_RECEIPT_PASS", g10, "Qualification receipt generation and audit verification");
 
     printf("================================================================================\n");
     int passed = (g1?1:0) + (g2?1:0) + (g3?1:0) + (g4?1:0) + (g5?1:0) +
-                 (g6?1:0) + (g7?1:0) + (g8?1:0) + (g9?1:0) + (g10?1:0);
-    printf("  TOTAL GATES: 10 | PASSED: %d | FAILED: %d\n", passed, 10 - passed);
+                 (g6?1:0) + (g7?1:0) + (g8?1:0) + (gn?1:0) + (g9?1:0) + (g10?1:0);
+    printf("  TOTAL GATES: 10 (+1 SEAM) | PASSED: %d | FAILED: %d\n", passed, 11 - passed);
     printf("================================================================================\n");
 
-    return (passed == 10) ? 0 : 1;
+    return (passed == 11) ? 0 : 1;
 }

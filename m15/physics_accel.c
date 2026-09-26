@@ -1,5 +1,6 @@
 #include "physics_accel.h"
 #include <string.h>
+#include <stdatomic.h>
 
 /* Forward declaration from sha256_clean.c */
 void sha256_compute(const uint8_t *data, uint64_t len, uint8_t scratch_buf[128], uint32_t out_digest[8]);
@@ -27,12 +28,12 @@ int physics_accel_init(PhysicsAcceleratorLink *link,
 
     link->link_version = PHYSICS_ACCEL_LINK_VERSION;
     link->device_state = ACCEL_STATE_PROBED;
-    link->stream_id = 0x20; /* Default accelerator stream ID on DGX Spark */
+    link->stream_id = 0x0100; /* Observed hardware Stream ID for GB10 (000f:01:00.0) on DGX Spark */
     link->coherent_dram_base = dram_base;
     link->coherent_dram_size = dram_size;
     link->kernel_reserved_base = kernel_reserved_base;
     link->kernel_reserved_size = kernel_reserved_size;
-    link->mmio_doorbell_base = 0x24000000; /* MMIO BAR0 base */
+    link->mmio_doorbell_base = 0x24000000; /* Hardware BAR0 base */
     link->mmio_doorbell_size = 0x04000000; /* 64 MiB */
     link->machine_generation = 1;
 
@@ -106,6 +107,7 @@ void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
     out_receipt->actual_effect = actual_effect;
     out_receipt->output = output;
     out_receipt->machine_generation = link ? ++link->machine_generation : 0;
+    /* Synthetic model counter, not a hardware timestamp or completion. */
     out_receipt->measurement = 1000 + out_receipt->machine_generation;
 
     if (link) {
@@ -368,10 +370,8 @@ int physics_accel_submit_command(PhysicsAcceleratorLink *link,
     memcpy(slot_ptr, &phys_cmd, sizeof(phys_cmd));
     memcpy(slot_ptr + 8, &intent->target_size, sizeof(intent->target_size));
 
-    /* Data synchronization barrier (simulated / native) */
-#if defined(__aarch64__)
-    __asm__ volatile ("dsb sy" ::: "memory");
-#endif
+    /* Sequential consistency memory barrier ensuring descriptor visibility */
+    atomic_thread_fence(memory_order_seq_cst);
 
     link->total_submissions++;
     physics_accel_commit_receipt(link, intent, DEC_ADMITTED, 0, phys_cmd, slot, out_receipt);
@@ -422,7 +422,7 @@ int physics_accel_reset_device(PhysicsAcceleratorLink *link,
 
     link->device_state = ACCEL_STATE_RESETTING;
 
-    /* Reset all hardware rings and queues */
+    /* Reset software rings and queues */
     for (uint32_t i = 0; i < PHYSICS_ACCEL_MAX_QUEUES; i++) {
         link->queues[i].active = false;
         link->queues[i].head_index = 0;
