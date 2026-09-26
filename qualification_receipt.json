@@ -2,10 +2,10 @@
   "milestone": "MILESTONE 2 \u2014 PHYSICS_BOOT",
   "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
   "status": "QUALIFIED_QEMU_VIRT",
-  "timestamp": "2026-09-26T05:57:36.677245+00:00",
+  "timestamp": "2026-09-26T05:58:21.520389+00:00",
   "source": {
-    "base_commit": "92655ab5b1f49ac6afb347874b9c81b17f6da8a9",
-    "tracked_changes_at_run": true,
+    "base_commit": "16ad5a226b6d7305d4e4ddbdb61d98a2f31fd341",
+    "tracked_changes_at_run": false,
     "note": "base_commit is HEAD when the gates ran; the receipt is committed on top of it"
   },
   "environment": {
