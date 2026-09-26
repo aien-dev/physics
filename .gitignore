@@ -9,3 +9,4 @@ physics_unit.*
 physics_full.elf
 test_physics.elf
 run_unit_test.py
+build/

@@ -1,13 +1,14 @@
 {
   "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "target_platform": "qemu-virt-aarch64",
   "milestone": "PHYSICS_BOOT",
   "architecture": {
     "arch": "aarch64",
     "endianness": "little",
-    "entry_exception_level": "contract-defined (EL1 or EL2)",
-    "physics_target_exception_level": "contract-defined (matches entry EL)"
+    "expected_entry_exception_level": "EL1",
+    "expected_entry_el_value": "0x04",
+    "physics_target_exception_level": "EL1"
   },
   "memory_map": {
     "dram_base": "0x40000000",
@@ -85,9 +86,24 @@
   ],
   "physics_entry_abi": {
     "x0": "0x401FE000",
-    "x1_max_size": 65536,
+    "x1_payload_size": 6144,
     "x2_cookie": "0x5048595349435330",
-    "entry_point": "0x40200000"
+    "entry_point": "0x40200000",
+    "x1_payload_size_enforced": true
+  },
+  "boot_descriptor_contract": {
+    "expected_address": "0x401FE000",
+    "size_bytes": 64,
+    "magic": "0x4D424453435F3031",
+    "version": 1,
+    "length": 64,
+    "flags_reserved": 0,
+    "ram_base": "0x40000000",
+    "ram_size": "0x08000000",
+    "dram_end": "0x48000000",
+    "uart_base": "0x09000000",
+    "physics_base": "0x40200000",
+    "physics_size": 6144
   },
   "vector_table_spec": {
     "base_address": "0x40201000",
@@ -106,6 +122,56 @@
     "bound_base": "0x40208000",
     "bound_size": "0x07DF8000",
     "revocation_state": 1,
+    "attenuation_depth": 0,
     "atlas_provenance_digest": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5"
+  },
+  "boot_state_layout": {
+    "base": "0x40205800",
+    "size_bytes": 2048,
+    "descriptor_copy": {
+      "offset": "0x000",
+      "size_bytes": 64,
+      "note": "validated 64-byte descriptor copied from 0x401FE000; PHYSICS never dereferences the Atlas scratch pointer afterwards"
+    },
+    "entry_record": {
+      "offset": "0x040",
+      "fields": {
+        "current_el": "0x040 (u64, CurrentEL & 0xC)"
+      }
+    },
+    "trap_frame": {
+      "offset": "0x080",
+      "address": "0x40205880",
+      "size_bytes": 320,
+      "fields": {
+        "x0_x30": "0x000..0x0F0 (31 x u64)",
+        "sp": "0x0F8",
+        "vector_slot": "0x100",
+        "current_el": "0x108",
+        "esr_el1": "0x110",
+        "elr_el1": "0x118",
+        "spsr_el1": "0x120",
+        "far_el1": "0x128",
+        "far_valid": "0x130",
+        "magic": "0x138 (0x314D524650415254 'TRAPFRM1', written last)"
+      }
+    },
+    "seam2_test_record": {
+      "offset": "0x200",
+      "note": "written only by Seam 2 test images, never by canonical physics.bin"
+    }
+  },
+  "static_data_layout": {
+    "base": "0x40207000",
+    "size_bytes": 4096,
+    "fields": {
+      "dram_end": "0x00",
+      "total_frames": "0x08",
+      "next_free_cursor": "0x10",
+      "reserved_zero": "0x18",
+      "bitmap": "0x20 (ceil(total_frames/8) bytes = 4031)"
+    },
+    "total_frames": 32248,
+    "allocation_failure": "0 (FRAME_EXHAUSTED; never a valid frame)"
   }
 }

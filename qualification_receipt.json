@@ -1,22 +1,59 @@
 {
   "milestone": "MILESTONE 2 \u2014 PHYSICS_BOOT",
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
   "status": "QUALIFIED_QEMU_VIRT",
-  "timestamp": "2026-09-26T05:37:45.839959+00:00",
+  "timestamp": "2026-09-26T05:57:36.677245+00:00",
+  "source": {
+    "base_commit": "92655ab5b1f49ac6afb347874b9c81b17f6da8a9",
+    "tracked_changes_at_run": true,
+    "note": "base_commit is HEAD when the gates ran; the receipt is committed on top of it"
+  },
+  "environment": {
+    "qemu": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+    "machine": "virt, cortex-a57, 128M, tcg thread=single"
+  },
   "canonical_artifact": {
     "name": "physics.bin",
-    "sha256": "4ab2f5abc083b1c38aa15c136a94837f0de706eb86a53915b32a27b7a516422e",
+    "sha256": "4b22a08cd408b5cf90258af13b833b97a5211b4d2480fa74be357228f4aed3bd",
     "size_bytes": 6144,
     "total_words": 1536,
     "entry_point": "0x40200000",
     "provenance_anchor": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5"
   },
+  "atlas_handoff_artifact": {
+    "name": "atlas_m2.bin",
+    "sha256": "1d6d75a6881bb9d9b17a777ec7dee885780386c4699d776adc7cc1c277b09012",
+    "size_bytes": 1764
+  },
+  "bound_file_sha256": {
+    "machine_contract.json": "8ef99d44abfc5f2076b1858c145c95ce7e4b79f2dbee7464c679c69d38a2b6a6",
+    "physics.audit": "4db61d0191ed93db61942aefa6f378907c1c128a7f6c77dd87290ecdb5e0b6f3",
+    "physics.manifest": "452a92caf455fd764e2ec87f6e2907eb8e5212e992fa3874c936276e41de587c",
+    "physics.memory-map": "3523ee71b4be6f7f1f1f93e80ce5b3ab84024d9be86b44082722c5f8d0ce8730",
+    "seam1_physics_audit.py": "d761f4b90e9c6006936924f03f5ad25e43e272069b62c9623cb6ea46f3096395",
+    "seam2_physics_harness.py": "5c9de9c7dba0958f0860ef61f80939ecc015dd62e854ec3e70248f845a3f8155",
+    "run_milestone2_gates.py": "a069f3302f1847c62bdedf0973f0516cf073b34f07b451e60f3ba58eaa7ce03f",
+    "generate_physics_audit.py": "5f9a4cad4b85ae777412eae50fa6b86395884b8652402fdbb260e01a24f61da9",
+    "m2_build.py": "bdaba6c23622cab43edc9cbf90616b100b63647adeefea7f6f2b2bc202cde9b9",
+    "atlas_m2.bin": "1d6d75a6881bb9d9b17a777ec7dee885780386c4699d776adc7cc1c277b09012",
+    "physics.bin": "4b22a08cd408b5cf90258af13b833b97a5211b4d2480fa74be357228f4aed3bd",
+    "physics_pin.inc": "9ae18bd1cebf48415c17ff984880dc3c39f20870420a7f35e38a239262965760",
+    "atlas.sha256": "501191627d8948956a178db5d4f6e8bd9c748b147bb95d2ee51276ac85a27a2a",
+    "atlas_m2.s": "4fa39c5347600618b4e0085f5fe9004d1341856578af43d7eaa01d159bf12ec1",
+    "physics.s": "0254a65243e98c36b7cfac49fa1ac0a7c97f8318862cf050306a8d45388e4b60",
+    "vector_table.s": "a94dd5d84618a7ebf5ecaf97c5029b39efb8d2d6e266b08551bc6028589dfebf",
+    "memory_alloc.s": "f6d710e6acd8604b832703ad1a357386203e853621ac42f5c2e3dee3380e4183",
+    "capability.s": "96808a14f4d1a1795ffaec50995ebbcc23d720f6731f1b89373fa922848cf303",
+    "sha256_clean.c": "35989415a49f8d3df6adf9bd761dc70f4d633034a797d6acda45cf2163d00d1e",
+    "physics.ld": "03dd48e5210d2ffc9bd271b60a35dabad8af6bc8dd91801938551564d1502649"
+  },
   "audit_accounting": {
-    "decoded_instructions": 370,
-    "instruction_bytes": 1480,
-    "rodata_words": 96,
-    "rodata_bytes": 384,
-    "canonical_padding_words": 558,
-    "canonical_padding_bytes": 2232,
+    "decoded_instructions": 464,
+    "instruction_bytes": 1856,
+    "rodata_words": 170,
+    "rodata_bytes": 680,
+    "canonical_padding_words": 390,
+    "canonical_padding_bytes": 1560,
     "vector_table_words": 512,
     "vector_table_bytes": 2048,
     "total_words": 1536,

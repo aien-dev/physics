@@ -25,46 +25,11 @@ import subprocess
 import sys
 
 def build_physics_binary(base_dir="."):
-    physics_s = os.path.join(base_dir, "physics.s")
-    vector_s = os.path.join(base_dir, "vector_table.s")
-    mem_s = os.path.join(base_dir, "memory_alloc.s")
-    cap_s = os.path.join(base_dir, "capability.s")
-    ld_script = os.path.join(base_dir, "physics.ld")
-
-    physics_o = os.path.join(base_dir, "physics.o")
-    vector_o = os.path.join(base_dir, "vector_table.o")
-    mem_o = os.path.join(base_dir, "memory_alloc.o")
-    cap_o = os.path.join(base_dir, "capability.o")
-    physics_elf = os.path.join(base_dir, "physics.elf")
-    physics_bin = os.path.join(base_dir, "physics.bin")
-
-    # Assemble modules if sources exist and are newer or objects missing
-    sources = [
-        (physics_s, physics_o),
-        (vector_s, vector_o),
-        (mem_s, mem_o),
-        (cap_s, cap_o),
-    ]
-    for src, obj in sources:
-        if os.path.exists(src):
-            cmd = ["aarch64-linux-gnu-gcc", "-c", "-nostdlib", "-ffreestanding", src, "-o", obj]
-            subprocess.run(cmd, check=True)
-
-    # Link with linker script
-    ld_cmd = [
-        "aarch64-linux-gnu-ld",
-        "-T", ld_script,
-        physics_o, vector_o, mem_o, cap_o,
-        "-o", physics_elf
-    ]
-    print(f"Linking: {' '.join(ld_cmd)}")
-    subprocess.run(ld_cmd, check=True)
-
-    # Objcopy to binary
-    objcopy_cmd = ["aarch64-linux-gnu-objcopy", "-O", "binary", physics_elf, physics_bin]
-    print(f"Extracting binary: {' '.join(objcopy_cmd)}")
-    subprocess.run(objcopy_cmd, check=True)
-
+    """Build physics.bin, physics_pin.inc and atlas_m2.bin from source via
+    m2_build (no cached objects), returning the physics ELF and binary."""
+    from m2_build import build_canonical
+    physics_elf, physics_bin = build_canonical(base_dir)
+    print(f"Built {physics_bin} and atlas_m2.bin from source (intermediates in build/canonical)")
     return physics_elf, physics_bin
 
 def generate_decode(physics_elf, base_dir="."):

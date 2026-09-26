@@ -9,640 +9,640 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 
 | Offset | Raw Bytes | Decoded Operation / Content | Inputs | Outputs | Branch Target | Memory Accessed | Classification |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `0x0000` | `58000d83` | `ldr	x3, 402001b0 <print_hex64+0x58>` | `-` | `x3` | `-` | `Literal @ 0x402001b0` | `INSTRUCTION` |
+| `0x0000` | `58001203` | `ldr	x3, 40200240 <print_hex64+0x58>` | `-` | `x3` | `-` | `Literal @ 0x40200240` | `INSTRUCTION` |
 | `0x0004` | `eb03005f` | `cmp	x2, x3` | `x2, x3` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0008` | `540006e1` | `b.ne	402000e4 <_physics_entry+0xe4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
-| `0x000c` | `58000d63` | `ldr	x3, 402001b8 <print_hex64+0x60>` | `-` | `x3` | `-` | `Literal @ 0x402001b8` | `INSTRUCTION` |
-| `0x0010` | `eb03001f` | `cmp	x0, x3` | `x0, x3` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0014` | `54000701` | `b.ne	402000f4 <_physics_entry+0xf4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
-| `0x0018` | `f9400013` | `ldr	x19, [x0]` | `-` | `x19` | `-` | `Read [x0]` | `INSTRUCTION` |
-| `0x001c` | `f9400414` | `ldr	x20, [x0, #8]` | `-` | `x20` | `-` | `Read [x0, #8]` | `INSTRUCTION` |
-| `0x0020` | `f9400815` | `ldr	x21, [x0, #16]` | `-` | `x21` | `-` | `Read [x0, #16]` | `INSTRUCTION` |
-| `0x0024` | `b4000714` | `cbz	x20, 40200104 <_physics_entry+0x104>` | `-` | `-` | `<_physics_entry+0x104>` | `-` | `INSTRUCTION` |
-| `0x0028` | `8b140264` | `add	x4, x19, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x002c` | `eb13009f` | `cmp	x4, x19` | `x4, x19` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0030` | `540006a9` | `b.ls	40200104 <_physics_entry+0x104>  // b.plast` | `-` | `-` | `b.plast` | `-` | `INSTRUCTION` |
-| `0x0034` | `58000c65` | `ldr	x5, 402001c0 <print_hex64+0x68>` | `-` | `x5` | `-` | `Literal @ 0x402001c0` | `INSTRUCTION` |
-| `0x0038` | `eb1300bf` | `cmp	x5, x19` | `x5, x19` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x003c` | `54000643` | `b.cc	40200104 <_physics_entry+0x104>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
-| `0x0040` | `58000c46` | `ldr	x6, 402001c8 <print_hex64+0x70>` | `-` | `x6` | `-` | `Literal @ 0x402001c8` | `INSTRUCTION` |
-| `0x0044` | `eb0400df` | `cmp	x6, x4` | `x6, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0048` | `540005e8` | `b.hi	40200104 <_physics_entry+0x104>  // b.pmore` | `-` | `-` | `b.pmore` | `-` | `INSTRUCTION` |
-| `0x004c` | `58000c27` | `ldr	x7, 402001d0 <print_hex64+0x78>` | `-` | `x7` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x0050` | `eb0702bf` | `cmp	x21, x7` | `x21, x7` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0054` | `54000581` | `b.ne	40200104 <_physics_entry+0x104>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
-| `0x0058` | `58000c08` | `ldr	x8, 402001d8 <print_hex64+0x80>` | `-` | `x8` | `-` | `Literal @ 0x402001d8` | `INSTRUCTION` |
-| `0x005c` | `f9000113` | `str	x19, [x8]` | `x19` | `-` | `-` | `Write [x8]` | `INSTRUCTION` |
-| `0x0060` | `f9000514` | `str	x20, [x8, #8]` | `x20` | `-` | `-` | `Write [x8, #8]` | `INSTRUCTION` |
-| `0x0064` | `f9000915` | `str	x21, [x8, #16]` | `x21` | `-` | `-` | `Write [x8, #16]` | `INSTRUCTION` |
-| `0x0068` | `d5384249` | `mrs	x9, currentel` | `currentel` | `x9` | `-` | `-` | `INSTRUCTION` |
-| `0x006c` | `927e0529` | `and	x9, x9, #0xc` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0070` | `f9000d09` | `str	x9, [x8, #24]` | `x9` | `-` | `-` | `Write [x8, #24]` | `INSTRUCTION` |
-| `0x0074` | `58000b2a` | `ldr	x10, 402001d8 <print_hex64+0x80>` | `-` | `x10` | `-` | `Literal @ 0x402001d8` | `INSTRUCTION` |
-| `0x0078` | `9100015f` | `mov	sp, x10` | `x10` | `SP` | `-` | `-` | `INSTRUCTION` |
-| `0x007c` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0080` | `58000b00` | `ldr	x0, 402001e0 <print_hex64+0x88>` | `-` | `x0` | `-` | `Literal @ 0x402001e0` | `INSTRUCTION` |
-| `0x0084` | `94000028` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0088` | `58000b00` | `ldr	x0, 402001e8 <print_hex64+0x90>` | `-` | `x0` | `-` | `Literal @ 0x402001e8` | `INSTRUCTION` |
-| `0x008c` | `94000026` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0090` | `58000b01` | `ldr	x1, 402001f0 <print_hex64+0x98>` | `-` | `x1` | `-` | `Literal @ 0x402001f0` | `INSTRUCTION` |
-| `0x0094` | `f100113f` | `cmp	x9, #0x4` | `x9, #0x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0098` | `54000080` | `b.eq	402000a8 <_physics_entry+0xa8>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x009c` | `f100213f` | `cmp	x9, #0x8` | `x9, #0x8` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x00a0` | `540000a0` | `b.eq	402000b4 <_physics_entry+0xb4>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x00a4` | `1400001c` | `b	40200114 <_physics_entry+0x114>` | `-` | `-` | `<_physics_entry+0x114>` | `-` | `INSTRUCTION` |
-| `0x00a8` | `d518c001` | `msr	vbar_el1, x1` | `x1` | `vbar_el1` | `-` | `-` | `INSTRUCTION` |
-| `0x00ac` | `d5033fdf` | `isb` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00b0` | `14000003` | `b	402000bc <_physics_entry+0xbc>` | `-` | `-` | `<_physics_entry+0xbc>` | `-` | `INSTRUCTION` |
-| `0x00b4` | `d51cc001` | `msr	vbar_el2, x1` | `x1` | `vbar_el2` | `-` | `-` | `INSTRUCTION` |
-| `0x00b8` | `d5033fdf` | `isb` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00bc` | `580009e0` | `ldr	x0, 402001f8 <print_hex64+0xa0>` | `-` | `x0` | `-` | `Literal @ 0x402001f8` | `INSTRUCTION` |
-| `0x00c0` | `94000019` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00c4` | `aa1303e0` | `mov	x0, x19` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00c8` | `aa1403e1` | `mov	x1, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00cc` | `940000bd` | `bl	402003c0 <frame_allocator_init>` | `-` | `-` | `<frame_allocator_init>` | `-` | `INSTRUCTION` |
-| `0x00d0` | `94000104` | `bl	402004e0 <init_root_capability>` | `-` | `-` | `<init_root_capability>` | `-` | `INSTRUCTION` |
-| `0x00d4` | `58000960` | `ldr	x0, 40200200 <print_hex64+0xa8>` | `-` | `x0` | `-` | `Literal @ 0x40200200` | `INSTRUCTION` |
-| `0x00d8` | `94000013` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00dc` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00e0` | `17ffffff` | `b	402000dc <_physics_entry+0xdc>` | `-` | `-` | `<_physics_entry+0xdc>` | `-` | `INSTRUCTION` |
-| `0x00e4` | `58000774` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x00e8` | `58000900` | `ldr	x0, 40200208 <print_hex64+0xb0>` | `-` | `x0` | `-` | `Literal @ 0x40200208` | `INSTRUCTION` |
-| `0x00ec` | `9400000e` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00f0` | `17fffffb` | `b	402000dc <_physics_entry+0xdc>` | `-` | `-` | `<_physics_entry+0xdc>` | `-` | `INSTRUCTION` |
-| `0x00f4` | `580006f4` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x00f8` | `580008c0` | `ldr	x0, 40200210 <print_hex64+0xb8>` | `-` | `x0` | `-` | `Literal @ 0x40200210` | `INSTRUCTION` |
-| `0x00fc` | `9400000a` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0100` | `17fffff7` | `b	402000dc <_physics_entry+0xdc>` | `-` | `-` | `<_physics_entry+0xdc>` | `-` | `INSTRUCTION` |
-| `0x0104` | `58000674` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x0108` | `58000880` | `ldr	x0, 40200218 <print_hex64+0xc0>` | `-` | `x0` | `-` | `Literal @ 0x40200218` | `INSTRUCTION` |
-| `0x010c` | `94000006` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0110` | `17fffff3` | `b	402000dc <_physics_entry+0xdc>` | `-` | `-` | `<_physics_entry+0xdc>` | `-` | `INSTRUCTION` |
-| `0x0114` | `580005f4` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x0118` | `58000840` | `ldr	x0, 40200220 <print_hex64+0xc8>` | `-` | `x0` | `-` | `Literal @ 0x40200220` | `INSTRUCTION` |
-| `0x011c` | `94000002` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0120` | `17ffffef` | `b	402000dc <_physics_entry+0xdc>` | `-` | `-` | `<_physics_entry+0xdc>` | `-` | `INSTRUCTION` |
-| `0x0124` | `58000574` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x0128` | `38401401` | `ldrb	w1, [x0], #1` | `-` | `w1` | `-` | `Read [x0]` | `INSTRUCTION` |
-| `0x012c` | `340000a1` | `cbz	w1, 40200140 <print_string+0x1c>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0130` | `b9401a82` | `ldr	w2, [x20, #24]` | `-` | `w2` | `-` | `Read [x20, #24]` | `INSTRUCTION` |
-| `0x0134` | `372fffe2` | `tbnz	w2, #5, 40200130 <print_string+0xc>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0138` | `b9000281` | `str	w1, [x20]` | `w1` | `-` | `-` | `Write [x20]` | `INSTRUCTION` |
-| `0x013c` | `17fffffb` | `b	40200128 <print_string+0x4>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0140` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0144` | `58000474` | `ldr	x20, 402001d0 <print_hex64+0x78>` | `-` | `x20` | `-` | `Literal @ 0x402001d0` | `INSTRUCTION` |
-| `0x0148` | `b9401a82` | `ldr	w2, [x20, #24]` | `-` | `w2` | `-` | `Read [x20, #24]` | `INSTRUCTION` |
-| `0x014c` | `372fffe2` | `tbnz	w2, #5, 40200148 <print_char+0x4>` | `-` | `-` | `<print_char+0x4>` | `-` | `INSTRUCTION` |
-| `0x0150` | `b9000280` | `str	w0, [x20]` | `w0` | `-` | `-` | `Write [x20]` | `INSTRUCTION` |
-| `0x0154` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0158` | `a9be7bfd` | `stp	x29, x30, [sp, #-32]!` | `x29, x30` | `-` | `-` | `Write [sp, #-32]` | `INSTRUCTION` |
-| `0x015c` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0160` | `f9000bf3` | `str	x19, [sp, #16]` | `x19` | `-` | `-` | `Write [sp, #16]` | `INSTRUCTION` |
-| `0x0164` | `aa0003f3` | `mov	x19, x0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0168` | `52800600` | `mov	w0, #0x30                  	// #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x016c` | `97fffff6` | `bl	40200144 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
-| `0x0170` | `52800f00` | `mov	w0, #0x78                  	// #120` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0174` | `97fffff4` | `bl	40200144 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
-| `0x0178` | `52800781` | `mov	w1, #0x3c                  	// #60` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x017c` | `9ac12662` | `lsr	x2, x19, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0180` | `12000c42` | `and	w2, w2, #0xf` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0184` | `7100285f` | `cmp	w2, #0xa` | `w2, #0xa` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0188` | `5400006b` | `b.lt	40200194 <print_hex64+0x3c>  // b.tstop` | `-` | `-` | `b.tstop` | `-` | `INSTRUCTION` |
-| `0x018c` | `11015c40` | `add	w0, w2, #0x57` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0190` | `14000002` | `b	40200198 <print_hex64+0x40>` | `-` | `-` | `<print_hex64+0x40>` | `-` | `INSTRUCTION` |
-| `0x0194` | `1100c040` | `add	w0, w2, #0x30` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0198` | `97ffffeb` | `bl	40200144 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
-| `0x019c` | `71001021` | `subs	w1, w1, #0x4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01a0` | `54fffeea` | `b.ge	4020017c <print_hex64+0x24>  // b.tcont` | `-` | `-` | `b.tcont` | `-` | `INSTRUCTION` |
-| `0x01a4` | `f9400bf3` | `ldr	x19, [sp, #16]` | `-` | `x19` | `-` | `Read [sp, #16]` | `INSTRUCTION` |
-| `0x01a8` | `a8c27bfd` | `ldp	x29, x30, [sp], #32` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
-| `0x01ac` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01b0` | `49435330` | `.word	0x49435330` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01b4` | `50485953` | `.word	0x50485953` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01b8` | `401fe000` | `.word	0x401fe000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01bc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01c0` | `40200000` | `.word	0x40200000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01c4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01c8` | `40208000` | `.word	0x40208000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01cc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01d0` | `09000000` | `.word	0x09000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01d4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01d8` | `40205800` | `.word	0x40205800` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01dc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01e0` | `402005c8` | `.word	0x402005c8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01e4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01e8` | `402005d9` | `.word	0x402005d9` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01ec` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01f0` | `40201000` | `.word	0x40201000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01f4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01f8` | `402005f1` | `.word	0x402005f1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x01fc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0200` | `4020060a` | `.word	0x4020060a` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0204` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0208` | `40200624` | `.word	0x40200624` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x020c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0210` | `4020063f` | `.word	0x4020063f` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0214` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0218` | `40200662` | `.word	0x40200662` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x021c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0220` | `40200682` | `.word	0x40200682` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0224` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0228` | `58000ad3` | `ldr	x19, 40200380 <common_trap_entry+0x158>` | `-` | `x19` | `-` | `Literal @ 0x40200380` | `INSTRUCTION` |
-| `0x022c` | `f9000260` | `str	x0, [x19]` | `x0` | `-` | `-` | `Write [x19]` | `INSTRUCTION` |
-| `0x0230` | `d5384242` | `mrs	x2, currentel` | `currentel` | `x2` | `-` | `-` | `INSTRUCTION` |
-| `0x0234` | `927e0442` | `and	x2, x2, #0xc` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0238` | `f9000662` | `str	x2, [x19, #8]` | `x2` | `-` | `-` | `Write [x19, #8]` | `INSTRUCTION` |
-| `0x023c` | `f100205f` | `cmp	x2, #0x8` | `x2, #0x8` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0240` | `54000340` | `b.eq	402002a8 <common_trap_entry+0x80>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0244` | `d5385203` | `mrs	x3, esr_el1` | `esr_el1` | `x3` | `-` | `-` | `INSTRUCTION` |
-| `0x0248` | `f9000a63` | `str	x3, [x19, #16]` | `x3` | `-` | `-` | `Write [x19, #16]` | `INSTRUCTION` |
-| `0x024c` | `d5384024` | `mrs	x4, elr_el1` | `elr_el1` | `x4` | `-` | `-` | `INSTRUCTION` |
-| `0x0250` | `f9000e64` | `str	x4, [x19, #24]` | `x4` | `-` | `-` | `Write [x19, #24]` | `INSTRUCTION` |
-| `0x0254` | `d5384005` | `mrs	x5, spsr_el1` | `spsr_el1` | `x5` | `-` | `-` | `INSTRUCTION` |
-| `0x0258` | `f9001265` | `str	x5, [x19, #32]` | `x5` | `-` | `-` | `Write [x19, #32]` | `INSTRUCTION` |
-| `0x025c` | `531a7c66` | `lsr	w6, w3, #26` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0260` | `710080df` | `cmp	w6, #0x20` | `w6, #0x20` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0264` | `54000180` | `b.eq	40200294 <common_trap_entry+0x6c>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0268` | `710084df` | `cmp	w6, #0x21` | `w6, #0x21` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x026c` | `54000140` | `b.eq	40200294 <common_trap_entry+0x6c>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0270` | `710088df` | `cmp	w6, #0x22` | `w6, #0x22` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0274` | `54000100` | `b.eq	40200294 <common_trap_entry+0x6c>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0278` | `710090df` | `cmp	w6, #0x24` | `w6, #0x24` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x027c` | `540000c0` | `b.eq	40200294 <common_trap_entry+0x6c>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0280` | `710094df` | `cmp	w6, #0x25` | `w6, #0x25` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0284` | `54000080` | `b.eq	40200294 <common_trap_entry+0x6c>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0288` | `f900167f` | `str	xzr, [x19, #40]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x028c` | `f9001a7f` | `str	xzr, [x19, #48]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0290` | `1400001e` | `b	40200308 <common_trap_entry+0xe0>` | `-` | `-` | `<common_trap_entry+0xe0>` | `-` | `INSTRUCTION` |
-| `0x0294` | `d5386007` | `mrs	x7, far_el1` | `far_el1` | `x7` | `-` | `-` | `INSTRUCTION` |
-| `0x0298` | `f9001667` | `str	x7, [x19, #40]` | `x7` | `-` | `-` | `Write [x19, #40]` | `INSTRUCTION` |
-| `0x029c` | `d2800028` | `mov	x8, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x02a0` | `f9001a68` | `str	x8, [x19, #48]` | `x8` | `-` | `-` | `Write [x19, #48]` | `INSTRUCTION` |
-| `0x02a4` | `14000019` | `b	40200308 <common_trap_entry+0xe0>` | `-` | `-` | `<common_trap_entry+0xe0>` | `-` | `INSTRUCTION` |
-| `0x02a8` | `d53c5203` | `mrs	x3, esr_el2` | `esr_el2` | `x3` | `-` | `-` | `INSTRUCTION` |
-| `0x02ac` | `f9000a63` | `str	x3, [x19, #16]` | `x3` | `-` | `-` | `Write [x19, #16]` | `INSTRUCTION` |
-| `0x02b0` | `d53c4024` | `mrs	x4, elr_el2` | `elr_el2` | `x4` | `-` | `-` | `INSTRUCTION` |
-| `0x02b4` | `f9000e64` | `str	x4, [x19, #24]` | `x4` | `-` | `-` | `Write [x19, #24]` | `INSTRUCTION` |
-| `0x02b8` | `d53c4005` | `mrs	x5, spsr_el2` | `spsr_el2` | `x5` | `-` | `-` | `INSTRUCTION` |
-| `0x02bc` | `f9001265` | `str	x5, [x19, #32]` | `x5` | `-` | `-` | `Write [x19, #32]` | `INSTRUCTION` |
-| `0x02c0` | `531a7c66` | `lsr	w6, w3, #26` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x02c4` | `710080df` | `cmp	w6, #0x20` | `w6, #0x20` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x02c8` | `54000180` | `b.eq	402002f8 <common_trap_entry+0xd0>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x02cc` | `710084df` | `cmp	w6, #0x21` | `w6, #0x21` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x02d0` | `54000140` | `b.eq	402002f8 <common_trap_entry+0xd0>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x02d4` | `710088df` | `cmp	w6, #0x22` | `w6, #0x22` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x02d8` | `54000100` | `b.eq	402002f8 <common_trap_entry+0xd0>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x02dc` | `710090df` | `cmp	w6, #0x24` | `w6, #0x24` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x02e0` | `540000c0` | `b.eq	402002f8 <common_trap_entry+0xd0>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x02e4` | `710094df` | `cmp	w6, #0x25` | `w6, #0x25` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x02e8` | `54000080` | `b.eq	402002f8 <common_trap_entry+0xd0>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x02ec` | `f900167f` | `str	xzr, [x19, #40]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x02f0` | `f9001a7f` | `str	xzr, [x19, #48]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x02f4` | `14000005` | `b	40200308 <common_trap_entry+0xe0>` | `-` | `-` | `<common_trap_entry+0xe0>` | `-` | `INSTRUCTION` |
-| `0x02f8` | `d53c6007` | `mrs	x7, far_el2` | `far_el2` | `x7` | `-` | `-` | `INSTRUCTION` |
-| `0x02fc` | `f9001667` | `str	x7, [x19, #40]` | `x7` | `-` | `-` | `Write [x19, #40]` | `INSTRUCTION` |
-| `0x0300` | `d2800028` | `mov	x8, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0304` | `f9001a68` | `str	x8, [x19, #48]` | `x8` | `-` | `-` | `Write [x19, #48]` | `INSTRUCTION` |
-| `0x0308` | `58000414` | `ldr	x20, 40200388 <common_trap_entry+0x160>` | `-` | `x20` | `-` | `Literal @ 0x40200388` | `INSTRUCTION` |
-| `0x030c` | `58000420` | `ldr	x0, 40200390 <common_trap_entry+0x168>` | `-` | `x0` | `-` | `Literal @ 0x40200390` | `INSTRUCTION` |
-| `0x0310` | `97ffff85` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0314` | `58000420` | `ldr	x0, 40200398 <common_trap_entry+0x170>` | `-` | `x0` | `-` | `Literal @ 0x40200398` | `INSTRUCTION` |
-| `0x0318` | `97ffff83` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x031c` | `f9400260` | `ldr	x0, [x19]` | `-` | `x0` | `-` | `Read [x19]` | `INSTRUCTION` |
-| `0x0320` | `97ffff8e` | `bl	40200158 <print_hex64>` | `-` | `-` | `<print_hex64>` | `-` | `INSTRUCTION` |
-| `0x0324` | `580003e0` | `ldr	x0, 402003a0 <common_trap_entry+0x178>` | `-` | `x0` | `-` | `Literal @ 0x402003a0` | `INSTRUCTION` |
-| `0x0328` | `97ffff7f` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x032c` | `580003e0` | `ldr	x0, 402003a8 <common_trap_entry+0x180>` | `-` | `x0` | `-` | `Literal @ 0x402003a8` | `INSTRUCTION` |
-| `0x0330` | `97ffff7d` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0334` | `f9400a60` | `ldr	x0, [x19, #16]` | `-` | `x0` | `-` | `Read [x19, #16]` | `INSTRUCTION` |
-| `0x0338` | `97ffff88` | `bl	40200158 <print_hex64>` | `-` | `-` | `<print_hex64>` | `-` | `INSTRUCTION` |
-| `0x033c` | `58000320` | `ldr	x0, 402003a0 <common_trap_entry+0x178>` | `-` | `x0` | `-` | `Literal @ 0x402003a0` | `INSTRUCTION` |
-| `0x0340` | `97ffff79` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0344` | `58000360` | `ldr	x0, 402003b0 <common_trap_entry+0x188>` | `-` | `x0` | `-` | `Literal @ 0x402003b0` | `INSTRUCTION` |
-| `0x0348` | `97ffff77` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x034c` | `f9401660` | `ldr	x0, [x19, #40]` | `-` | `x0` | `-` | `Read [x19, #40]` | `INSTRUCTION` |
-| `0x0350` | `97ffff82` | `bl	40200158 <print_hex64>` | `-` | `-` | `<print_hex64>` | `-` | `INSTRUCTION` |
-| `0x0354` | `58000260` | `ldr	x0, 402003a0 <common_trap_entry+0x178>` | `-` | `x0` | `-` | `Literal @ 0x402003a0` | `INSTRUCTION` |
-| `0x0358` | `97ffff73` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x035c` | `580002e0` | `ldr	x0, 402003b8 <common_trap_entry+0x190>` | `-` | `x0` | `-` | `Literal @ 0x402003b8` | `INSTRUCTION` |
-| `0x0360` | `97ffff71` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0364` | `f9400e60` | `ldr	x0, [x19, #24]` | `-` | `x0` | `-` | `Read [x19, #24]` | `INSTRUCTION` |
-| `0x0368` | `97ffff7c` | `bl	40200158 <print_hex64>` | `-` | `-` | `<print_hex64>` | `-` | `INSTRUCTION` |
-| `0x036c` | `580001a0` | `ldr	x0, 402003a0 <common_trap_entry+0x178>` | `-` | `x0` | `-` | `Literal @ 0x402003a0` | `INSTRUCTION` |
-| `0x0370` | `97ffff6d` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0374` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0378` | `17ffffff` | `b	40200374 <common_trap_entry+0x14c>` | `-` | `-` | `<common_trap_entry+0x14c>` | `-` | `INSTRUCTION` |
-| `0x037c` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0380` | `40205840` | `.word	0x40205840` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0384` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0388` | `09000000` | `.word	0x09000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x038c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0390` | `402006a8` | `.word	0x402006a8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0394` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0398` | `402006c4` | `.word	0x402006c4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x039c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03a0` | `402006e5` | `.word	0x402006e5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03a4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03a8` | `402006cd` | `.word	0x402006cd` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03ac` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03b0` | `402006d5` | `.word	0x402006d5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03b4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03b8` | `402006dd` | `.word	0x402006dd` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03bc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03c0` | `a9bf7bfd` | `stp	x29, x30, [sp, #-16]!` | `x29, x30` | `-` | `-` | `Write [sp, #-16]` | `INSTRUCTION` |
-| `0x03c4` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03c8` | `8b010002` | `add	x2, x0, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03cc` | `580007e3` | `ldr	x3, 402004c8 <is_frame_reserved+0x30>` | `-` | `x3` | `-` | `Literal @ 0x402004c8` | `INSTRUCTION` |
-| `0x03d0` | `f9000062` | `str	x2, [x3]` | `x2` | `-` | `-` | `Write [x3]` | `INSTRUCTION` |
-| `0x03d4` | `580007e4` | `ldr	x4, 402004d0 <is_frame_reserved+0x38>` | `-` | `x4` | `-` | `Literal @ 0x402004d0` | `INSTRUCTION` |
-| `0x03d8` | `eb04005f` | `cmp	x2, x4` | `x2, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x03dc` | `54000209` | `b.ls	4020041c <frame_allocator_init+0x5c>  // b.plast` | `-` | `-` | `b.plast` | `-` | `INSTRUCTION` |
-| `0x03e0` | `cb040045` | `sub	x5, x2, x4` | `-` | `-` | `x4` | `-` | `INSTRUCTION` |
-| `0x03e4` | `d34cfca5` | `lsr	x5, x5, #12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03e8` | `f9000465` | `str	x5, [x3, #8]` | `x5` | `-` | `-` | `Write [x3, #8]` | `INSTRUCTION` |
-| `0x03ec` | `91001ca6` | `add	x6, x5, #0x7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03f0` | `d343fcc6` | `lsr	x6, x6, #3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03f4` | `91004067` | `add	x7, x3, #0x10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x03f8` | `b4000086` | `cbz	x6, 40200408 <frame_allocator_init+0x48>` | `-` | `-` | `<frame_allocator_init+0x48>` | `-` | `INSTRUCTION` |
-| `0x03fc` | `380014ff` | `strb	wzr, [x7], #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0400` | `d10004c6` | `sub	x6, x6, #0x1` | `-` | `-` | `#0x1` | `-` | `INSTRUCTION` |
-| `0x0404` | `17fffffd` | `b	402003f8 <frame_allocator_init+0x38>` | `-` | `-` | `<frame_allocator_init+0x38>` | `-` | `INSTRUCTION` |
-| `0x0408` | `58000680` | `ldr	x0, 402004d8 <is_frame_reserved+0x40>` | `-` | `x0` | `-` | `Literal @ 0x402004d8` | `INSTRUCTION` |
-| `0x040c` | `97ffff46` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0410` | `aa0503e0` | `mov	x0, x5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0414` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
-| `0x0418` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x041c` | `f900047f` | `str	xzr, [x3, #8]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0420` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0424` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
-| `0x0428` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x042c` | `580004e3` | `ldr	x3, 402004c8 <is_frame_reserved+0x30>` | `-` | `x3` | `-` | `Literal @ 0x402004c8` | `INSTRUCTION` |
-| `0x0430` | `f9400062` | `ldr	x2, [x3]` | `-` | `x2` | `-` | `Read [x3]` | `INSTRUCTION` |
-| `0x0434` | `f9400465` | `ldr	x5, [x3, #8]` | `-` | `x5` | `-` | `Read [x3, #8]` | `INSTRUCTION` |
-| `0x0438` | `b40002c5` | `cbz	x5, 40200490 <allocate_frame+0x64>` | `-` | `-` | `<allocate_frame+0x64>` | `-` | `INSTRUCTION` |
-| `0x043c` | `91004067` | `add	x7, x3, #0x10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0440` | `d2800008` | `mov	x8, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0444` | `eb05011f` | `cmp	x8, x5` | `x8, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0448` | `5400024a` | `b.ge	40200490 <allocate_frame+0x64>  // b.tcont` | `-` | `-` | `b.tcont` | `-` | `INSTRUCTION` |
-| `0x044c` | `d343fd09` | `lsr	x9, x8, #3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0450` | `9240090a` | `and	x10, x8, #0x7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0454` | `386968eb` | `ldrb	w11, [x7, x9]` | `-` | `w11` | `-` | `Read [x7, x9]` | `INSTRUCTION` |
-| `0x0458` | `5280002c` | `mov	w12, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x045c` | `1aca218c` | `lsl	w12, w12, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0460` | `6a0c017f` | `tst	w11, w12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0464` | `54000060` | `b.eq	40200470 <allocate_frame+0x44>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
-| `0x0468` | `91000508` | `add	x8, x8, #0x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x046c` | `17fffff6` | `b	40200444 <allocate_frame+0x18>` | `-` | `-` | `<allocate_frame+0x18>` | `-` | `INSTRUCTION` |
-| `0x0470` | `2a0c016b` | `orr	w11, w11, w12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0474` | `382968eb` | `strb	w11, [x7, x9]` | `w11` | `-` | `-` | `Write [x7, x9]` | `INSTRUCTION` |
-| `0x0478` | `580002c4` | `ldr	x4, 402004d0 <is_frame_reserved+0x38>` | `-` | `x4` | `-` | `Literal @ 0x402004d0` | `INSTRUCTION` |
-| `0x047c` | `d374cd0d` | `lsl	x13, x8, #12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0480` | `8b0d0080` | `add	x0, x4, x13` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0484` | `eb02001f` | `cmp	x0, x2` | `x0, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0488` | `5400004a` | `b.ge	40200490 <allocate_frame+0x64>  // b.tcont` | `-` | `-` | `b.tcont` | `-` | `INSTRUCTION` |
-| `0x048c` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0490` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0494` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0498` | `580001c1` | `ldr	x1, 402004d0 <is_frame_reserved+0x38>` | `-` | `x1` | `-` | `Literal @ 0x402004d0` | `INSTRUCTION` |
-| `0x049c` | `eb01001f` | `cmp	x0, x1` | `x0, x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x04a0` | `540000e3` | `b.cc	402004bc <is_frame_reserved+0x24>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
-| `0x04a4` | `58000123` | `ldr	x3, 402004c8 <is_frame_reserved+0x30>` | `-` | `x3` | `-` | `Literal @ 0x402004c8` | `INSTRUCTION` |
-| `0x04a8` | `f9400062` | `ldr	x2, [x3]` | `-` | `x2` | `-` | `Read [x3]` | `INSTRUCTION` |
-| `0x04ac` | `eb02001f` | `cmp	x0, x2` | `x0, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x04b0` | `5400006a` | `b.ge	402004bc <is_frame_reserved+0x24>  // b.tcont` | `-` | `-` | `b.tcont` | `-` | `INSTRUCTION` |
-| `0x04b4` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04b8` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04bc` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04c0` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04c4` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04c8` | `40207000` | `.word	0x40207000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0008` | `540009a1` | `b.ne	4020013c <_physics_entry+0x13c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x000c` | `580011e3` | `ldr	x3, 40200248 <print_hex64+0x60>` | `-` | `x3` | `-` | `Literal @ 0x40200248` | `INSTRUCTION` |
+| `0x0010` | `eb03003f` | `cmp	x1, x3` | `x1, x3` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0014` | `54000be1` | `b.ne	40200190 <_physics_entry+0x190>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0018` | `580011c3` | `ldr	x3, 40200250 <print_hex64+0x68>` | `-` | `x3` | `-` | `Literal @ 0x40200250` | `INSTRUCTION` |
+| `0x001c` | `eb03001f` | `cmp	x0, x3` | `x0, x3` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0020` | `54000941` | `b.ne	40200148 <_physics_entry+0x148>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0024` | `f9400004` | `ldr	x4, [x0]` | `-` | `x4` | `-` | `Read [x0]` | `INSTRUCTION` |
+| `0x0028` | `58001185` | `ldr	x5, 40200258 <print_hex64+0x70>` | `-` | `x5` | `-` | `Literal @ 0x40200258` | `INSTRUCTION` |
+| `0x002c` | `eb05009f` | `cmp	x4, x5` | `x4, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0030` | `54000921` | `b.ne	40200154 <_physics_entry+0x154>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0034` | `b9400804` | `ldr	w4, [x0, #8]` | `-` | `w4` | `-` | `Read [x0, #8]` | `INSTRUCTION` |
+| `0x0038` | `7100049f` | `cmp	w4, #0x1` | `w4, #0x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x003c` | `54000921` | `b.ne	40200160 <_physics_entry+0x160>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0040` | `b9400c04` | `ldr	w4, [x0, #12]` | `-` | `w4` | `-` | `Read [x0, #12]` | `INSTRUCTION` |
+| `0x0044` | `7101009f` | `cmp	w4, #0x40` | `w4, #0x40` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0048` | `54000921` | `b.ne	4020016c <_physics_entry+0x16c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x004c` | `f9400804` | `ldr	x4, [x0, #16]` | `-` | `x4` | `-` | `Read [x0, #16]` | `INSTRUCTION` |
+| `0x0050` | `b5000944` | `cbnz	x4, 40200178 <_physics_entry+0x178>` | `-` | `-` | `<_physics_entry+0x178>` | `-` | `INSTRUCTION` |
+| `0x0054` | `f9400c13` | `ldr	x19, [x0, #24]` | `-` | `x19` | `-` | `Read [x0, #24]` | `INSTRUCTION` |
+| `0x0058` | `58001045` | `ldr	x5, 40200260 <print_hex64+0x78>` | `-` | `x5` | `-` | `Literal @ 0x40200260` | `INSTRUCTION` |
+| `0x005c` | `eb05027f` | `cmp	x19, x5` | `x19, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0060` | `54000921` | `b.ne	40200184 <_physics_entry+0x184>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0064` | `f9401014` | `ldr	x20, [x0, #32]` | `-` | `x20` | `-` | `Read [x0, #32]` | `INSTRUCTION` |
+| `0x0068` | `58001005` | `ldr	x5, 40200268 <print_hex64+0x80>` | `-` | `x5` | `-` | `Literal @ 0x40200268` | `INSTRUCTION` |
+| `0x006c` | `eb05029f` | `cmp	x20, x5` | `x20, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0070` | `540008a1` | `b.ne	40200184 <_physics_entry+0x184>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0074` | `f9401415` | `ldr	x21, [x0, #40]` | `-` | `x21` | `-` | `Read [x0, #40]` | `INSTRUCTION` |
+| `0x0078` | `58000fc5` | `ldr	x5, 40200270 <print_hex64+0x88>` | `-` | `x5` | `-` | `Literal @ 0x40200270` | `INSTRUCTION` |
+| `0x007c` | `eb0502bf` | `cmp	x21, x5` | `x21, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0080` | `54000821` | `b.ne	40200184 <_physics_entry+0x184>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0084` | `f9401816` | `ldr	x22, [x0, #48]` | `-` | `x22` | `-` | `Read [x0, #48]` | `INSTRUCTION` |
+| `0x0088` | `58000f85` | `ldr	x5, 40200278 <print_hex64+0x90>` | `-` | `x5` | `-` | `Literal @ 0x40200278` | `INSTRUCTION` |
+| `0x008c` | `eb0502df` | `cmp	x22, x5` | `x22, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0090` | `540007a1` | `b.ne	40200184 <_physics_entry+0x184>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0094` | `f9401c17` | `ldr	x23, [x0, #56]` | `-` | `x23` | `-` | `Read [x0, #56]` | `INSTRUCTION` |
+| `0x0098` | `58000d85` | `ldr	x5, 40200248 <print_hex64+0x60>` | `-` | `x5` | `-` | `Literal @ 0x40200248` | `INSTRUCTION` |
+| `0x009c` | `eb0502ff` | `cmp	x23, x5` | `x23, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x00a0` | `54000721` | `b.ne	40200184 <_physics_entry+0x184>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x00a4` | `58000ee8` | `ldr	x8, 40200280 <print_hex64+0x98>` | `-` | `x8` | `-` | `Literal @ 0x40200280` | `INSTRUCTION` |
+| `0x00a8` | `a9401404` | `ldp	x4, x5, [x0]` | `-` | `x4, x5` | `-` | `Read [x0]` | `INSTRUCTION` |
+| `0x00ac` | `a9001504` | `stp	x4, x5, [x8]` | `x4, x5` | `-` | `-` | `Write [x8]` | `INSTRUCTION` |
+| `0x00b0` | `a9411404` | `ldp	x4, x5, [x0, #16]` | `-` | `x4, x5` | `-` | `Read [x0, #16]` | `INSTRUCTION` |
+| `0x00b4` | `a9011504` | `stp	x4, x5, [x8, #16]` | `x4, x5` | `-` | `-` | `Write [x8, #16]` | `INSTRUCTION` |
+| `0x00b8` | `a9421404` | `ldp	x4, x5, [x0, #32]` | `-` | `x4, x5` | `-` | `Read [x0, #32]` | `INSTRUCTION` |
+| `0x00bc` | `a9021504` | `stp	x4, x5, [x8, #32]` | `x4, x5` | `-` | `-` | `Write [x8, #32]` | `INSTRUCTION` |
+| `0x00c0` | `a9431404` | `ldp	x4, x5, [x0, #48]` | `-` | `x4, x5` | `-` | `Read [x0, #48]` | `INSTRUCTION` |
+| `0x00c4` | `a9031504` | `stp	x4, x5, [x8, #48]` | `x4, x5` | `-` | `-` | `Write [x8, #48]` | `INSTRUCTION` |
+| `0x00c8` | `d5384249` | `mrs	x9, currentel` | `currentel` | `x9` | `-` | `-` | `INSTRUCTION` |
+| `0x00cc` | `927e0529` | `and	x9, x9, #0xc` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00d0` | `f100113f` | `cmp	x9, #0x4` | `x9, #0x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x00d4` | `540006a1` | `b.ne	402001a8 <_physics_entry+0x1a8>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x00d8` | `f9002109` | `str	x9, [x8, #64]` | `x9` | `-` | `-` | `Write [x8, #64]` | `INSTRUCTION` |
+| `0x00dc` | `58000d2a` | `ldr	x10, 40200280 <print_hex64+0x98>` | `-` | `x10` | `-` | `Literal @ 0x40200280` | `INSTRUCTION` |
+| `0x00e0` | `9100015f` | `mov	sp, x10` | `x10` | `SP` | `-` | `-` | `INSTRUCTION` |
+| `0x00e4` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00e8` | `58000d00` | `ldr	x0, 40200288 <print_hex64+0xa0>` | `-` | `x0` | `-` | `Literal @ 0x40200288` | `INSTRUCTION` |
+| `0x00ec` | `94000032` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00f0` | `58000d00` | `ldr	x0, 40200290 <print_hex64+0xa8>` | `-` | `x0` | `-` | `Literal @ 0x40200290` | `INSTRUCTION` |
+| `0x00f4` | `94000030` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00f8` | `58000d00` | `ldr	x0, 40200298 <print_hex64+0xb0>` | `-` | `x0` | `-` | `Literal @ 0x40200298` | `INSTRUCTION` |
+| `0x00fc` | `9400002e` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0100` | `58000d01` | `ldr	x1, 402002a0 <print_hex64+0xb8>` | `-` | `x1` | `-` | `Literal @ 0x402002a0` | `INSTRUCTION` |
+| `0x0104` | `d518c001` | `msr	vbar_el1, x1` | `x1` | `vbar_el1` | `-` | `-` | `INSTRUCTION` |
+| `0x0108` | `d5033fdf` | `isb` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x010c` | `58000ce0` | `ldr	x0, 402002a8 <print_hex64+0xc0>` | `-` | `x0` | `-` | `Literal @ 0x402002a8` | `INSTRUCTION` |
+| `0x0110` | `94000029` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0114` | `58000b68` | `ldr	x8, 40200280 <print_hex64+0x98>` | `-` | `x8` | `-` | `Literal @ 0x40200280` | `INSTRUCTION` |
+| `0x0118` | `f9400d00` | `ldr	x0, [x8, #24]` | `-` | `x0` | `-` | `Read [x8, #24]` | `INSTRUCTION` |
+| `0x011c` | `f9401101` | `ldr	x1, [x8, #32]` | `-` | `x1` | `-` | `Read [x8, #32]` | `INSTRUCTION` |
+| `0x0120` | `940000f8` | `bl	40200500 <frame_allocator_init>` | `-` | `-` | `<frame_allocator_init>` | `-` | `INSTRUCTION` |
+| `0x0124` | `b40003c0` | `cbz	x0, 4020019c <_physics_entry+0x19c>` | `-` | `-` | `<_physics_entry+0x19c>` | `-` | `INSTRUCTION` |
+| `0x0128` | `9400014a` | `bl	40200650 <init_root_capability>` | `-` | `-` | `<init_root_capability>` | `-` | `INSTRUCTION` |
+| `0x012c` | `58000c20` | `ldr	x0, 402002b0 <print_hex64+0xc8>` | `-` | `x0` | `-` | `Literal @ 0x402002b0` | `INSTRUCTION` |
+| `0x0130` | `94000021` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0134` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0138` | `17ffffff` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x013c` | `58000be0` | `ldr	x0, 402002b8 <print_hex64+0xd0>` | `-` | `x0` | `-` | `Literal @ 0x402002b8` | `INSTRUCTION` |
+| `0x0140` | `9400001d` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0144` | `17fffffc` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0148` | `58000bc0` | `ldr	x0, 402002c0 <print_hex64+0xd8>` | `-` | `x0` | `-` | `Literal @ 0x402002c0` | `INSTRUCTION` |
+| `0x014c` | `9400001a` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0150` | `17fffff9` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0154` | `58000ba0` | `ldr	x0, 402002c8 <print_hex64+0xe0>` | `-` | `x0` | `-` | `Literal @ 0x402002c8` | `INSTRUCTION` |
+| `0x0158` | `94000017` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x015c` | `17fffff6` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0160` | `58000b80` | `ldr	x0, 402002d0 <print_hex64+0xe8>` | `-` | `x0` | `-` | `Literal @ 0x402002d0` | `INSTRUCTION` |
+| `0x0164` | `94000014` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0168` | `17fffff3` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x016c` | `58000b60` | `ldr	x0, 402002d8 <print_hex64+0xf0>` | `-` | `x0` | `-` | `Literal @ 0x402002d8` | `INSTRUCTION` |
+| `0x0170` | `94000011` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0174` | `17fffff0` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0178` | `58000b40` | `ldr	x0, 402002e0 <print_hex64+0xf8>` | `-` | `x0` | `-` | `Literal @ 0x402002e0` | `INSTRUCTION` |
+| `0x017c` | `9400000e` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0180` | `17ffffed` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0184` | `58000b20` | `ldr	x0, 402002e8 <print_hex64+0x100>` | `-` | `x0` | `-` | `Literal @ 0x402002e8` | `INSTRUCTION` |
+| `0x0188` | `9400000b` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x018c` | `17ffffea` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x0190` | `58000b00` | `ldr	x0, 402002f0 <print_hex64+0x108>` | `-` | `x0` | `-` | `Literal @ 0x402002f0` | `INSTRUCTION` |
+| `0x0194` | `94000008` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0198` | `17ffffe7` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x019c` | `58000ae0` | `ldr	x0, 402002f8 <print_hex64+0x110>` | `-` | `x0` | `-` | `Literal @ 0x402002f8` | `INSTRUCTION` |
+| `0x01a0` | `94000005` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01a4` | `17ffffe4` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x01a8` | `58000ac0` | `ldr	x0, 40200300 <print_hex64+0x118>` | `-` | `x0` | `-` | `Literal @ 0x40200300` | `INSTRUCTION` |
+| `0x01ac` | `94000002` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01b0` | `17ffffe1` | `b	40200134 <_physics_entry+0x134>` | `-` | `-` | `<_physics_entry+0x134>` | `-` | `INSTRUCTION` |
+| `0x01b4` | `580005f0` | `ldr	x16, 40200270 <print_hex64+0x88>` | `-` | `x16` | `-` | `Literal @ 0x40200270` | `INSTRUCTION` |
+| `0x01b8` | `38401401` | `ldrb	w1, [x0], #1` | `-` | `w1` | `-` | `Read [x0]` | `INSTRUCTION` |
+| `0x01bc` | `340000a1` | `cbz	w1, 402001d0 <print_string+0x1c>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01c0` | `b9401a02` | `ldr	w2, [x16, #24]` | `-` | `w2` | `-` | `Read [x16, #24]` | `INSTRUCTION` |
+| `0x01c4` | `372fffe2` | `tbnz	w2, #5, 402001c0 <print_string+0xc>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01c8` | `b9000201` | `str	w1, [x16]` | `w1` | `-` | `-` | `Write [x16]` | `INSTRUCTION` |
+| `0x01cc` | `17fffffb` | `b	402001b8 <print_string+0x4>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01d0` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01d4` | `580004f0` | `ldr	x16, 40200270 <print_hex64+0x88>` | `-` | `x16` | `-` | `Literal @ 0x40200270` | `INSTRUCTION` |
+| `0x01d8` | `b9401a02` | `ldr	w2, [x16, #24]` | `-` | `w2` | `-` | `Read [x16, #24]` | `INSTRUCTION` |
+| `0x01dc` | `372fffe2` | `tbnz	w2, #5, 402001d8 <print_char+0x4>` | `-` | `-` | `<print_char+0x4>` | `-` | `INSTRUCTION` |
+| `0x01e0` | `b9000200` | `str	w0, [x16]` | `w0` | `-` | `-` | `Write [x16]` | `INSTRUCTION` |
+| `0x01e4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01e8` | `a9be7bfd` | `stp	x29, x30, [sp, #-32]!` | `x29, x30` | `-` | `-` | `Write [sp, #-32]` | `INSTRUCTION` |
+| `0x01ec` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01f0` | `a90153f3` | `stp	x19, x20, [sp, #16]` | `x19, x20` | `-` | `-` | `Write [sp, #16]` | `INSTRUCTION` |
+| `0x01f4` | `aa0003f3` | `mov	x19, x0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01f8` | `52800600` | `mov	w0, #0x30                  	// #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01fc` | `97fffff6` | `bl	402001d4 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
+| `0x0200` | `52800f00` | `mov	w0, #0x78                  	// #120` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0204` | `97fffff4` | `bl	402001d4 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
+| `0x0208` | `52800794` | `mov	w20, #0x3c                  	// #60` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x020c` | `9ad42662` | `lsr	x2, x19, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0210` | `12000c42` | `and	w2, w2, #0xf` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0214` | `7100285f` | `cmp	w2, #0xa` | `w2, #0xa` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0218` | `5400006b` | `b.lt	40200224 <print_hex64+0x3c>  // b.tstop` | `-` | `-` | `b.tstop` | `-` | `INSTRUCTION` |
+| `0x021c` | `11015c40` | `add	w0, w2, #0x57` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0220` | `14000002` | `b	40200228 <print_hex64+0x40>` | `-` | `-` | `<print_hex64+0x40>` | `-` | `INSTRUCTION` |
+| `0x0224` | `1100c040` | `add	w0, w2, #0x30` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0228` | `97ffffeb` | `bl	402001d4 <print_char>` | `-` | `-` | `<print_char>` | `-` | `INSTRUCTION` |
+| `0x022c` | `71001294` | `subs	w20, w20, #0x4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0230` | `54fffeea` | `b.ge	4020020c <print_hex64+0x24>  // b.tcont` | `-` | `-` | `b.tcont` | `-` | `INSTRUCTION` |
+| `0x0234` | `a94153f3` | `ldp	x19, x20, [sp, #16]` | `-` | `x19, x20` | `-` | `Read [sp, #16]` | `INSTRUCTION` |
+| `0x0238` | `a8c27bfd` | `ldp	x29, x30, [sp], #32` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
+| `0x023c` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0240` | `49435330` | `.word	0x49435330` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0244` | `50485953` | `.word	0x50485953` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0248` | `00001800` | `.word	0x00001800` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x024c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0250` | `401fe000` | `.word	0x401fe000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0254` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0258` | `435f3031` | `.word	0x435f3031` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x025c` | `4d424453` | `.word	0x4d424453` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0260` | `40000000` | `.word	0x40000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0264` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0268` | `08000000` | `.word	0x08000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x026c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0270` | `09000000` | `.word	0x09000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0274` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0278` | `40200000` | `.word	0x40200000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x027c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0280` | `40205800` | `.word	0x40205800` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0284` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0288` | `40200740` | `.word	0x40200740` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x028c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0290` | `40200751` | `.word	0x40200751` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0294` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0298` | `40200769` | `.word	0x40200769` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x029c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02a0` | `40201000` | `.word	0x40201000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02a4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02a8` | `40200786` | `.word	0x40200786` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02ac` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02b0` | `4020079f` | `.word	0x4020079f` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02b4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02b8` | `402007b9` | `.word	0x402007b9` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02bc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02c0` | `402007d4` | `.word	0x402007d4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02c4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02c8` | `402007f7` | `.word	0x402007f7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02cc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02d0` | `40200816` | `.word	0x40200816` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02d4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02d8` | `40200837` | `.word	0x40200837` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02dc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e0` | `40200857` | `.word	0x40200857` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e8` | `40200879` | `.word	0x40200879` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02ec` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02f0` | `40200899` | `.word	0x40200899` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02f4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02f8` | `402008ba` | `.word	0x402008ba` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02fc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0300` | `402008da` | `.word	0x402008da` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0304` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0308` | `d51bd041` | `msr	tpidr_el0, x1` | `x1` | `tpidr_el0` | `-` | `-` | `INSTRUCTION` |
+| `0x030c` | `d2a80401` | `mov	x1, #0x40200000            	// #1075838976` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0310` | `f28b1001` | `movk	x1, #0x5880` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0314` | `a9010c22` | `stp	x2, x3, [x1, #16]` | `x2, x3` | `-` | `-` | `Write [x1, #16]` | `INSTRUCTION` |
+| `0x0318` | `a9021424` | `stp	x4, x5, [x1, #32]` | `x4, x5` | `-` | `-` | `Write [x1, #32]` | `INSTRUCTION` |
+| `0x031c` | `a9031c26` | `stp	x6, x7, [x1, #48]` | `x6, x7` | `-` | `-` | `Write [x1, #48]` | `INSTRUCTION` |
+| `0x0320` | `a9042428` | `stp	x8, x9, [x1, #64]` | `x8, x9` | `-` | `-` | `Write [x1, #64]` | `INSTRUCTION` |
+| `0x0324` | `a9052c2a` | `stp	x10, x11, [x1, #80]` | `x10, x11` | `-` | `-` | `Write [x1, #80]` | `INSTRUCTION` |
+| `0x0328` | `a906342c` | `stp	x12, x13, [x1, #96]` | `x12, x13` | `-` | `-` | `Write [x1, #96]` | `INSTRUCTION` |
+| `0x032c` | `a9073c2e` | `stp	x14, x15, [x1, #112]` | `x14, x15` | `-` | `-` | `Write [x1, #112]` | `INSTRUCTION` |
+| `0x0330` | `a9084430` | `stp	x16, x17, [x1, #128]` | `x16, x17` | `-` | `-` | `Write [x1, #128]` | `INSTRUCTION` |
+| `0x0334` | `a9094c32` | `stp	x18, x19, [x1, #144]` | `x18, x19` | `-` | `-` | `Write [x1, #144]` | `INSTRUCTION` |
+| `0x0338` | `a90a5434` | `stp	x20, x21, [x1, #160]` | `x20, x21` | `-` | `-` | `Write [x1, #160]` | `INSTRUCTION` |
+| `0x033c` | `a90b5c36` | `stp	x22, x23, [x1, #176]` | `x22, x23` | `-` | `-` | `Write [x1, #176]` | `INSTRUCTION` |
+| `0x0340` | `a90c6438` | `stp	x24, x25, [x1, #192]` | `x24, x25` | `-` | `-` | `Write [x1, #192]` | `INSTRUCTION` |
+| `0x0344` | `a90d6c3a` | `stp	x26, x27, [x1, #208]` | `x26, x27` | `-` | `-` | `Write [x1, #208]` | `INSTRUCTION` |
+| `0x0348` | `a90e743c` | `stp	x28, x29, [x1, #224]` | `x28, x29` | `-` | `-` | `Write [x1, #224]` | `INSTRUCTION` |
+| `0x034c` | `f900783e` | `str	x30, [x1, #240]` | `x30` | `-` | `-` | `Write [x1, #240]` | `INSTRUCTION` |
+| `0x0350` | `d538d082` | `mrs	x2, tpidr_el1` | `tpidr_el1` | `x2` | `-` | `-` | `INSTRUCTION` |
+| `0x0354` | `d53bd043` | `mrs	x3, tpidr_el0` | `tpidr_el0` | `x3` | `-` | `-` | `INSTRUCTION` |
+| `0x0358` | `a9000c22` | `stp	x2, x3, [x1]` | `x2, x3` | `-` | `-` | `Write [x1]` | `INSTRUCTION` |
+| `0x035c` | `910003e2` | `mov	x2, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0360` | `f9007c22` | `str	x2, [x1, #248]` | `x2` | `-` | `-` | `Write [x1, #248]` | `INSTRUCTION` |
+| `0x0364` | `f9008020` | `str	x0, [x1, #256]` | `x0` | `-` | `-` | `Write [x1, #256]` | `INSTRUCTION` |
+| `0x0368` | `d5384242` | `mrs	x2, currentel` | `currentel` | `x2` | `-` | `-` | `INSTRUCTION` |
+| `0x036c` | `927e0442` | `and	x2, x2, #0xc` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0370` | `f9008422` | `str	x2, [x1, #264]` | `x2` | `-` | `-` | `Write [x1, #264]` | `INSTRUCTION` |
+| `0x0374` | `d5385203` | `mrs	x3, esr_el1` | `esr_el1` | `x3` | `-` | `-` | `INSTRUCTION` |
+| `0x0378` | `f9008823` | `str	x3, [x1, #272]` | `x3` | `-` | `-` | `Write [x1, #272]` | `INSTRUCTION` |
+| `0x037c` | `d5384024` | `mrs	x4, elr_el1` | `elr_el1` | `x4` | `-` | `-` | `INSTRUCTION` |
+| `0x0380` | `f9008c24` | `str	x4, [x1, #280]` | `x4` | `-` | `-` | `Write [x1, #280]` | `INSTRUCTION` |
+| `0x0384` | `d5384005` | `mrs	x5, spsr_el1` | `spsr_el1` | `x5` | `-` | `-` | `INSTRUCTION` |
+| `0x0388` | `f9009025` | `str	x5, [x1, #288]` | `x5` | `-` | `-` | `Write [x1, #288]` | `INSTRUCTION` |
+| `0x038c` | `d35a7c66` | `ubfx	x6, x3, #26, #6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0390` | `f10088df` | `cmp	x6, #0x22` | `x6, #0x22` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0394` | `540001e0` | `b.eq	402003d0 <common_trap_entry+0xc8>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x0398` | `f100d0df` | `cmp	x6, #0x34` | `x6, #0x34` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x039c` | `540001a0` | `b.eq	402003d0 <common_trap_entry+0xc8>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03a0` | `f100d4df` | `cmp	x6, #0x35` | `x6, #0x35` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x03a4` | `54000160` | `b.eq	402003d0 <common_trap_entry+0xc8>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03a8` | `f10080df` | `cmp	x6, #0x20` | `x6, #0x20` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x03ac` | `54000100` | `b.eq	402003cc <common_trap_entry+0xc4>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03b0` | `f10084df` | `cmp	x6, #0x21` | `x6, #0x21` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x03b4` | `540000c0` | `b.eq	402003cc <common_trap_entry+0xc4>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03b8` | `f10090df` | `cmp	x6, #0x24` | `x6, #0x24` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x03bc` | `54000080` | `b.eq	402003cc <common_trap_entry+0xc4>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03c0` | `f10094df` | `cmp	x6, #0x25` | `x6, #0x25` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x03c4` | `54000040` | `b.eq	402003cc <common_trap_entry+0xc4>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x03c8` | `14000005` | `b	402003dc <common_trap_entry+0xd4>` | `-` | `-` | `<common_trap_entry+0xd4>` | `-` | `INSTRUCTION` |
+| `0x03cc` | `37500083` | `tbnz	w3, #10, 402003dc <common_trap_entry+0xd4>` | `-` | `-` | `<common_trap_entry+0xd4>` | `-` | `INSTRUCTION` |
+| `0x03d0` | `d5386007` | `mrs	x7, far_el1` | `far_el1` | `x7` | `-` | `-` | `INSTRUCTION` |
+| `0x03d4` | `d2800028` | `mov	x8, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03d8` | `14000003` | `b	402003e4 <common_trap_entry+0xdc>` | `-` | `-` | `<common_trap_entry+0xdc>` | `-` | `INSTRUCTION` |
+| `0x03dc` | `d2800007` | `mov	x7, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03e0` | `d2800008` | `mov	x8, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03e4` | `a912a027` | `stp	x7, x8, [x1, #296]` | `x7, x8` | `-` | `-` | `Write [x1, #296]` | `INSTRUCTION` |
+| `0x03e8` | `580005c9` | `ldr	x9, 402004a0 <print_field+0x34>` | `-` | `x9` | `-` | `Literal @ 0x402004a0` | `INSTRUCTION` |
+| `0x03ec` | `f9009c29` | `str	x9, [x1, #312]` | `x9` | `-` | `-` | `Write [x1, #312]` | `INSTRUCTION` |
+| `0x03f0` | `d5033f9f` | `dsb	sy` | `-` | `-` | `sy` | `-` | `INSTRUCTION` |
+| `0x03f4` | `aa0103f3` | `mov	x19, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03f8` | `58000582` | `ldr	x2, 402004a8 <print_field+0x3c>` | `-` | `x2` | `-` | `Literal @ 0x402004a8` | `INSTRUCTION` |
+| `0x03fc` | `9100005f` | `mov	sp, x2` | `x2` | `SP` | `-` | `-` | `INSTRUCTION` |
+| `0x0400` | `58000580` | `ldr	x0, 402004b0 <print_field+0x44>` | `-` | `x0` | `-` | `Literal @ 0x402004b0` | `INSTRUCTION` |
+| `0x0404` | `97ffff6c` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0408` | `58000580` | `ldr	x0, 402004b8 <print_field+0x4c>` | `-` | `x0` | `-` | `Literal @ 0x402004b8` | `INSTRUCTION` |
+| `0x040c` | `f9408261` | `ldr	x1, [x19, #256]` | `-` | `x1` | `-` | `Read [x19, #256]` | `INSTRUCTION` |
+| `0x0410` | `94000017` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x0414` | `58000560` | `ldr	x0, 402004c0 <print_field+0x54>` | `-` | `x0` | `-` | `Literal @ 0x402004c0` | `INSTRUCTION` |
+| `0x0418` | `f9408661` | `ldr	x1, [x19, #264]` | `-` | `x1` | `-` | `Read [x19, #264]` | `INSTRUCTION` |
+| `0x041c` | `94000014` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x0420` | `58000540` | `ldr	x0, 402004c8 <print_field+0x5c>` | `-` | `x0` | `-` | `Literal @ 0x402004c8` | `INSTRUCTION` |
+| `0x0424` | `f9408a61` | `ldr	x1, [x19, #272]` | `-` | `x1` | `-` | `Read [x19, #272]` | `INSTRUCTION` |
+| `0x0428` | `94000011` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x042c` | `58000520` | `ldr	x0, 402004d0 <print_field+0x64>` | `-` | `x0` | `-` | `Literal @ 0x402004d0` | `INSTRUCTION` |
+| `0x0430` | `f9408e61` | `ldr	x1, [x19, #280]` | `-` | `x1` | `-` | `Read [x19, #280]` | `INSTRUCTION` |
+| `0x0434` | `9400000e` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x0438` | `58000500` | `ldr	x0, 402004d8 <print_field+0x6c>` | `-` | `x0` | `-` | `Literal @ 0x402004d8` | `INSTRUCTION` |
+| `0x043c` | `f9409261` | `ldr	x1, [x19, #288]` | `-` | `x1` | `-` | `Read [x19, #288]` | `INSTRUCTION` |
+| `0x0440` | `9400000b` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x0444` | `580004e0` | `ldr	x0, 402004e0 <print_field+0x74>` | `-` | `x0` | `-` | `Literal @ 0x402004e0` | `INSTRUCTION` |
+| `0x0448` | `f9409661` | `ldr	x1, [x19, #296]` | `-` | `x1` | `-` | `Read [x19, #296]` | `INSTRUCTION` |
+| `0x044c` | `94000008` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x0450` | `580004c0` | `ldr	x0, 402004e8 <print_field+0x7c>` | `-` | `x0` | `-` | `Literal @ 0x402004e8` | `INSTRUCTION` |
+| `0x0454` | `f9409a61` | `ldr	x1, [x19, #304]` | `-` | `x1` | `-` | `Read [x19, #304]` | `INSTRUCTION` |
+| `0x0458` | `94000005` | `bl	4020046c <print_field>` | `-` | `-` | `<print_field>` | `-` | `INSTRUCTION` |
+| `0x045c` | `580004a0` | `ldr	x0, 402004f0 <print_field+0x84>` | `-` | `x0` | `-` | `Literal @ 0x402004f0` | `INSTRUCTION` |
+| `0x0460` | `97ffff55` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0464` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0468` | `17ffffff` | `b	40200464 <common_trap_entry+0x15c>` | `-` | `-` | `<common_trap_entry+0x15c>` | `-` | `INSTRUCTION` |
+| `0x046c` | `a9be7bfd` | `stp	x29, x30, [sp, #-32]!` | `x29, x30` | `-` | `-` | `Write [sp, #-32]` | `INSTRUCTION` |
+| `0x0470` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0474` | `f9000bf4` | `str	x20, [sp, #16]` | `x20` | `-` | `-` | `Write [sp, #16]` | `INSTRUCTION` |
+| `0x0478` | `aa0103f4` | `mov	x20, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x047c` | `97ffff4e` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0480` | `aa1403e0` | `mov	x0, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0484` | `97ffff59` | `bl	402001e8 <print_hex64>` | `-` | `-` | `<print_hex64>` | `-` | `INSTRUCTION` |
+| `0x0488` | `58000380` | `ldr	x0, 402004f8 <print_field+0x8c>` | `-` | `x0` | `-` | `Literal @ 0x402004f8` | `INSTRUCTION` |
+| `0x048c` | `97ffff4a` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0490` | `f9400bf4` | `ldr	x20, [sp, #16]` | `-` | `x20` | `-` | `Read [sp, #16]` | `INSTRUCTION` |
+| `0x0494` | `a8c27bfd` | `ldp	x29, x30, [sp], #32` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
+| `0x0498` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x049c` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04a0` | `50415254` | `.word	0x50415254` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04a4` | `314d5246` | `.word	0x314d5246` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04a8` | `40205800` | `.word	0x40205800` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04ac` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04b0` | `40200900` | `.word	0x40200900` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04b4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04b8` | `4020091c` | `.word	0x4020091c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04bc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04c0` | `40200925` | `.word	0x40200925` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04c4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04c8` | `40200934` | `.word	0x40200934` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x04cc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04d0` | `40208000` | `.word	0x40208000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04d0` | `4020093c` | `.word	0x4020093c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x04d4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04d8` | `402006e8` | `.word	0x402006e8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04d8` | `40200944` | `.word	0x40200944` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x04dc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04e0` | `a9bf7bfd` | `stp	x29, x30, [sp, #-16]!` | `x29, x30` | `-` | `-` | `Write [sp, #-16]` | `INSTRUCTION` |
-| `0x04e4` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04e8` | `58000600` | `ldr	x0, 402005a8 <validate_capability+0x54>` | `-` | `x0` | `-` | `Literal @ 0x402005a8` | `INSTRUCTION` |
-| `0x04ec` | `52800001` | `mov	w1, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04f0` | `b9000001` | `str	w1, [x0]` | `w1` | `-` | `-` | `Write [x0]` | `INSTRUCTION` |
-| `0x04f4` | `52800021` | `mov	w1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x04f8` | `b9000401` | `str	w1, [x0, #4]` | `w1` | `-` | `-` | `Write [x0, #4]` | `INSTRUCTION` |
-| `0x04fc` | `d2800021` | `mov	x1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0500` | `f9000401` | `str	x1, [x0, #8]` | `x1` | `-` | `-` | `Write [x0, #8]` | `INSTRUCTION` |
-| `0x0504` | `12800001` | `mov	w1, #0xffffffff            	// #-1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0508` | `b9001001` | `str	w1, [x0, #16]` | `w1` | `-` | `-` | `Write [x0, #16]` | `INSTRUCTION` |
-| `0x050c` | `b9001401` | `str	w1, [x0, #20]` | `w1` | `-` | `-` | `Write [x0, #20]` | `INSTRUCTION` |
-| `0x0510` | `58000501` | `ldr	x1, 402005b0 <validate_capability+0x5c>` | `-` | `x1` | `-` | `Literal @ 0x402005b0` | `INSTRUCTION` |
-| `0x0514` | `f9000c01` | `str	x1, [x0, #24]` | `x1` | `-` | `-` | `Write [x0, #24]` | `INSTRUCTION` |
-| `0x0518` | `58000501` | `ldr	x1, 402005b8 <validate_capability+0x64>` | `-` | `x1` | `-` | `Literal @ 0x402005b8` | `INSTRUCTION` |
-| `0x051c` | `f9001001` | `str	x1, [x0, #32]` | `x1` | `-` | `-` | `Write [x0, #32]` | `INSTRUCTION` |
-| `0x0520` | `52800021` | `mov	w1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0524` | `b9002801` | `str	w1, [x0, #40]` | `w1` | `-` | `-` | `Write [x0, #40]` | `INSTRUCTION` |
-| `0x0528` | `52800001` | `mov	w1, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x052c` | `b9002c01` | `str	w1, [x0, #44]` | `w1` | `-` | `-` | `Write [x0, #44]` | `INSTRUCTION` |
-| `0x0530` | `70000f81` | `adr	x1, 40200723 <pinned_atlas_sha256>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0534` | `a9400c22` | `ldp	x2, x3, [x1]` | `-` | `x2, x3` | `-` | `Read [x1]` | `INSTRUCTION` |
-| `0x0538` | `a9411424` | `ldp	x4, x5, [x1, #16]` | `-` | `x4, x5` | `-` | `Read [x1, #16]` | `INSTRUCTION` |
-| `0x053c` | `a9030c02` | `stp	x2, x3, [x0, #48]` | `x2, x3` | `-` | `-` | `Write [x0, #48]` | `INSTRUCTION` |
-| `0x0540` | `a9041404` | `stp	x4, x5, [x0, #64]` | `x4, x5` | `-` | `-` | `Write [x0, #64]` | `INSTRUCTION` |
-| `0x0544` | `580003e0` | `ldr	x0, 402005c0 <validate_capability+0x6c>` | `-` | `x0` | `-` | `Literal @ 0x402005c0` | `INSTRUCTION` |
-| `0x0548` | `97fffef7` | `bl	40200124 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x054c` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
-| `0x0550` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0554` | `b9402804` | `ldr	w4, [x0, #40]` | `-` | `w4` | `-` | `Read [x0, #40]` | `INSTRUCTION` |
-| `0x0558` | `7100049f` | `cmp	w4, #0x1` | `w4, #0x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x055c` | `54000221` | `b.ne	402005a0 <validate_capability+0x4c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
-| `0x0560` | `b9401404` | `ldr	w4, [x0, #20]` | `-` | `w4` | `-` | `Read [x0, #20]` | `INSTRUCTION` |
-| `0x0564` | `0a010085` | `and	w5, w4, w1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0568` | `6b0100bf` | `cmp	w5, w1` | `w5, w1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x056c` | `540001a1` | `b.ne	402005a0 <validate_capability+0x4c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
-| `0x0570` | `f9400c04` | `ldr	x4, [x0, #24]` | `-` | `x4` | `-` | `Read [x0, #24]` | `INSTRUCTION` |
-| `0x0574` | `eb04005f` | `cmp	x2, x4` | `x2, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0578` | `54000143` | `b.cc	402005a0 <validate_capability+0x4c>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
-| `0x057c` | `8b030045` | `add	x5, x2, x3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0580` | `eb0200bf` | `cmp	x5, x2` | `x5, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0584` | `540000e3` | `b.cc	402005a0 <validate_capability+0x4c>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
-| `0x0588` | `f9401006` | `ldr	x6, [x0, #32]` | `-` | `x6` | `-` | `Read [x0, #32]` | `INSTRUCTION` |
-| `0x058c` | `8b060087` | `add	x7, x4, x6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0590` | `eb0700bf` | `cmp	x5, x7` | `x5, x7` | `NZCV` | `-` | `-` | `INSTRUCTION` |
-| `0x0594` | `54000068` | `b.hi	402005a0 <validate_capability+0x4c>  // b.pmore` | `-` | `-` | `b.pmore` | `-` | `INSTRUCTION` |
-| `0x0598` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x059c` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05a0` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05a4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05a8` | `40206000` | `.word	0x40206000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05ac` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05b0` | `40208000` | `.word	0x40208000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05b4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05b8` | `07df8000` | `.word	0x07df8000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05bc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05c0` | `40200708` | `.word	0x40200708` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05c4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x05c8` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05cc` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05d0` | `41574120` | `.word 0x41574120` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05d4` | `0a4e454b` | `.word 0x0a4e454b` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05d8` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05dc` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05e0` | `4e49203a` | `.word 0x4e49203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05e4` | `53455247` | `.word 0x53455247` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05e8` | `41565f53` | `.word 0x41565f53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05ec` | `0a44494c` | `.word 0x0a44494c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05f0` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05f4` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05f8` | `4256203a` | `.word 0x4256203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x05fc` | `495f5241` | `.word 0x495f5241` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0600` | `4154534e` | `.word 0x4154534e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0604` | `44454c4c` | `.word 0x44454c4c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0608` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x060c` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0610` | `51203a53` | `.word 0x51203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0614` | `53454955` | `.word 0x53454955` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0618` | `544e4543` | `.word 0x544e4543` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x061c` | `4145525f` | `.word 0x4145525f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0620` | `000a5944` | `.word 0x000a5944` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0624` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0628` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x062c` | `4e415020` | `.word 0x4e415020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0630` | `425f4349` | `.word 0x425f4349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0634` | `435f4441` | `.word 0x435f4441` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0638` | `494b4f4f` | `.word 0x494b4f4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x063c` | `50000a45` | `.word 0x50000a45` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0640` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0644` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0648` | `494e4150` | `.word 0x494e4150` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x064c` | `41425f43` | `.word 0x41425f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0650` | `45445f44` | `.word 0x45445f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0654` | `49524353` | `.word 0x49524353` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0658` | `524f5450` | `.word 0x524f5450` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x065c` | `5254505f` | `.word 0x5254505f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0660` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0664` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0668` | `50203a53` | `.word 0x50203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x066c` | `43494e41` | `.word 0x43494e41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0670` | `474e495f` | `.word 0x474e495f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0674` | `53534552` | `.word 0x53534552` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0678` | `524f435f` | `.word 0x524f435f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x067c` | `54505552` | `.word 0x54505552` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0680` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0684` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0688` | `50203a53` | `.word 0x50203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x068c` | `43494e41` | `.word 0x43494e41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0690` | `434e555f` | `.word 0x434e555f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0694` | `52544e4f` | `.word 0x52544e4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0698` | `45544341` | `.word 0x45544341` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x069c` | `4c455f44` | `.word 0x4c455f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06a0` | `0000000a` | `.word 0x0000000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06a4` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06a8` | `41465b0a` | `.word 0x41465b0a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06ac` | `5d544c55` | `.word 0x5d544c55` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06b0` | `43584520` | `.word 0x43584520` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06b4` | `49545045` | `.word 0x49545045` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06b8` | `54204e4f` | `.word 0x54204e4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06bc` | `50504152` | `.word 0x50504152` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06c0` | `000a4445` | `.word 0x000a4445` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06c4` | `4c532020` | `.word 0x4c532020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06c8` | `203a544f` | `.word 0x203a544f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06cc` | `45202000` | `.word 0x45202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06d0` | `203a5253` | `.word 0x203a5253` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06d4` | `46202000` | `.word 0x46202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06d8` | `203a5241` | `.word 0x203a5241` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06dc` | `45202000` | `.word 0x45202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06e0` | `203a524c` | `.word 0x203a524c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06e4` | `00000a00` | `.word 0x00000a00` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06e8` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06ec` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06f0` | `41524620` | `.word 0x41524620` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06f4` | `415f454d` | `.word 0x415f454d` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06f8` | `5f485455` | `.word 0x5f485455` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x06fc` | `4e554f42` | `.word 0x4e554f42` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0700` | `00000a44` | `.word 0x00000a44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0704` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0708` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x070c` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0710` | `50414320` | `.word 0x50414320` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0714` | `4f4f525f` | `.word 0x4f4f525f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0718` | `45475f54` | `.word 0x45475f54` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x071c` | `4953454e` | `.word 0x4953454e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0720` | `f7000a53` | `.word 0xf7000a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0724` | `b4012580` | `.word 0xb4012580` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0728` | `9ec1a010` | `.word 0x9ec1a010` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x072c` | `ca8f7bff` | `.word 0xca8f7bff` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0730` | `bac96588` | `.word 0xbac96588` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0734` | `a4bf969c` | `.word 0xa4bf969c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0738` | `a85c06f8` | `.word 0xa85c06f8` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x073c` | `77b608f5` | `.word 0x77b608f5` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0740` | `00a5b948` | `.word 0x00a5b948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0744` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0748` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x074c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0750` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0754` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0758` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x075c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0760` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0764` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0768` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x076c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0770` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0774` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0778` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x077c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0780` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0784` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0788` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x078c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0790` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0794` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0798` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x079c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07a0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07a4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07a8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07ac` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07b0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07b4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07b8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07bc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07c0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07c4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07c8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07cc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07d0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07d4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07d8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07dc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07e0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07e4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07e8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07ec` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07f0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07f4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07f8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x07fc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0800` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0804` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0808` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x080c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0810` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0814` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0818` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x081c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0820` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0824` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0828` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x082c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0830` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0834` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0838` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x083c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0840` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0844` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0848` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x084c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0850` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0854` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0858` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x085c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0860` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0864` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0868` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x086c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0870` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0874` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0878` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x087c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0880` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0884` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0888` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x088c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0890` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0894` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0898` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x089c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08a0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08a4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08a8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08ac` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08b0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08b4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08b8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08bc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08c0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08c4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08c8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08cc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08d0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08d4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08d8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08dc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08e0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08e4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08e8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08ec` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08f0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08f4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08f8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x08fc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0900` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0904` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0908` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x090c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0910` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0914` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0918` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x091c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0920` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0924` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0928` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x092c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0930` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0934` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0938` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x093c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0940` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0944` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0948` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x094c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0950` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0954` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0958` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x095c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0960` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0964` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0968` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x096c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0970` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0974` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0978` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x097c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0980` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0984` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0988` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x098c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0990` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0994` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x0998` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x099c` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09a0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09a4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09a8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09ac` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09b0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09b4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09b8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09bc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09c0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09c4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09c8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09cc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09d0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09d4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09d8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09dc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09e0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x09e4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
+| `0x04e0` | `4020094d` | `.word	0x4020094d` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04e4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04e8` | `40200955` | `.word	0x40200955` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04ec` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04f0` | `40200963` | `.word	0x40200963` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04f4` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04f8` | `40200981` | `.word	0x40200981` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x04fc` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0500` | `a9bf7bfd` | `stp	x29, x30, [sp, #-16]!` | `x29, x30` | `-` | `-` | `Write [sp, #-16]` | `INSTRUCTION` |
+| `0x0504` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0508` | `ab010002` | `adds	x2, x0, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x050c` | `540003a2` | `b.cs	40200580 <frame_allocator_init+0x80>  // b.hs, b.nlast` | `-` | `-` | `b.nlast` | `-` | `INSTRUCTION` |
+| `0x0510` | `58000904` | `ldr	x4, 40200630 <is_frame_reserved+0x30>` | `-` | `x4` | `-` | `Literal @ 0x40200630` | `INSTRUCTION` |
+| `0x0514` | `eb04005f` | `cmp	x2, x4` | `x2, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0518` | `54000341` | `b.ne	40200580 <frame_allocator_init+0x80>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x051c` | `580008e4` | `ldr	x4, 40200638 <is_frame_reserved+0x38>` | `-` | `x4` | `-` | `Literal @ 0x40200638` | `INSTRUCTION` |
+| `0x0520` | `eb04005f` | `cmp	x2, x4` | `x2, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0524` | `540002e9` | `b.ls	40200580 <frame_allocator_init+0x80>  // b.plast` | `-` | `-` | `b.plast` | `-` | `INSTRUCTION` |
+| `0x0528` | `cb040045` | `sub	x5, x2, x4` | `-` | `-` | `x4` | `-` | `INSTRUCTION` |
+| `0x052c` | `d34cfca5` | `lsr	x5, x5, #12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0530` | `91001ca6` | `add	x6, x5, #0x7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0534` | `d343fcc6` | `lsr	x6, x6, #3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0538` | `910080c7` | `add	x7, x6, #0x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x053c` | `f14004ff` | `cmp	x7, #0x1, lsl #12` | `x7, #0x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0540` | `54000208` | `b.hi	40200580 <frame_allocator_init+0x80>  // b.pmore` | `-` | `-` | `b.pmore` | `-` | `INSTRUCTION` |
+| `0x0544` | `580007e3` | `ldr	x3, 40200640 <is_frame_reserved+0x40>` | `-` | `x3` | `-` | `Literal @ 0x40200640` | `INSTRUCTION` |
+| `0x0548` | `f9000062` | `str	x2, [x3]` | `x2` | `-` | `-` | `Write [x3]` | `INSTRUCTION` |
+| `0x054c` | `f9000465` | `str	x5, [x3, #8]` | `x5` | `-` | `-` | `Write [x3, #8]` | `INSTRUCTION` |
+| `0x0550` | `f900087f` | `str	xzr, [x3, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0554` | `f9000c7f` | `str	xzr, [x3, #24]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0558` | `91008067` | `add	x7, x3, #0x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x055c` | `b4000086` | `cbz	x6, 4020056c <frame_allocator_init+0x6c>` | `-` | `-` | `<frame_allocator_init+0x6c>` | `-` | `INSTRUCTION` |
+| `0x0560` | `380014ff` | `strb	wzr, [x7], #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0564` | `d10004c6` | `sub	x6, x6, #0x1` | `-` | `-` | `#0x1` | `-` | `INSTRUCTION` |
+| `0x0568` | `17fffffd` | `b	4020055c <frame_allocator_init+0x5c>` | `-` | `-` | `<frame_allocator_init+0x5c>` | `-` | `INSTRUCTION` |
+| `0x056c` | `580006e0` | `ldr	x0, 40200648 <is_frame_reserved+0x48>` | `-` | `x0` | `-` | `Literal @ 0x40200648` | `INSTRUCTION` |
+| `0x0570` | `97ffff11` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0574` | `aa0503e0` | `mov	x0, x5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0578` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
+| `0x057c` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0580` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0584` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
+| `0x0588` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x058c` | `580005a3` | `ldr	x3, 40200640 <is_frame_reserved+0x40>` | `-` | `x3` | `-` | `Literal @ 0x40200640` | `INSTRUCTION` |
+| `0x0590` | `f9400062` | `ldr	x2, [x3]` | `-` | `x2` | `-` | `Read [x3]` | `INSTRUCTION` |
+| `0x0594` | `f9400465` | `ldr	x5, [x3, #8]` | `-` | `x5` | `-` | `Read [x3, #8]` | `INSTRUCTION` |
+| `0x0598` | `b4000305` | `cbz	x5, 402005f8 <allocate_frame+0x6c>` | `-` | `-` | `<allocate_frame+0x6c>` | `-` | `INSTRUCTION` |
+| `0x059c` | `f9400868` | `ldr	x8, [x3, #16]` | `-` | `x8` | `-` | `Read [x3, #16]` | `INSTRUCTION` |
+| `0x05a0` | `91008067` | `add	x7, x3, #0x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05a4` | `eb05011f` | `cmp	x8, x5` | `x8, x5` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x05a8` | `54000282` | `b.cs	402005f8 <allocate_frame+0x6c>  // b.hs, b.nlast` | `-` | `-` | `b.nlast` | `-` | `INSTRUCTION` |
+| `0x05ac` | `d343fd09` | `lsr	x9, x8, #3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05b0` | `9240090a` | `and	x10, x8, #0x7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05b4` | `386968eb` | `ldrb	w11, [x7, x9]` | `-` | `w11` | `-` | `Read [x7, x9]` | `INSTRUCTION` |
+| `0x05b8` | `5280002c` | `mov	w12, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05bc` | `1aca218c` | `lsl	w12, w12, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05c0` | `6a0c017f` | `tst	w11, w12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05c4` | `54000060` | `b.eq	402005d0 <allocate_frame+0x44>  // b.none` | `-` | `-` | `b.none` | `-` | `INSTRUCTION` |
+| `0x05c8` | `91000508` | `add	x8, x8, #0x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05cc` | `17fffff6` | `b	402005a4 <allocate_frame+0x18>` | `-` | `-` | `<allocate_frame+0x18>` | `-` | `INSTRUCTION` |
+| `0x05d0` | `58000344` | `ldr	x4, 40200638 <is_frame_reserved+0x38>` | `-` | `x4` | `-` | `Literal @ 0x40200638` | `INSTRUCTION` |
+| `0x05d4` | `d374cd0d` | `lsl	x13, x8, #12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05d8` | `8b0d0080` | `add	x0, x4, x13` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05dc` | `eb02001f` | `cmp	x0, x2` | `x0, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x05e0` | `540000c2` | `b.cs	402005f8 <allocate_frame+0x6c>  // b.hs, b.nlast` | `-` | `-` | `b.nlast` | `-` | `INSTRUCTION` |
+| `0x05e4` | `2a0c016b` | `orr	w11, w11, w12` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05e8` | `382968eb` | `strb	w11, [x7, x9]` | `w11` | `-` | `-` | `Write [x7, x9]` | `INSTRUCTION` |
+| `0x05ec` | `9100050e` | `add	x14, x8, #0x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05f0` | `f900086e` | `str	x14, [x3, #16]` | `x14` | `-` | `-` | `Write [x3, #16]` | `INSTRUCTION` |
+| `0x05f4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05f8` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x05fc` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0600` | `580001c1` | `ldr	x1, 40200638 <is_frame_reserved+0x38>` | `-` | `x1` | `-` | `Literal @ 0x40200638` | `INSTRUCTION` |
+| `0x0604` | `eb01001f` | `cmp	x0, x1` | `x0, x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0608` | `540000e3` | `b.cc	40200624 <is_frame_reserved+0x24>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
+| `0x060c` | `580001a3` | `ldr	x3, 40200640 <is_frame_reserved+0x40>` | `-` | `x3` | `-` | `Literal @ 0x40200640` | `INSTRUCTION` |
+| `0x0610` | `f9400062` | `ldr	x2, [x3]` | `-` | `x2` | `-` | `Read [x3]` | `INSTRUCTION` |
+| `0x0614` | `eb02001f` | `cmp	x0, x2` | `x0, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0618` | `54000062` | `b.cs	40200624 <is_frame_reserved+0x24>  // b.hs, b.nlast` | `-` | `-` | `b.nlast` | `-` | `INSTRUCTION` |
+| `0x061c` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0620` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0624` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0628` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x062c` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0630` | `48000000` | `.word	0x48000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0634` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0638` | `40208000` | `.word	0x40208000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x063c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0640` | `40207000` | `.word	0x40207000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0644` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0648` | `40200988` | `.word	0x40200988` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x064c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0650` | `a9bf7bfd` | `stp	x29, x30, [sp, #-16]!` | `x29, x30` | `-` | `-` | `Write [sp, #-16]` | `INSTRUCTION` |
+| `0x0654` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0658` | `58000640` | `ldr	x0, 40200720 <validate_capability+0x58>` | `-` | `x0` | `-` | `Literal @ 0x40200720` | `INSTRUCTION` |
+| `0x065c` | `52800001` | `mov	w1, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0660` | `b9000001` | `str	w1, [x0]` | `w1` | `-` | `-` | `Write [x0]` | `INSTRUCTION` |
+| `0x0664` | `52800021` | `mov	w1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0668` | `b9000401` | `str	w1, [x0, #4]` | `w1` | `-` | `-` | `Write [x0, #4]` | `INSTRUCTION` |
+| `0x066c` | `d2800021` | `mov	x1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0670` | `f9000401` | `str	x1, [x0, #8]` | `x1` | `-` | `-` | `Write [x0, #8]` | `INSTRUCTION` |
+| `0x0674` | `52800021` | `mov	w1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0678` | `b9001001` | `str	w1, [x0, #16]` | `w1` | `-` | `-` | `Write [x0, #16]` | `INSTRUCTION` |
+| `0x067c` | `12800001` | `mov	w1, #0xffffffff            	// #-1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0680` | `b9001401` | `str	w1, [x0, #20]` | `w1` | `-` | `-` | `Write [x0, #20]` | `INSTRUCTION` |
+| `0x0684` | `58000521` | `ldr	x1, 40200728 <validate_capability+0x60>` | `-` | `x1` | `-` | `Literal @ 0x40200728` | `INSTRUCTION` |
+| `0x0688` | `f9000c01` | `str	x1, [x0, #24]` | `x1` | `-` | `-` | `Write [x0, #24]` | `INSTRUCTION` |
+| `0x068c` | `58000521` | `ldr	x1, 40200730 <validate_capability+0x68>` | `-` | `x1` | `-` | `Literal @ 0x40200730` | `INSTRUCTION` |
+| `0x0690` | `f9001001` | `str	x1, [x0, #32]` | `x1` | `-` | `-` | `Write [x0, #32]` | `INSTRUCTION` |
+| `0x0694` | `52800021` | `mov	w1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0698` | `b9002801` | `str	w1, [x0, #40]` | `w1` | `-` | `-` | `Write [x0, #40]` | `INSTRUCTION` |
+| `0x069c` | `52800001` | `mov	w1, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06a0` | `b9002c01` | `str	w1, [x0, #44]` | `w1` | `-` | `-` | `Write [x0, #44]` | `INSTRUCTION` |
+| `0x06a4` | `700018e1` | `adr	x1, 402009c3 <pinned_atlas_sha256>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06a8` | `a9400c22` | `ldp	x2, x3, [x1]` | `-` | `x2, x3` | `-` | `Read [x1]` | `INSTRUCTION` |
+| `0x06ac` | `a9411424` | `ldp	x4, x5, [x1, #16]` | `-` | `x4, x5` | `-` | `Read [x1, #16]` | `INSTRUCTION` |
+| `0x06b0` | `a9030c02` | `stp	x2, x3, [x0, #48]` | `x2, x3` | `-` | `-` | `Write [x0, #48]` | `INSTRUCTION` |
+| `0x06b4` | `a9041404` | `stp	x4, x5, [x0, #64]` | `x4, x5` | `-` | `-` | `Write [x0, #64]` | `INSTRUCTION` |
+| `0x06b8` | `58000400` | `ldr	x0, 40200738 <validate_capability+0x70>` | `-` | `x0` | `-` | `Literal @ 0x40200738` | `INSTRUCTION` |
+| `0x06bc` | `97fffebe` | `bl	402001b4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06c0` | `a8c17bfd` | `ldp	x29, x30, [sp], #16` | `-` | `x29, x30` | `-` | `Read [sp]` | `INSTRUCTION` |
+| `0x06c4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06c8` | `b9402804` | `ldr	w4, [x0, #40]` | `-` | `w4` | `-` | `Read [x0, #40]` | `INSTRUCTION` |
+| `0x06cc` | `7100049f` | `cmp	w4, #0x1` | `w4, #0x1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x06d0` | `54000221` | `b.ne	40200714 <validate_capability+0x4c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x06d4` | `b9401404` | `ldr	w4, [x0, #20]` | `-` | `w4` | `-` | `Read [x0, #20]` | `INSTRUCTION` |
+| `0x06d8` | `0a010085` | `and	w5, w4, w1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06dc` | `6b0100bf` | `cmp	w5, w1` | `w5, w1` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x06e0` | `540001a1` | `b.ne	40200714 <validate_capability+0x4c>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x06e4` | `f9400c04` | `ldr	x4, [x0, #24]` | `-` | `x4` | `-` | `Read [x0, #24]` | `INSTRUCTION` |
+| `0x06e8` | `eb04005f` | `cmp	x2, x4` | `x2, x4` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x06ec` | `54000143` | `b.cc	40200714 <validate_capability+0x4c>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
+| `0x06f0` | `8b030045` | `add	x5, x2, x3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x06f4` | `eb0200bf` | `cmp	x5, x2` | `x5, x2` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x06f8` | `540000e3` | `b.cc	40200714 <validate_capability+0x4c>  // b.lo, b.ul, b.last` | `-` | `-` | `b.last` | `-` | `INSTRUCTION` |
+| `0x06fc` | `f9401006` | `ldr	x6, [x0, #32]` | `-` | `x6` | `-` | `Read [x0, #32]` | `INSTRUCTION` |
+| `0x0700` | `8b060087` | `add	x7, x4, x6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0704` | `eb0700bf` | `cmp	x5, x7` | `x5, x7` | `NZCV` | `-` | `-` | `INSTRUCTION` |
+| `0x0708` | `54000068` | `b.hi	40200714 <validate_capability+0x4c>  // b.pmore` | `-` | `-` | `b.pmore` | `-` | `INSTRUCTION` |
+| `0x070c` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0710` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0714` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0718` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x071c` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0720` | `40206000` | `.word	0x40206000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0724` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0728` | `40208000` | `.word	0x40208000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x072c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0730` | `07df8000` | `.word	0x07df8000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0734` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0738` | `402009a8` | `.word	0x402009a8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x073c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0740` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0744` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0748` | `41574120` | `.word 0x41574120` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x074c` | `0a4e454b` | `.word 0x0a4e454b` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0750` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0754` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0758` | `4e49203a` | `.word 0x4e49203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x075c` | `53455247` | `.word 0x53455247` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0760` | `41565f53` | `.word 0x41565f53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0764` | `0a44494c` | `.word 0x0a44494c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0768` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x076c` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0770` | `4e45203a` | `.word 0x4e45203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0774` | `5f595254` | `.word 0x5f595254` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0778` | `5f314c45` | `.word 0x5f314c45` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x077c` | `49524556` | `.word 0x49524556` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0780` | `44454946` | `.word 0x44454946` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0784` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0788` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x078c` | `56203a53` | `.word 0x56203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0790` | `5f524142` | `.word 0x5f524142` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0794` | `54534e49` | `.word 0x54534e49` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0798` | `454c4c41` | `.word 0x454c4c41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x079c` | `50000a44` | `.word 0x50000a44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07a0` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07a4` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07a8` | `45495551` | `.word 0x45495551` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07ac` | `4e454353` | `.word 0x4e454353` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07b0` | `45525f54` | `.word 0x45525f54` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07b4` | `0a594441` | `.word 0x0a594441` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07b8` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07bc` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07c0` | `4150203a` | `.word 0x4150203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07c4` | `5f43494e` | `.word 0x5f43494e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07c8` | `5f444142` | `.word 0x5f444142` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07cc` | `4b4f4f43` | `.word 0x4b4f4f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07d0` | `000a4549` | `.word 0x000a4549` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07d4` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07d8` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07dc` | `4e415020` | `.word 0x4e415020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07e0` | `425f4349` | `.word 0x425f4349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07e4` | `445f4441` | `.word 0x445f4441` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07e8` | `52435345` | `.word 0x52435345` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07ec` | `4f545049` | `.word 0x4f545049` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07f0` | `54505f52` | `.word 0x54505f52` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07f4` | `50000a52` | `.word 0x50000a52` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07f8` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x07fc` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0800` | `494e4150` | `.word 0x494e4150` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0804` | `41425f43` | `.word 0x41425f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0808` | `45445f44` | `.word 0x45445f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x080c` | `4d5f4353` | `.word 0x4d5f4353` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0810` | `43494741` | `.word 0x43494741` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0814` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0818` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x081c` | `50203a53` | `.word 0x50203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0820` | `43494e41` | `.word 0x43494e41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0824` | `4441425f` | `.word 0x4441425f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0828` | `5345445f` | `.word 0x5345445f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x082c` | `45565f43` | `.word 0x45565f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0830` | `4f495352` | `.word 0x4f495352` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0834` | `50000a4e` | `.word 0x50000a4e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0838` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x083c` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0840` | `494e4150` | `.word 0x494e4150` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0844` | `41425f43` | `.word 0x41425f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0848` | `45445f44` | `.word 0x45445f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x084c` | `4c5f4353` | `.word 0x4c5f4353` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0850` | `54474e45` | `.word 0x54474e45` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0854` | `50000a48` | `.word 0x50000a48` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0858` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x085c` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0860` | `494e4150` | `.word 0x494e4150` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0864` | `41425f43` | `.word 0x41425f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0868` | `45445f44` | `.word 0x45445f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x086c` | `525f4353` | `.word 0x525f4353` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0870` | `52455345` | `.word 0x52455345` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0874` | `0a444556` | `.word 0x0a444556` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0878` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x087c` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0880` | `4150203a` | `.word 0x4150203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0884` | `5f43494e` | `.word 0x5f43494e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0888` | `52474e49` | `.word 0x52474e49` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x088c` | `5f535345` | `.word 0x5f535345` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0890` | `52524f43` | `.word 0x52524f43` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0894` | `0a545055` | `.word 0x0a545055` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0898` | `59485000` | `.word 0x59485000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x089c` | `53434953` | `.word 0x53434953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08a0` | `4150203a` | `.word 0x4150203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08a4` | `5f43494e` | `.word 0x5f43494e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08a8` | `5f444142` | `.word 0x5f444142` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08ac` | `4c594150` | `.word 0x4c594150` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08b0` | `5f44414f` | `.word 0x5f44414f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08b4` | `455a4953` | `.word 0x455a4953` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08b8` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08bc` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08c0` | `50203a53` | `.word 0x50203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08c4` | `43494e41` | `.word 0x43494e41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08c8` | `4152465f` | `.word 0x4152465f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08cc` | `415f454d` | `.word 0x415f454d` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08d0` | `4f485455` | `.word 0x4f485455` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08d4` | `59544952` | `.word 0x59544952` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08d8` | `4850000a` | `.word 0x4850000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08dc` | `43495359` | `.word 0x43495359` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08e0` | `50203a53` | `.word 0x50203a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08e4` | `43494e41` | `.word 0x43494e41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08e8` | `434e555f` | `.word 0x434e555f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08ec` | `52544e4f` | `.word 0x52544e4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08f0` | `45544341` | `.word 0x45544341` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08f4` | `4c455f44` | `.word 0x4c455f44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08f8` | `0000000a` | `.word 0x0000000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x08fc` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0900` | `41465b0a` | `.word 0x41465b0a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0904` | `5d544c55` | `.word 0x5d544c55` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0908` | `43584520` | `.word 0x43584520` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x090c` | `49545045` | `.word 0x49545045` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0910` | `54204e4f` | `.word 0x54204e4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0914` | `50504152` | `.word 0x50504152` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0918` | `000a4445` | `.word 0x000a4445` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x091c` | `4c532020` | `.word 0x4c532020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0920` | `203a544f` | `.word 0x203a544f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0924` | `43202000` | `.word 0x43202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0928` | `45525255` | `.word 0x45525255` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x092c` | `455f544e` | `.word 0x455f544e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0930` | `00203a4c` | `.word 0x00203a4c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0934` | `53452020` | `.word 0x53452020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0938` | `00203a52` | `.word 0x00203a52` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x093c` | `4c452020` | `.word 0x4c452020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0940` | `00203a52` | `.word 0x00203a52` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0944` | `50532020` | `.word 0x50532020` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0948` | `203a5253` | `.word 0x203a5253` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x094c` | `46202000` | `.word 0x46202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0950` | `203a5241` | `.word 0x203a5241` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0954` | `46202000` | `.word 0x46202000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0958` | `565f5241` | `.word 0x565f5241` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x095c` | `44494c41` | `.word 0x44494c41` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0960` | `5000203a` | `.word 0x5000203a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0964` | `49535948` | `.word 0x49535948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0968` | `203a5343` | `.word 0x203a5343` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x096c` | `50415254` | `.word 0x50415254` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0970` | `4152465f` | `.word 0x4152465f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0974` | `435f454d` | `.word 0x435f454d` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0978` | `55545041` | `.word 0x55545041` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x097c` | `0a444552` | `.word 0x0a444552` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0980` | `00000a00` | `.word 0x00000a00` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0984` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0988` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x098c` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0990` | `41524620` | `.word 0x41524620` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0994` | `415f454d` | `.word 0x415f454d` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0998` | `5f485455` | `.word 0x5f485455` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x099c` | `4e554f42` | `.word 0x4e554f42` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09a0` | `00000a44` | `.word 0x00000a44` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09a4` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09a8` | `53594850` | `.word 0x53594850` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09ac` | `3a534349` | `.word 0x3a534349` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09b0` | `50414320` | `.word 0x50414320` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09b4` | `4f4f525f` | `.word 0x4f4f525f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09b8` | `45475f54` | `.word 0x45475f54` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09bc` | `4953454e` | `.word 0x4953454e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09c0` | `f7000a53` | `.word 0xf7000a53` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09c4` | `b4012580` | `.word 0xb4012580` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09c8` | `9ec1a010` | `.word 0x9ec1a010` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09cc` | `ca8f7bff` | `.word 0xca8f7bff` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09d0` | `bac96588` | `.word 0xbac96588` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09d4` | `a4bf969c` | `.word 0xa4bf969c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09d8` | `a85c06f8` | `.word 0xa85c06f8` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09dc` | `77b608f5` | `.word 0x77b608f5` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09e0` | `00a5b948` | `.word 0x00a5b948` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x09e4` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
 | `0x09e8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
 | `0x09ec` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
 | `0x09f0` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
@@ -1033,9 +1033,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x0ff4` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
 | `0x0ff8` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
 | `0x0ffc` | `00000000` | `.word 0x00000000 (align pad)` | `-` | `-` | `-` | `Padding to 2 KiB VBAR Boundary` | `CANONICAL PADDING` |
-| `0x1000` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1004` | `17fffc89` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1008` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1000` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1004` | `d2800000` | `mov	x0, #0x0                   	// #0` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1008` | `17fffcc0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x100c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1010` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1014` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1065,9 +1065,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1074` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1078` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x107c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1080` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1084` | `17fffc69` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1088` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1080` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1084` | `d2800020` | `mov	x0, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1088` | `17fffca0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x108c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1090` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1094` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1097,9 +1097,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x10f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x10f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x10fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1100` | `d2800040` | `mov	x0, #0x2                   	// #2` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1104` | `17fffc49` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1108` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1100` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1104` | `d2800040` | `mov	x0, #0x2                   	// #2` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1108` | `17fffc80` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x110c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1110` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1114` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1129,9 +1129,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1174` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1178` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x117c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1180` | `d2800060` | `mov	x0, #0x3                   	// #3` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1184` | `17fffc29` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1188` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1180` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1184` | `d2800060` | `mov	x0, #0x3                   	// #3` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1188` | `17fffc60` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x118c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1190` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1194` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1161,9 +1161,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x11f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x11f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x11fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1200` | `d2800080` | `mov	x0, #0x4                   	// #4` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1204` | `17fffc09` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1208` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1200` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1204` | `d2800080` | `mov	x0, #0x4                   	// #4` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1208` | `17fffc40` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x120c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1210` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1214` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1193,9 +1193,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1274` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1278` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x127c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1280` | `d28000a0` | `mov	x0, #0x5                   	// #5` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1284` | `17fffbe9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1288` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1280` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1284` | `d28000a0` | `mov	x0, #0x5                   	// #5` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1288` | `17fffc20` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x128c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1290` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1294` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1225,9 +1225,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x12f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x12f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x12fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1300` | `d28000c0` | `mov	x0, #0x6                   	// #6` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1304` | `17fffbc9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1308` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1300` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1304` | `d28000c0` | `mov	x0, #0x6                   	// #6` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1308` | `17fffc00` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x130c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1310` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1314` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1257,9 +1257,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1374` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1378` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x137c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1380` | `d28000e0` | `mov	x0, #0x7                   	// #7` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1384` | `17fffba9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1388` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1380` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1384` | `d28000e0` | `mov	x0, #0x7                   	// #7` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1388` | `17fffbe0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x138c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1390` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1394` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1289,9 +1289,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x13f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x13f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x13fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1400` | `d2800100` | `mov	x0, #0x8                   	// #8` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1404` | `17fffb89` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1408` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1400` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1404` | `d2800100` | `mov	x0, #0x8                   	// #8` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1408` | `17fffbc0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x140c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1410` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1414` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1321,9 +1321,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1474` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1478` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x147c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1480` | `d2800120` | `mov	x0, #0x9                   	// #9` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1484` | `17fffb69` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1488` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1480` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1484` | `d2800120` | `mov	x0, #0x9                   	// #9` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1488` | `17fffba0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x148c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1490` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1494` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1353,9 +1353,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x14f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x14f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x14fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1500` | `d2800140` | `mov	x0, #0xa                   	// #10` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1504` | `17fffb49` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1508` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1500` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1504` | `d2800140` | `mov	x0, #0xa                   	// #10` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1508` | `17fffb80` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x150c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1510` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1514` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1385,9 +1385,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1574` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1578` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x157c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1580` | `d2800160` | `mov	x0, #0xb                   	// #11` | `-` | `-` | `#11` | `-` | `VECTOR_ENTRY` |
-| `0x1584` | `17fffb29` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1588` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1580` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1584` | `d2800160` | `mov	x0, #0xb                   	// #11` | `-` | `-` | `#11` | `-` | `VECTOR_ENTRY` |
+| `0x1588` | `17fffb60` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x158c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1590` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1594` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1417,9 +1417,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x15f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x15f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x15fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1600` | `d2800180` | `mov	x0, #0xc                   	// #12` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1604` | `17fffb09` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1608` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1600` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1604` | `d2800180` | `mov	x0, #0xc                   	// #12` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1608` | `17fffb40` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x160c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1610` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1614` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1449,9 +1449,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1674` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1678` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x167c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1680` | `d28001a0` | `mov	x0, #0xd                   	// #13` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1684` | `17fffae9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1688` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1680` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1684` | `d28001a0` | `mov	x0, #0xd                   	// #13` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1688` | `17fffb20` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x168c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1690` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1694` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1481,9 +1481,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x16f4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x16f8` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x16fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1700` | `d28001c0` | `mov	x0, #0xe                   	// #14` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1704` | `17fffac9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1708` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1700` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1704` | `d28001c0` | `mov	x0, #0xe                   	// #14` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1708` | `17fffb00` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x170c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1710` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1714` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1513,9 +1513,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x1774` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1778` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x177c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1780` | `d28001e0` | `mov	x0, #0xf                   	// #15` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
-| `0x1784` | `17fffaa9` | `b	40200228 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
-| `0x1788` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1780` | `d518d080` | `msr	tpidr_el1, x0` | `x0` | `tpidr_el1` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1784` | `d28001e0` | `mov	x0, #0xf                   	// #15` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
+| `0x1788` | `17fffae0` | `b	40200308 <common_trap_entry>` | `-` | `-` | `<common_trap_entry>` | `-` | `VECTOR_ENTRY` |
 | `0x178c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1790` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 | `0x1794` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
@@ -1547,9 +1547,9 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 | `0x17fc` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `VECTOR_ENTRY` |
 
 ## Mathematical Reconciliation Summary
-- Decoded Kernel Code Instructions: 370 (x 4 bytes = 1480 bytes)
-- Read-Only Data (rodata) Words:    96 (x 4 bytes = 384 bytes)
-- Canonical Alignment Padding Words: 558 (x 4 bytes = 2232 bytes)
+- Decoded Kernel Code Instructions: 464 (x 4 bytes = 1856 bytes)
+- Read-Only Data (rodata) Words:    170 (x 4 bytes = 680 bytes)
+- Canonical Alignment Padding Words: 390 (x 4 bytes = 1560 bytes)
 - Vector Table (VBAR) Words:         512 (x 4 bytes = 2048 bytes)
 - Reconciled Total Word Count:       1536 words
 - Reconciled Total Byte Count:       6144 bytes
@@ -1558,6 +1558,6 @@ Milestone 2: Physics Authority Nucleus (PHYSICS_BOOT)
 
 ### Generalized Byte Accounting Formula Conformance
 ```text
-CODE_BYTES (1480) + RODATA_BYTES (384) + CANONICAL_PADDING_BYTES (2232) + VECTOR_TABLE_BYTES (2048) = 6144 BYTES
+CODE_BYTES (1856) + RODATA_BYTES (680) + CANONICAL_PADDING_BYTES (1560) + VECTOR_TABLE_BYTES (2048) = 6144 BYTES
 EXACT DISCREPANCY: 0 BYTES
 ```
