@@ -82,13 +82,14 @@ int physics_accel_validate_capability(const PhysicsAcceleratorLink *link,
     return DEC_ADMITTED;
 }
 
-void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
-                                  const EffectIntent *intent,
-                                  uint32_t decision,
-                                  uint32_t rejection_reason,
-                                  uint64_t actual_effect,
-                                  uint64_t output,
-                                  EffectReceipt *out_receipt) {
+void physics_accel_commit_receipt_measured(PhysicsAcceleratorLink *link,
+                                           const EffectIntent *intent,
+                                           uint32_t decision,
+                                           uint32_t rejection_reason,
+                                           uint64_t actual_effect,
+                                           uint64_t output,
+                                           uint64_t measurement,
+                                           EffectReceipt *out_receipt) {
     if (!out_receipt) return;
     memset(out_receipt, 0, sizeof(*out_receipt));
 
@@ -107,8 +108,7 @@ void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
     out_receipt->actual_effect = actual_effect;
     out_receipt->output = output;
     out_receipt->machine_generation = link ? ++link->machine_generation : 0;
-    /* Synthetic model counter, not a hardware timestamp or completion. */
-    out_receipt->measurement = 1000 + out_receipt->machine_generation;
+    out_receipt->measurement = measurement;
 
     if (link) {
         memcpy(out_receipt->previous_receipt_digest, link->last_receipt_digest, 32);
@@ -124,6 +124,19 @@ void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
     if (link) {
         memcpy(link->last_receipt_digest, out_receipt->receipt_digest, 32);
     }
+}
+
+void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
+                                  const EffectIntent *intent,
+                                  uint32_t decision,
+                                  uint32_t rejection_reason,
+                                  uint64_t actual_effect,
+                                  uint64_t output,
+                                  EffectReceipt *out_receipt) {
+    uint64_t gen = link ? (link->machine_generation + 1) : 0;
+    uint64_t synthetic_meas = 1000 + gen;
+    physics_accel_commit_receipt_measured(link, intent, decision, rejection_reason,
+                                          actual_effect, output, synthetic_meas, out_receipt);
 }
 
 int physics_accel_grant_dma_window(PhysicsAcceleratorLink *link,

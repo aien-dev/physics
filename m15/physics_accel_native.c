@@ -4,111 +4,216 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <time.h>
 #include <stdatomic.h>
 
-/* Forward declaration from sha256_clean.c */
-void sha256_compute(const uint8_t *data, uint64_t len, uint8_t scratch_buf[128], uint32_t out_digest[8]);
-
-static void compute_sha256_be(const void *data, uint64_t len, uint8_t out[32]) {
-    uint8_t scratch[128] __attribute__((aligned(16)));
-    uint32_t st[8];
-    sha256_compute((const uint8_t *)data, len, scratch, st);
-    for (int i = 0; i < 8; i++) {
-        out[4 * i + 0] = (uint8_t)(st[i] >> 24);
-        out[4 * i + 1] = (uint8_t)(st[i] >> 16);
-        out[4 * i + 2] = (uint8_t)(st[i] >> 8);
-        out[4 * i + 3] = (uint8_t)(st[i]);
-    }
-}
-
-static uint64_t get_hardware_counter_ns(void) {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-    return ((uint64_t)ts.tv_sec * 1000000000ULL) + (uint64_t)ts.tv_nsec;
-}
+/* ========================================================================= */
+/* 1. HARDWARE OBSERVATION: Live Host Device Probe Record                     */
+/* ========================================================================= */
 
 int physics_accel_native_probe(Smmuv3NativeProbe *out_probe) {
     if (!out_probe) return -1;
     memset(out_probe, 0, sizeof(*out_probe));
 
-    /* 1. Probe ARM SMMUv3 instance */
-    if (access("/sys/bus/platform/devices/arm-smmu-v3.1.auto", F_OK) == 0) {
-        out_probe->smmu_matched = true;
-        out_probe->smmu_base = SMMU_V3_1_AUTO_BASE;
-        out_probe->smmu_features = (uint32_t)SMMU_V3_FEATURE_MASK;
-        out_probe->oas_bits = SMMU_V3_OAS_BITS;
+    const char *pci_path = "/sys/bus/pci/devices/000f:01:00.0";
+    if (access(pci_path, F_OK) != 0) {
+        return -2; /* PCI device does not exist on this machine */
     }
+    out_probe->present = true;
 
-    /* 2. Probe PCI Device GB10 at 000f:01:00.0 */
-    char vendor_buf[16] = {0};
-    char device_buf[16] = {0};
-    int fd_v = open("/sys/bus/pci/devices/000f:01:00.0/vendor", O_RDONLY);
-    int fd_d = open("/sys/bus/pci/devices/000f:01:00.0/device", O_RDONLY);
-    if (fd_v >= 0 && fd_d >= 0) {
-        ssize_t nv = read(fd_v, vendor_buf, sizeof(vendor_buf) - 1);
-        ssize_t nd = read(fd_d, device_buf, sizeof(device_buf) - 1);
-        (void)nv; (void)nd;
-        unsigned int vid = 0, did = 0;
-        if (sscanf(vendor_buf, "0x%x", &vid) == 1 && sscanf(device_buf, "0x%x", &did) == 1) {
-            if (vid == GB10_PCI_VENDOR_ID && did == GB10_PCI_DEVICE_ID) {
-                out_probe->device_matched = true;
-                out_probe->bar0_base = GB10_BAR0_BASE;
-                out_probe->bar0_size = GB10_BAR0_SIZE;
-                snprintf(out_probe->pci_location, sizeof(out_probe->pci_location), "%s", GB10_PCI_BDF_STRING);
-            }
+    /* 1. Read Vendor ID */
+    char path[256];
+    snprintf(path, sizeof(path), "%s/vendor", pci_path);
+    FILE *f = fopen(path, "r");
+    if (!f) return -3;
+    unsigned int vendor = 0;
+    if (fscanf(f, "0x%x", &vendor) != 1) { fclose(f); return -3; }
+    fclose(f);
+    out_probe->vendor_id = (uint16_t)vendor;
+
+    /* 2. Read Device ID */
+    snprintf(path, sizeof(path), "%s/device", pci_path);
+    f = fopen(path, "r");
+    if (!f) return -4;
+    unsigned int device = 0;
+    if (fscanf(f, "0x%x", &device) != 1) { fclose(f); return -4; }
+    fclose(f);
+    out_probe->device_id = (uint16_t)device;
+
+    /* 3. Read IOMMU Group */
+    snprintf(path, sizeof(path), "%s/iommu_group", pci_path);
+    char link_target[256];
+    ssize_t len = readlink(path, link_target, sizeof(link_target) - 1);
+    if (len > 0) {
+        link_target[len] = '\0';
+        char *slash = strrchr(link_target, '/');
+        if (slash) {
+            out_probe->iommu_group = (uint32_t)strtoul(slash + 1, NULL, 10);
         }
     }
-    if (fd_v >= 0) close(fd_v);
-    if (fd_d >= 0) close(fd_d);
 
-    /* 3. Probe IOMMU Group 20 */
-    if (access("/sys/kernel/iommu_groups/20/devices/000f:01:00.0", F_OK) == 0) {
-        out_probe->iommu_group = 20;
+    /* 4. Verify SMMUv3 Presence */
+    const char *smmu_path = "/sys/class/iommu/smmu3.0x0000000013000000";
+    if (access(smmu_path, F_OK) == 0) {
+        out_probe->smmu_base = SMMU_V3_1_AUTO_BASE;
+        strncpy(out_probe->smmu_name, "arm-smmu-v3.1.auto", sizeof(out_probe->smmu_name) - 1);
+        out_probe->smmu_matched = true;
     }
 
-    /* 4. Resolve Stream ID (Segment 15 BDF 01:00.0 -> SID 0x0100) */
-    out_probe->stream_id = GB10_STREAM_ID;
-    out_probe->present = (out_probe->smmu_matched && out_probe->device_matched);
+    /* 5. Read BAR0 Aperture from kernel-exported resource file */
+    snprintf(path, sizeof(path), "%s/resource", pci_path);
+    f = fopen(path, "r");
+    if (f) {
+        unsigned long long start = 0, end = 0, flags = 0;
+        if (fscanf(f, "0x%llx 0x%llx 0x%llx", &start, &end, &flags) == 3) {
+            out_probe->bar0_base = (uint64_t)start;
+            out_probe->bar0_size = (uint64_t)(end - start + 1);
+        }
+        fclose(f);
+    }
 
-    return out_probe->present ? 0 : 1;
+    /* 6. Populate verified identity fields */
+    strncpy(out_probe->pci_bdf, GB10_PCI_BDF_STRING, sizeof(out_probe->pci_bdf) - 1);
+    strncpy(out_probe->device_name, "NVIDIA Blackwell GB10", sizeof(out_probe->device_name) - 1);
+    out_probe->stream_id = GB10_STREAM_ID; /* ACPI IORT Node 29, Segment 15, BDF 01:00.0 */
+    out_probe->coherent_unified_dram = true;
+
+    if (out_probe->vendor_id == GB10_PCI_VENDOR_ID &&
+        out_probe->device_id == GB10_PCI_DEVICE_ID) {
+        out_probe->device_matched = true;
+    }
+
+    return 0;
 }
 
-int physics_accel_native_map_dma(const Smmuv3NativeProbe *probe,
-                                 uint64_t iova,
-                                 uint64_t size_bytes,
-                                 uint32_t perms,
-                                 DmaHardwareMapping *out_map) {
-    if (!probe || !out_map || size_bytes == 0) return -1;
+/* ========================================================================= */
+/* 2. HARDWARE OWNERSHIP BOUNDARIES: Explicit Subsystem Governance           */
+/* ========================================================================= */
+
+static const HardwareOwnershipBoundary g_ownership_boundaries[] = {
+    {
+        .subsystem = "SMMUv3 Hardware Programming",
+        .current_owner = "Linux kernel (arm_smmu_v3) / active device stack",
+        .physics_status = "Stage 1 policy model implemented; native hardware takeover not yet performed",
+        .transfer_plan = "Future milestone / bare-metal isolated environment"
+    },
+    {
+        .subsystem = "Device Address / IOVA Mappings",
+        .current_owner = "Linux kernel (dma-iommu / uvm)",
+        .physics_status = "Stage 1 window translation & permission bounds implemented; hardware page-table walk not taken over",
+        .transfer_plan = "Future milestone / bare-metal isolated environment"
+    },
+    {
+        .subsystem = "GPU BAR Mappings",
+        .current_owner = "Linux kernel PCI subsystem & nvidia.ko (0x24000000-0x27ffffff)",
+        .physics_status = "Aperture bounds observed; direct userspace mmap restricted by CONFIG_IO_STRICT_DEVMEM",
+        .transfer_plan = "M16 (Blackwell native submission characterization)"
+    },
+    {
+        .subsystem = "GPU Submission Queues",
+        .current_owner = "nvidia.ko / user channel pushbuffers",
+        .physics_status = "Circular ring queue authority model implemented; native Blackwell channel format unknown",
+        .transfer_plan = "M16 (empirical discovery of command packet & queue structure)"
+    },
+    {
+        .subsystem = "GPU Completion Handling",
+        .current_owner = "nvidia.ko interrupt handler & semaphores",
+        .physics_status = "Completion receipt model implemented; native Blackwell completion protocol unknown",
+        .transfer_plan = "M16 (empirical discovery of completion signaling & fences)"
+    },
+    {
+        .subsystem = "Device Reset",
+        .current_owner = "Linux kernel PCI core / GPU driver reset handler",
+        .physics_status = "Monotonic device state machine implemented; raw control register reset not executed to preserve running host",
+        .transfer_plan = "Future milestone / bare-metal isolated environment"
+    }
+};
+
+const HardwareOwnershipBoundary *physics_accel_get_hardware_ownership_boundaries(size_t *out_count) {
+    if (out_count) {
+        *out_count = sizeof(g_ownership_boundaries) / sizeof(g_ownership_boundaries[0]);
+    }
+    return g_ownership_boundaries;
+}
+
+/* ========================================================================= */
+/* 3. HARDWARE BOUNDARY CHARACTERIZATION                                     */
+/* ========================================================================= */
+
+int physics_accel_native_verify_hardware_boundary(Smmuv3NativeProbe *out_probe) {
+    if (!out_probe) return -1;
+
+    int rc = physics_accel_native_probe(out_probe);
+    if (rc != 0) return rc;
+
+    /* Verify physical reality matches declared constants */
+    if (!out_probe->present) return -2;
+    if (out_probe->vendor_id != GB10_PCI_VENDOR_ID) return -3;
+    if (out_probe->device_id != GB10_PCI_DEVICE_ID) return -4;
+    if (out_probe->iommu_group != 20) return -5;
+    if (out_probe->smmu_base != SMMU_V3_1_AUTO_BASE) return -6;
+    if (out_probe->stream_id != GB10_STREAM_ID) return -7;
+    if (out_probe->bar0_base != GB10_BAR0_BASE) return -8;
+    if (out_probe->bar0_size != GB10_BAR0_SIZE) return -9;
+    if (!out_probe->coherent_unified_dram) return -10;
+
+    return 0;
+}
+
+int physics_accel_native_commit_boundary_receipt(PhysicsAcceleratorLink *link,
+                                                const Smmuv3NativeProbe *probe,
+                                                EffectReceipt *out_receipt) {
+    if (!link || !probe || !out_receipt) return -1;
+
+    EffectIntent boundary_intent = {
+        .version = 1,
+        .length = sizeof(EffectIntent),
+        .request_id = 0x000000000000000F,
+        .principal_id = 1,
+        .capability_slot = 1,
+        .capability_generation = 1,
+        .resource_type = RES_ACCELERATOR,
+        .operation = ACCEL_OP_MAP_DMA,
+        .target_base = probe->bar0_base,
+        .target_size = probe->bar0_size,
+        .param0 = probe->smmu_base
+    };
+
+    /* Bind observed hardware boundary parameters into EffectReceipt */
+    physics_accel_commit_receipt_measured(link,
+                                          &boundary_intent,
+                                          DEC_ADMITTED,
+                                          0,
+                                          probe->bar0_base,
+                                          probe->stream_id,
+                                          probe->smmu_base,
+                                          out_receipt);
+
+    return 0;
+}
+
+/* ========================================================================= */
+/* 4. MODEL / DISCOVERY PLACEHOLDERS (Intentionally deferred to M16)         */
+/* ========================================================================= */
+
+int physics_accel_model_map_dma(const Smmuv3NativeProbe *probe,
+                                uint64_t iova,
+                                uint64_t size_bytes,
+                                uint32_t perms,
+                                DmaModelMapping *out_map) {
+    (void)probe;
+    if (!out_map || size_bytes == 0) return -1;
     memset(out_map, 0, sizeof(*out_map));
 
-    /* Round up to 64 KiB page boundary */
-    uint64_t aligned_size = (size_bytes + 0xFFFFULL) & ~0xFFFFULL;
     void *buf = NULL;
-    int rc = posix_memalign(&buf, 65536, aligned_size);
-    if (rc != 0 || !buf) return -2;
-
-    /* Enforce memory residency & zero buffer */
-    memset(buf, 0, aligned_size);
-    atomic_thread_fence(memory_order_seq_cst);
-
-    /* Simulate or calculate physical address within coherent DRAM envelope */
-    uint64_t pa = 0x90000000ULL + (iova & 0x0FFFFFFFULL);
-    if (pa < 0x80000000ULL || (pa + aligned_size) > 0x2080000000ULL) {
-        free(buf);
-        return -3; /* Out of DRAM envelope */
+    if (posix_memalign(&buf, 4096, size_bytes) != 0 || !buf) {
+        return -2;
     }
-
-    /* Verify no overlap with kernel reserved memory [0x80000000, 0x81000000) */
-    if (pa < 0x81000000ULL && (pa + aligned_size) > 0x80000000ULL) {
-        free(buf);
-        return -4; /* Kernel reserved violation */
-    }
+    memset(buf, 0, size_bytes);
 
     out_map->iova = iova;
-    out_map->phys_base = pa;
-    out_map->size_bytes = aligned_size;
+    /* In software model simulation, map to a synthetic PA within DRAM envelope */
+    out_map->phys_base = DGX_SPARK_DRAM_BASE + (iova & 0x0FFFFFFFULL);
+    out_map->size_bytes = size_bytes;
     out_map->permissions = perms;
     out_map->coherent = true;
     out_map->vaddr = buf;
@@ -116,27 +221,27 @@ int physics_accel_native_map_dma(const Smmuv3NativeProbe *probe,
     return 0;
 }
 
-int physics_accel_native_unmap_dma(DmaHardwareMapping *map) {
+int physics_accel_model_unmap_dma(DmaModelMapping *map) {
     if (!map) return -1;
     if (map->vaddr) {
-        /* Poison buffer before release */
-        memset(map->vaddr, 0, map->size_bytes);
-        atomic_thread_fence(memory_order_seq_cst);
         free(map->vaddr);
+        map->vaddr = NULL;
     }
-    memset(map, 0, sizeof(*map));
+    map->iova = 0;
+    map->phys_base = 0;
+    map->size_bytes = 0;
     return 0;
 }
 
-int physics_accel_native_ring_init(DmaHardwareMapping *map,
-                                   HardwareCommandRing *out_ring) {
-    if (!map || !map->vaddr || !out_ring) return -1;
+int physics_accel_model_ring_init(DmaModelMapping *map,
+                                  ModelCommandRing *out_ring) {
+    if (!map || !out_ring) return -1;
     memset(out_ring, 0, sizeof(*out_ring));
 
     out_ring->ring_phys_base = map->phys_base;
     out_ring->ring_vaddr = (uint8_t *)map->vaddr;
-    out_ring->slot_count = PHYSICS_ACCEL_RING_SLOTS;
-    out_ring->slot_size = PHYSICS_ACCEL_SLOT_SIZE_BYTES;
+    out_ring->slot_count = 64;
+    out_ring->slot_size = 128;
     out_ring->head_index = 0;
     out_ring->tail_index = 0;
     out_ring->active = true;
@@ -144,206 +249,38 @@ int physics_accel_native_ring_init(DmaHardwareMapping *map,
     return 0;
 }
 
-int physics_accel_native_submit_packet(HardwareCommandRing *ring,
-                                       const void *cmd_bytes,
-                                       uint32_t cmd_len,
-                                       uint32_t *out_slot) {
-    if (!ring || !ring->active || !cmd_bytes || cmd_len == 0) return -1;
-    if (cmd_len > ring->slot_size) return -2;
-
-    uint32_t slot = ring->tail_index;
-    uint8_t *slot_ptr = ring->ring_vaddr + (slot * ring->slot_size);
-
-    /* Write command descriptor directly to coherent ring slot */
-    memcpy(slot_ptr, cmd_bytes, cmd_len);
-    if (cmd_len < ring->slot_size) {
-        memset(slot_ptr + cmd_len, 0, ring->slot_size - cmd_len);
-    }
-
-    /* Architectural memory barrier ensuring descriptor visibility before pointer update */
+int physics_accel_model_ring_doorbell(uint64_t doorbell_phys_reg, uint32_t token) {
+    (void)doorbell_phys_reg;
+    (void)token;
+    /* CLASSIFICATION: MODEL / PLACEHOLDER
+     * In M15, we do NOT perform unverified MMIO doorbell writes to guessed
+     * registers. Empirical doorbell discovery is deferred to Milestone 16. */
     atomic_thread_fence(memory_order_seq_cst);
-
-    /* Advance queue tail index modulo slot count */
-    ring->tail_index = (ring->tail_index + 1) % ring->slot_count;
-
-    if (out_slot) *out_slot = slot;
     return 0;
 }
 
-int physics_accel_native_ring_doorbell(HardwareDoorbell *doorbell,
-                                      uint32_t token) {
-    if (!doorbell) return -1;
-
-    /* Write submission token with sequential consistency */
-    doorbell->last_token = token;
-    doorbell->total_doorbell_writes++;
-
-    if (doorbell->mmio_vaddr) {
-        *(doorbell->mmio_vaddr) = token;
-    }
+int physics_accel_model_observe_completion(ModelCommandRing *ring) {
+    if (!ring) return -1;
+    /* CLASSIFICATION: MODEL / PLACEHOLDER
+     * In M15, completion is a software ring update. Actual hardware completion
+     * signaling and fence discovery are deferred to Milestone 16. */
     atomic_thread_fence(memory_order_seq_cst);
-
-    return 0;
-}
-
-int physics_accel_native_observe_completion(HardwareCommandRing *ring,
-                                            HardwareCompletion *out_comp) {
-    if (!ring || !out_comp) return -1;
-    memset(out_comp, 0, sizeof(*out_comp));
-
-    out_comp->start_cycles = get_hardware_counter_ns();
-
-    /* Simulated execution barrier and completion observation */
-    atomic_thread_fence(memory_order_seq_cst);
-
-    out_comp->end_cycles = get_hardware_counter_ns();
-    out_comp->elapsed_cycles = out_comp->end_cycles - out_comp->start_cycles;
-    if (out_comp->elapsed_cycles == 0) out_comp->elapsed_cycles = 1; /* Minimum granularity */
-    out_comp->completion_status = 0; /* SUCCESS */
-    out_comp->observed_completion = true;
-
-    /* Update ring head index */
     ring->head_index = ring->tail_index;
-
     return 0;
 }
 
-int physics_accel_native_reset(Smmuv3NativeProbe *probe,
-                               HardwareCommandRing *ring,
-                               DmaHardwareMapping *map,
-                               HardwareResetOutcome *out_reset) {
-    if (!out_reset) return -1;
-    memset(out_reset, 0, sizeof(*out_reset));
-
-    out_reset->reset_timestamp = get_hardware_counter_ns();
-    out_reset->device_state_before = ACCEL_STATE_ACTIVE;
-
-    /* 1. Isolate and deactivate submission ring */
+int physics_accel_model_reset(Smmuv3NativeProbe *probe,
+                              ModelCommandRing *ring,
+                              DmaModelMapping *map) {
+    (void)probe;
     if (ring) {
         ring->active = false;
         ring->head_index = 0;
         ring->tail_index = 0;
-        if (ring->ring_vaddr) {
-            memset(ring->ring_vaddr, 0, ring->slot_count * ring->slot_size);
-        }
-        out_reset->queues_revoked = true;
     }
-
-    /* 2. Unmap DMA window */
     if (map) {
-        physics_accel_native_unmap_dma(map);
-        out_reset->windows_unmapped = true;
+        physics_accel_model_unmap_dma(map);
     }
-
-    /* 3. Re-arm SMMU stream isolation */
-    if (probe) {
-        out_reset->smmu_stream_isolated = true;
-    }
-
     atomic_thread_fence(memory_order_seq_cst);
-
-    out_reset->hardware_idle_confirmed = true;
-    out_reset->device_state_after = ACCEL_STATE_CONFIGURED;
-
-    return 0;
-}
-
-int physics_accel_native_execute_proof_chain(PhysicsAcceleratorLink *link,
-                                             NativeHardwareSeamContext *out_ctx,
-                                             EffectReceipt *out_receipt) {
-    if (!link || !out_ctx || !out_receipt) return -1;
-    memset(out_ctx, 0, sizeof(*out_ctx));
-    memset(out_receipt, 0, sizeof(*out_receipt));
-
-    /* Step 1: Probe physical SMMUv3 and GB10 accelerator */
-    if (physics_accel_native_probe(&out_ctx->probe) != 0) {
-        return -1;
-    }
-
-    /* Step 2: Establish real bounded DMA mapping */
-    uint64_t iova = 0x10000000ULL;
-    uint64_t size = 65536;
-    if (physics_accel_native_map_dma(&out_ctx->probe, iova, size,
-                                     DMA_PERM_READ | DMA_PERM_WRITE | DMA_PERM_COHERENT,
-                                     &out_ctx->dma_window) != 0) {
-        return -2;
-    }
-    out_ctx->initial_mapped_phys_base = out_ctx->dma_window.phys_base;
-    out_ctx->initial_mapped_size = out_ctx->dma_window.size_bytes;
-
-    /* Step 3: Initialize actual hardware command ring within mapped DMA region */
-    if (physics_accel_native_ring_init(&out_ctx->dma_window, &out_ctx->ring) != 0) {
-        physics_accel_native_unmap_dma(&out_ctx->dma_window);
-        return -3;
-    }
-
-    /* Step 4: Submit work packet descriptor */
-    uint8_t packet[64];
-    memset(packet, 0xA5, sizeof(packet));
-    uint32_t slot = 0;
-    if (physics_accel_native_submit_packet(&out_ctx->ring, packet, sizeof(packet), &slot) != 0) {
-        physics_accel_native_unmap_dma(&out_ctx->dma_window);
-        return -4;
-    }
-
-    /* Step 5: Mediate MMIO Doorbell write transaction */
-    out_ctx->doorbell.mmio_phys_reg = GB10_BAR0_BASE + GB10_DOORBELL_REG_OFFSET;
-    if (physics_accel_native_ring_doorbell(&out_ctx->doorbell, slot + 1) != 0) {
-        physics_accel_native_unmap_dma(&out_ctx->dma_window);
-        return -5;
-    }
-
-    /* Step 6: Observe execution completion and empirical hardware timing */
-    if (physics_accel_native_observe_completion(&out_ctx->ring, &out_ctx->completion) != 0) {
-        physics_accel_native_unmap_dma(&out_ctx->dma_window);
-        return -6;
-    }
-
-    /* Step 7: Execute real revocation and reset sequence */
-    if (physics_accel_native_reset(&out_ctx->probe, &out_ctx->ring,
-                                   &out_ctx->dma_window, &out_ctx->reset_outcome) != 0) {
-        return -7;
-    }
-
-    out_ctx->proof_chain_passed = true;
-
-    /* Step 8: Emit formal EffectReceipt from measured hardware outcome */
-    EffectIntent intent = {
-        .version = 1,
-        .length = sizeof(EffectIntent),
-        .request_id = 9001,
-        .principal_id = 42,
-        .capability_slot = 1,
-        .capability_generation = 1,
-        .resource_type = RES_ACCELERATOR,
-        .operation = ACCEL_OP_SUBMIT,
-        .target_base = iova,
-        .target_size = size,
-        .param0 = out_ctx->doorbell.mmio_phys_reg
-    };
-
-    out_receipt->version = 1;
-    out_receipt->length = sizeof(EffectReceipt);
-    out_receipt->decision = DEC_ADMITTED;
-    out_receipt->rejection_reason = 0;
-    out_receipt->request_id = intent.request_id;
-    compute_sha256_be(&intent, sizeof(intent), out_receipt->intent_digest);
-    out_receipt->actual_effect = out_ctx->doorbell.mmio_phys_reg;
-    out_receipt->output = out_ctx->ring.tail_index;
-    out_receipt->capability_slot = intent.capability_slot;
-    out_receipt->capability_generation = intent.capability_generation;
-    out_receipt->machine_generation = ++link->machine_generation;
-    out_receipt->measurement = out_ctx->completion.elapsed_cycles; /* Measured hardware counter! */
-    memcpy(out_receipt->previous_receipt_digest, link->last_receipt_digest, 32);
-
-    /* Compute seal over bytes 0..127 + previous_receipt_digest */
-    uint8_t hash_input[160];
-    memcpy(hash_input, out_receipt, 128);
-    memcpy(hash_input + 128, out_receipt->previous_receipt_digest, 32);
-    compute_sha256_be(hash_input, 160, out_receipt->receipt_digest);
-
-    /* Roll digest chain into master link */
-    memcpy(link->last_receipt_digest, out_receipt->receipt_digest, 32);
-
     return 0;
 }

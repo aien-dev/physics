@@ -243,4 +243,13 @@ void physics_accel_commit_receipt(PhysicsAcceleratorLink *link,
                                   uint64_t output,
                                   EffectReceipt *out_receipt);
 
+void physics_accel_commit_receipt_measured(PhysicsAcceleratorLink *link,
+                                           const EffectIntent *intent,
+                                           uint32_t decision,
+                                           uint32_t rejection_reason,
+                                           uint64_t actual_effect,
+                                           uint64_t output,
+                                           uint64_t measurement,
+                                           EffectReceipt *out_receipt);
+
 #endif /* PHYSICS_ACCEL_H */

@@ -1,0 +1,30 @@
+Subsystem: SMMUv3 Hardware Programming
+Current Owner: Linux kernel (arm_smmu_v3) / active device stack
+Physics Status: Stage 1 policy model implemented; native hardware takeover not yet performed
+Transfer Plan: Future milestone / bare-metal isolated environment
+
+Subsystem: Device Address / IOVA Mappings
+Current Owner: Linux kernel (dma-iommu / uvm)
+Physics Status: Stage 1 window translation & permission bounds implemented; hardware page-table walk not taken over
+Transfer Plan: Future milestone / bare-metal isolated environment
+
+Subsystem: GPU BAR Mappings
+Current Owner: Linux kernel PCI subsystem & nvidia.ko (0x24000000-0x27ffffff)
+Physics Status: Aperture bounds observed; direct userspace mmap restricted by CONFIG_IO_STRICT_DEVMEM
+Transfer Plan: M16 (Blackwell native submission characterization)
+
+Subsystem: GPU Submission Queues
+Current Owner: nvidia.ko / user channel pushbuffers
+Physics Status: Circular ring queue authority model implemented; native Blackwell channel format unknown
+Transfer Plan: M16 (empirical discovery of command packet & queue structure)
+
+Subsystem: GPU Completion Handling
+Current Owner: nvidia.ko interrupt handler & semaphores
+Physics Status: Completion receipt model implemented; native Blackwell completion protocol unknown
+Transfer Plan: M16 (empirical discovery of completion signaling & fences)
+
+Subsystem: Device Reset
+Current Owner: Linux kernel PCI core / GPU driver reset handler
+Physics Status: Monotonic device state machine implemented; raw control register reset not executed to preserve running host
+Transfer Plan: Future milestone / bare-metal isolated environment
+

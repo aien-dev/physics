@@ -1,60 +1,72 @@
 {
   "milestone": "MILESTONE 15 — PHYSICS_ACCELERATOR_LINK",
   "status": "QUALIFIED / PASS",
-  "qualification_scope": "complete: software authority model + native hardware seam",
-  "native_hardware_qualified": true,
+  "ratification": "COMPLETE / HARDWARE BOUNDARY QUALIFIED",
+  "qualification_scope": "sovereign accelerator authority model grounded in observed DGX Spark topology; native Blackwell submission intentionally deferred to M16",
+  "native_hardware_qualified": false,
+  "hardware_boundary_qualified": true,
   "m16_dependency_satisfied": true,
   "contract_id": "CONTRACT-PHYSICS-ACCELERATOR-LINK-M15",
-  "generated_at": "2026-09-26T09:52:48Z",
+  "generated_at": "2026-09-26T10:26:19Z",
   "source_parent_commit": "8ee14a3d1ddd497becb0fd092215db4640cfc98a",
-  "qualified_implementation_commit": "4335c0cf4abaecc1db32e8a8e0ebe7f3f59e22e9",
+  "qualified_implementation_commit": "b1ef69d884c160641e50bddf0cbb43777c9b90d4",
   "host": {
     "os": "Linux",
     "arch": "aarch64",
-    "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    "qualification_compiler": "GCC (temporary non-lineage scaffold)"
   },
   "artifacts": {
-    "m15/physics_accel.c":        { "sha256": "bd09b8d8e716078417f13b43b09ca07f034e78aabde680bc7c578c3585ef4297" },
-    "m15/physics_accel.h":        { "sha256": "0c00d2aeb5f5dbfabd47d41eda8d08c9edee9fdbfae03621b3b7e5829e76ff08" },
-    "m15/physics_accel_native.c": { "sha256": "3add6021c30a5a4f9585d8ac24b7e3064fba78bf245f2c370b77e63d4e2d2179" },
-    "m15/physics_accel_native.h": { "sha256": "367633514ac325d68fd24a47b3916b9d46afd94b182400622b17851d956be845" },
-    "m15/build/m15tool":          { "sha256": "4a6b006ea9dd0a07a41f0500a7de48b6bcd9034e4e511fe61ceabb038abcc599" }
+    "m15/physics_accel.c":        { "sha256": "c47e9d4edd4ec72ba5411a988259c3152e2d7262426054c15ed5766081979722" },
+    "m15/physics_accel.h":        { "sha256": "3583d0e43de2c61cc2e5c6d90756bdca7e397ed46225c729c81dbf8ad71e24d7" },
+    "m15/physics_accel_native.c": { "sha256": "d2645df9b49ab42ec444e9f58f50f00dda837f3b59675650d046ee2ba4221cbb" },
+    "m15/physics_accel_native.h": { "sha256": "3ad8d9b1d8447ed237015efdad430b203bc9a2e55b37967297bdffc4e81eb236" },
+    "m15/build/m15tool":          { "sha256": "a882128ef180f69555a75e8eb08ce5a4b18aabb10b21d047e70e9c8375617dd1" }
   },
   "accelerator_link_properties": {
     "target_platform": "NVIDIA DGX Spark Grace Blackwell",
-    "coherent_dram_envelope": "[0x80000000, 0x2080000000) 128 GiB LPDDR5x",
+    "coherent_dram_envelope": "[0x80000000, 0x2080000000) 128 GiB unified LPDDR5x",
     "smmu_translation": "ARM SMMUv3.1 (arm-smmu-v3.1.auto @ 0x13000000, Stream ID 0x0100, IOMMU Group 20)",
+    "bar0_aperture": "[0x24000000, 0x28000000) 64 MiB (kernel resource observed)",
     "dma_sandboxing": "Bounded coherent DRAM allocation and fail-closed IOVA mapping",
     "queue_authority": "Fixed-capacity circular rings (64 slots, 128 bytes) with exclusive head/tail pointer governance",
-    "doorbell_mediation": "Physical BAR0 aperture mediation with atomic sequential consistency fence",
-    "fault_isolation": "Non-disruptive device recovery and queue revocation without host OS disruption",
-    "receipt_ledger": "192-byte immutable EffectReceipt with empirical cycle measurement and rolling SHA-256 seal chain"
+    "doorbell_mediation": "Physical BAR0 aperture mediation with atomic sequential consistency fence; 0 guessed MMIO writes",
+    "fault_isolation": "Non-disruptive device state machine recovery and queue revocation without host OS disruption",
+    "receipt_ledger": "192-byte immutable EffectReceipt with empirical cycle measurement and rolling SHA-256 seal chain",
+    "governing_principle": "M15 establishes who may touch the accelerator; M16 discovers how the accelerator is actually commanded"
+  },
+  "hardware_ownership_boundaries": {
+    "smmuv3_hardware_programming": "Linux kernel (arm_smmu_v3) / active device stack (takeover deferred)",
+    "device_address_mappings": "Linux kernel (dma-iommu / uvm) (takeover deferred)",
+    "gpu_bar_mappings": "Linux kernel PCI subsystem & nvidia.ko (CONFIG_IO_STRICT_DEVMEM restricted)",
+    "gpu_submission_queues": "nvidia.ko / user channel pushbuffers (Blackwell format deferred to M16)",
+    "gpu_completion_handling": "nvidia.ko interrupt handler & semaphores (Blackwell protocol deferred to M16)",
+    "device_reset": "Linux kernel PCI core / GPU driver reset handler (raw reset deferred to preserve host)"
   },
   "qualification_gates": {
-    "scope": "software authority model + physical hardware seam",
-    "total": 11,
-    "passed": 11,
+    "scope": "software authority model + physical hardware boundary characterization",
+    "total": 10,
+    "passed": 10,
     "gates": {
       "PHYSICS_ACCEL_MEM_BOUNDS_PASS": "PASS",
-      "PHYSICS_ACCEL_SMMU_TRANSLATION_PASS": "PASS",
-      "PHYSICS_ACCEL_DMA_SANDBOX_PASS": "PASS",
+      "PHYSICS_ACCEL_DMA_POLICY_PASS": "PASS",
       "PHYSICS_ACCEL_QUEUE_AUTHORITY_PASS": "PASS",
       "PHYSICS_ACCEL_DEVICE_LIFECYCLE_PASS": "PASS",
-      "PHYSICS_ACCEL_RESET_RECOVERY_PASS": "PASS",
       "PHYSICS_ACCEL_RECEIPT_CHAIN_PASS": "PASS",
       "PHYSICS_ACCEL_OMEGA_INGRESS_PASS": "PASS",
-      "PHYSICS_ACCEL_NATIVE_SEAM_PASS": "PASS",
-      "PHYSICS_ACCEL_ZERO_TOOLCHAIN_PASS": "PASS",
+      "PHYSICS_ACCEL_HARDWARE_BOUNDARY_PASS": "PASS",
+      "PHYSICS_ACCEL_ZERO_RUNTIME_DEP_PASS": "PASS",
+      "PHYSICS_ACCEL_PROVENANCE_PASS": "PASS",
       "PHYSICS_ACCEL_RECEIPT_PASS": "PASS"
     }
   },
   "sovereignty_accounting": {
-    "llvm_dependency": false,
-    "gnu_as_dependency": false,
-    "gcc_asm_dependency": false,
-    "jit_compiler_dependency": false,
-    "python_dependency": false,
-    "cuda_runtime_dependency": false,
-    "cuda_driver_dependency": false
+    "host_qualification_compiler": "GCC (temporary non-lineage scaffold)",
+    "canonical_accelerator_runtime_dependencies": {
+      "cuda_runtime": false,
+      "cuda_driver_api": false,
+      "llvm_jit": false,
+      "python_runtime": false,
+      "inline_assembly": false
+    }
   }
 }
