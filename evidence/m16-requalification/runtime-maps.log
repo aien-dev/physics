@@ -1,0 +1,5 @@
+bd2dda1e0000-bd2dda1e4000 r-xp 00000000 103:02 13004529                  /home/drakestapleton/workspace/m17-physics/m16/m16_requalify
+bd2dda1ff000-bd2dda201000 rw-p 0000f000 103:02 13004529                  /home/drakestapleton/workspace/m17-physics/m16/m16_requalify
+bd2dda201000-bd2dda203000 rw-p 00000000 00:00 0 
+face51900000-face51927000 r-xp 00000000 103:02 1343055                   /usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1
+ffffde9a1000-ffffde9c2000 rw-p 00000000 00:00 0                          [stack]
