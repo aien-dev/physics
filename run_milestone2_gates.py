@@ -36,8 +36,13 @@ import datetime
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 import time
+
+import generate_physics_audit
+from m2_build import sha256_file
 
 from seam1_physics_audit import verify_seam1
 from seam2_physics_harness import verify_seam2
@@ -51,17 +56,22 @@ def run_milestone2_gates():
 
     start_time = time.time()
 
+    # 0. Regenerate every artifact from source in a clean build tree.
+    shutil.rmtree("build", ignore_errors=True)
+    generate_physics_audit.main()
+    print()
+
     # 1. Run Seam 1 (Artifact Audit Seam)
     seam1_results = verify_seam1(".")
-    if not seam1_results or not all(seam1_results.values()):
-        print("\nFATAL: Seam 1 static audit failed!")
+    if not seam1_results:
+        print("\nFATAL: Seam 1 static audit did not run!")
         sys.exit(1)
 
     print()
     # 2. Run Seam 2 (Execution Harness Seam)
     seam2_results = verify_seam2(".")
-    if not seam2_results or not all(seam2_results.values()):
-        print("\nFATAL: Seam 2 runtime execution failed!")
+    if not seam2_results:
+        print("\nFATAL: Seam 2 runtime execution did not run!")
         sys.exit(1)
 
     all_gates = {}
@@ -112,18 +122,45 @@ def run_milestone2_gates():
     print(f"Execution Duration: {duration:.2f} seconds")
     print("=" * 70)
 
+    bound_files = [
+        "machine_contract.json", "physics.audit", "physics.manifest", "physics.memory-map",
+        "seam1_physics_audit.py", "seam2_physics_harness.py", "run_milestone2_gates.py",
+        "generate_physics_audit.py", "m2_build.py",
+        "atlas_m2.bin", "physics.bin", "physics_pin.inc", "atlas.sha256",
+        "atlas_m2.s", "physics.s", "vector_table.s", "memory_alloc.s", "capability.s",
+        "sha256_clean.c", "physics.ld",
+    ]
+    head = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                           capture_output=True, text=True).stdout.strip()
+    qemu = subprocess.run(["qemu-system-aarch64", "--version"], capture_output=True,
+                          text=True).stdout.splitlines()[0]
+
     receipt = {
         "milestone": "MILESTONE 2 — PHYSICS_BOOT",
-        "status": "QUALIFIED_QEMU_VIRT",
+        "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
+        "status": "QUALIFIED_QEMU_VIRT" if all_passed else "NOT_QUALIFIED",
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "source": {
+            "base_commit": head,
+            "tracked_changes_at_run": bool(dirty),
+            "note": "base_commit is HEAD when the gates ran; the receipt is committed on top of it",
+        },
+        "environment": {"qemu": qemu, "machine": "virt, cortex-a57, 128M, tcg thread=single"},
         "canonical_artifact": {
             "name": "physics.bin",
             "sha256": physics_sha256,
             "size_bytes": os.path.getsize("physics.bin"),
             "total_words": total_words,
             "entry_point": "0x40200000",
-            "provenance_anchor": manifest.get("provenance_anchor")
+            "provenance_anchor": manifest.get("provenance_anchor"),
         },
+        "atlas_handoff_artifact": {
+            "name": "atlas_m2.bin",
+            "sha256": sha256_file("atlas_m2.bin"),
+            "size_bytes": os.path.getsize("atlas_m2.bin"),
+        },
+        "bound_file_sha256": {name: sha256_file(name) for name in bound_files},
         "audit_accounting": {
             "decoded_instructions": inst_count,
             "instruction_bytes": inst_count * 4,
@@ -135,19 +172,19 @@ def run_milestone2_gates():
             "vector_table_bytes": vec_count * 4,
             "total_words": total_words,
             "total_bytes": total_words * 4,
-            "discrepancy_bytes": 0
+            "discrepancy_bytes": 0,
         },
         "vector_table": {
             "base_address": "0x40201000",
             "alignment_bytes": 2048,
             "total_span_bytes": 2048,
             "slots": 16,
-            "slot_stride_bytes": 128
+            "slot_stride_bytes": 128,
         },
         "gates": all_gates,
         "native_qualification": {
             "PHYSICS_BOOT_NATIVE_PASS": "PENDING (Strictly decoupled; awaits DGX Spark silicon test)"
-        }
+        },
     }
 
     with open("qualification_receipt.json", "w") as f:

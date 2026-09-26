@@ -1,8 +1,51 @@
 /*
  * ATLAS M2: Bootstrap Seed for Milestone 2 (PHYSICS_BOOT)
- * Pinned Digest for physics.bin (6144 bytes):
- * b813fba2d05452c48574ac0c82de07457a78367c27e00718e85a0661b78ea4dd
+ *
+ * The pinned SHA-256 of physics.bin lives in physics_pin.inc, which
+ * build_m2.py regenerates from the physics.bin it just built. That file is
+ * the single source for the pin; this file carries no digest copy.
+ *
+ * Descriptor fields and PHYSICS_ENTRY_ABI registers default to the
+ * CONTRACT-QEMU-VIRT-AARCH64-M2 values. The Seam 2 hostile matrix overrides
+ * one at a time with `--defsym NAME=value`; the canonical build overrides none.
  */
+
+.ifndef DESC_MAGIC
+.equ DESC_MAGIC, 0x4D424453435F3031
+.endif
+.ifndef DESC_VERSION
+.equ DESC_VERSION, 1
+.endif
+.ifndef DESC_LENGTH
+.equ DESC_LENGTH, 64
+.endif
+.ifndef DESC_FLAGS
+.equ DESC_FLAGS, 0
+.endif
+.ifndef DESC_RAM_BASE
+.equ DESC_RAM_BASE, 0x40000000
+.endif
+.ifndef DESC_RAM_SIZE
+.equ DESC_RAM_SIZE, 0x08000000
+.endif
+.ifndef DESC_UART_BASE
+.equ DESC_UART_BASE, 0x09000000
+.endif
+.ifndef DESC_PHYSICS_BASE
+.equ DESC_PHYSICS_BASE, 0x40200000
+.endif
+.ifndef DESC_PHYSICS_SIZE
+.equ DESC_PHYSICS_SIZE, 6144
+.endif
+.ifndef ABI_X0
+.equ ABI_X0, 0x401FE000
+.endif
+.ifndef ABI_X1
+.equ ABI_X1, 6144
+.endif
+.ifndef ABI_X2
+.equ ABI_X2, 0x5048595349435330
+.endif
 
 .global _start
 .section .text
@@ -23,18 +66,26 @@ _start:
     adr x21, msg_awaken
     bl print_string
 
-    /* 5. Populate Machine Boot Descriptor at 0x401FE000 */
+    /* 5. Populate Machine Boot Descriptor at 0x401FE000 (64 bytes) */
     ldr x22, =0x401FE000
-    ldr x0, =0x40000000
-    str x0, [x22, #0]           /* +0:  RAM Base */
-    ldr x0, =0x08000000
-    str x0, [x22, #8]           /* +8:  RAM Size (128 MiB) */
-    mov x0, x20
-    str x0, [x22, #16]          /* +16: UART MMIO Base */
-    ldr x0, =0x40200000
-    str x0, [x22, #24]          /* +24: Physics Payload Base */
-    ldr x0, =6144
-    str x0, [x22, #32]          /* +32: Physics Payload Size */
+    ldr x0, =DESC_MAGIC         /* +0x00: magic = 'MBDSC_01' */
+    str x0, [x22, #0]
+    ldr w0, =DESC_VERSION       /* +0x08: version (u32) */
+    str w0, [x22, #8]
+    ldr w0, =DESC_LENGTH        /* +0x0C: length (u32) */
+    str w0, [x22, #12]
+    ldr x0, =DESC_FLAGS         /* +0x10: flags_reserved (u64) */
+    str x0, [x22, #16]
+    ldr x0, =DESC_RAM_BASE      /* +0x18: RAM Base */
+    str x0, [x22, #24]
+    ldr x0, =DESC_RAM_SIZE      /* +0x20: RAM Size */
+    str x0, [x22, #32]
+    ldr x0, =DESC_UART_BASE     /* +0x28: UART MMIO Base */
+    str x0, [x22, #40]
+    ldr x0, =DESC_PHYSICS_BASE  /* +0x30: Physics Payload Base */
+    str x0, [x22, #48]
+    ldr x0, =DESC_PHYSICS_SIZE  /* +0x38: Physics Payload Size */
+    str x0, [x22, #56]
 
     /* 6. Emit Diagnostic Checkpoint 2: VERIFY */
     adr x21, msg_verify
@@ -72,9 +123,9 @@ _start:
     bl print_string
 
     /* 9. Establish PHYSICS_ENTRY_ABI */
-    mov x0, x22                 /* x0 = pointer to Boot Descriptor (0x401FE000) */
-    ldr x1, =6144               /* x1 = payload size (6144 bytes) */
-    ldr x2, =0x5048595349435330 /* x2 = verification cookie ('PHYSICS0') */
+    ldr x0, =ABI_X0             /* x0 = pointer to Boot Descriptor (0x401FE000) */
+    ldr x1, =ABI_X1             /* x1 = payload size (6144 bytes) */
+    ldr x2, =ABI_X2             /* x2 = verification cookie ('PHYSICS0') */
 
     /* Static Target Proof: x19 is explicitly loaded from literal 0x40200000 immediately before branch */
     ldr x19, =0x40200000        /* Target: Contract-defined Physics Entry */
@@ -117,9 +168,7 @@ msg_refuse:
 
 .balign 8
 pinned_sha256_digest:
-    /* 4ab2f5abc083b1c38aa15c136a94837f0de706eb86a53915b32a27b7a516422e */
-    .word 0x4ab2f5ab, 0xc083b1c3, 0x8aa15c13, 0x6a94837f
-    .word 0x0de706eb, 0x86a53915, 0xb32a27b7, 0xa516422e
+    .include "physics_pin.inc"
 
 .ltorg
 .balign 64

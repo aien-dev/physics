@@ -46,9 +46,10 @@ root_capability_synthesis:
     mov x1, #1
     str x1, [x0, #8]
 
-    /* +0x10: resource_type = 0xFFFFFFFF, allowed_ops = 0xFFFFFFFF */
-    mov w1, #-1
+    /* +0x10: resource_type = 0x00000001 (RES_UNIVERSAL_ROOT), allowed_ops = 0xFFFFFFFF */
+    mov w1, #1
     str w1, [x0, #16]
+    mov w1, #-1
     str w1, [x0, #20]
 
     /* +0x18: bound_base = 0x40208000 (FREE_FRAME_BASE) */
