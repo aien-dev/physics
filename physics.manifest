@@ -1,0 +1,32 @@
+{
+  "artifact_name": "physics.bin",
+  "elf_artifact": "physics.elf",
+  "entry_point": "0x40200000",
+  "size_bytes": 6144,
+  "total_words": 1536,
+  "sha256": "4ab2f5abc083b1c38aa15c136a94837f0de706eb86a53915b32a27b7a516422e",
+  "vector_base_address": "0x40201000",
+  "vector_table_span_bytes": 2048,
+  "vector_slots": 16,
+  "vector_slot_stride_bytes": 128,
+  "provenance_anchor": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5",
+  "accounting": {
+    "code_bytes": 1480,
+    "rodata_bytes": 384,
+    "canonical_padding_bytes": 2232,
+    "vector_table_bytes": 2048,
+    "total_bytes": 6144,
+    "discrepancy_bytes": 0
+  },
+  "anti_bloat": {
+    "text_bytes": 1480,
+    "text_max_allowed_bytes": 32768,
+    "total_image_bytes": 6144,
+    "total_image_max_allowed_bytes": 65536,
+    "conformance": true
+  },
+  "milestone": "PHYSICS_BOOT",
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
+  "author": "Antigravity Sovereign Machine Synthesizer",
+  "verification_seam": "SEAM_1_ARTIFACT_AUDIT"
+}

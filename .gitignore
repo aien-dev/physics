@@ -1,0 +1,11 @@
+*.o
+*.elf
+__pycache__/
+atlas_corr_*
+atlas_trap.*
+atlas_unit.*
+physics_trap.*
+physics_unit.*
+physics_full.elf
+test_physics.elf
+run_unit_test.py

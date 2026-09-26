@@ -1,0 +1,69 @@
+# PHYSICS AUTHORITY NUCLEUS CONTROL FLOW SPECIFICATION
+## Milestone 2: Deterministic Boot Sequence & Fault Confinement
+
+### Flowchart Overview
+```mermaid
+graph TD
+    A[Atlas Handoff br x19 @ 0x40200000] --> B{Verify Cookie x2 == 'PHYSICS0'?}
+    B -- Mismatch --> C[Panic: Bad Cookie -> Quiescent Halt wfe]
+    B -- Valid --> D{Verify Descriptor x0 == 0x401FE000?}
+    D -- Mismatch --> E[Panic: Bad Descriptor -> Quiescent Halt wfe]
+    D -- Valid --> F[Read Boot Descriptor: RAM Base, RAM Size, UART Base]
+    F --> G[Migrate Stack: SP = 0x40208000]
+    G --> H[Emit Telemetry: PHYSICS: AWAKEN & DESCRIPTOR_VALID]
+    H --> I{Query CurrentEL}
+    I -- EL1 --> J[msr vbar_el1, x1]
+    I -- EL2 --> K[msr vbar_el2, x1]
+    J --> L[Emit Telemetry: PHYSICS: VBAR_INSTALLED]
+    K --> L
+    L --> M[Call frame_allocator_init: Window 0x40208000..DRAM_END]
+    M --> N[Emit Telemetry: PHYSICS: MEMORY_BOUND]
+    N --> O[Call root_capability_synthesis: Synthesize CAP_ROOT @ 0x40206000]
+    O --> P[Emit Telemetry: PHYSICS: ROOT_CAP_GENESIS]
+    P --> Q[Emit Telemetry: PHYSICS: QUIESCENT_READY]
+    Q --> R[Terminal Quiescence Loop: wfe; b .]
+
+    subgraph Exception Confinement [VBAR Vector Traps @ 0x40201000]
+        S[Trap Triggered: Sync / IRQ / FIQ / SError] --> T[Preserve GPRs x0-x30]
+        T --> U[Capture Raw State: CurrentEL, ESR, FAR, ELR, SPSR]
+        U --> V[Emit Raw Hex Telemetry to Console]
+        V --> W[Fail-Closed Quiescence: wfe; b .]
+    end
+```
+
+### Textual State Machine Transition Sequence
+1. **ENTRY STATE**: Invoked from Atlas via `br x19` at `0x40200000`.
+   - `x0`: Pointer to Machine Boot Descriptor at `0x401FE000`.
+   - `x1`: Payload size.
+   - `x2`: Verification Cookie `0x5048595349435330` (`PHYSICS0`).
+   - Interrupts masked (`DAIF = 0x3c0`).
+2. **INGRESS VALIDATION**:
+   - Compares `x2` to literal `'PHYSICS0'`. Mismatch vectors to `.Lpanic_bad_cookie`.
+   - Compares `x0` to literal `0x401FE000`. Mismatch vectors to `.Lpanic_bad_descriptor`.
+3. **STACK ISOLATION**:
+   - Updates `SP` to dedicated kernel stack `0x40208000` (or `0x40205800`), completely vacating and uncoupling Atlas scratchpad RAM.
+4. **TELEMETRY & VBAR REGISTRATION**:
+   - Emits `"PHYSICS: AWAKEN
+"` and `"PHYSICS: DESCRIPTOR_VALID
+"`.
+   - Loads `vector_table` address (`0x40201000`). Checks `CurrentEL` and programs `VBAR_EL1` or `VBAR_EL2`.
+   - Emits `"PHYSICS: VBAR_INSTALLED
+"`.
+5. **PHYSICAL FRAME AUTHORITY**:
+   - Invokes `frame_allocator_init(ram_base, ram_size)`.
+   - Calculates available frames above `0x40208000` up to `DRAM_END`.
+   - Clears frame bitmask in static memory.
+   - Emits `"PHYSICS: MEMORY_BOUND
+"`.
+6. **CAPABILITY GENESIS**:
+   - Invokes `root_capability_synthesis()`.
+   - Writes `CAP_ROOT` record at `0x40206000` (or `0x40209000`), anchoring pinned Atlas SHA-256 provenance hash.
+   - Emits `"PHYSICS: ROOT_CAP_GENESIS
+"`.
+7. **TERMINAL QUIESCENCE**:
+   - Emits `"PHYSICS: QUIESCENT_READY
+"`.
+   - Executes `wfe; b .` waiting for authoritative sovereign workload synthesis.
+8. **FAULT CONFINEMENT**:
+   - Any synchronous exception, unmapped access, or fault traps into `VBAR` at `0x40201000`.
+   - Trap handler saves full context, logs diagnostic crash telemetry, and halts safely in `wfe; b .`.

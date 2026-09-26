@@ -1,0 +1,53 @@
+{
+  "milestone": "MILESTONE 2 \u2014 PHYSICS_BOOT",
+  "status": "QUALIFIED_QEMU_VIRT",
+  "timestamp": "2026-09-26T05:37:45.839959+00:00",
+  "canonical_artifact": {
+    "name": "physics.bin",
+    "sha256": "4ab2f5abc083b1c38aa15c136a94837f0de706eb86a53915b32a27b7a516422e",
+    "size_bytes": 6144,
+    "total_words": 1536,
+    "entry_point": "0x40200000",
+    "provenance_anchor": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5"
+  },
+  "audit_accounting": {
+    "decoded_instructions": 370,
+    "instruction_bytes": 1480,
+    "rodata_words": 96,
+    "rodata_bytes": 384,
+    "canonical_padding_words": 558,
+    "canonical_padding_bytes": 2232,
+    "vector_table_words": 512,
+    "vector_table_bytes": 2048,
+    "total_words": 1536,
+    "total_bytes": 6144,
+    "discrepancy_bytes": 0
+  },
+  "vector_table": {
+    "base_address": "0x40201000",
+    "alignment_bytes": 2048,
+    "total_span_bytes": 2048,
+    "slots": 16,
+    "slot_stride_bytes": 128
+  },
+  "gates": {
+    "PHYSICS_ARTIFACT_IDENTITY_PASS": true,
+    "PHYSICS_MACHINE_CONTRACT_PASS": true,
+    "PHYSICS_AUDIT_PASS": true,
+    "PHYSICS_VECTOR_LAYOUT_PASS": true,
+    "PHYSICS_VECTOR_ALIGNMENT_PASS": true,
+    "PHYSICS_MEMORY_DISJOINTNESS_PASS": true,
+    "PHYSICS_STATIC_MEMORY_BOUNDS_PASS": true,
+    "PHYSICS_ENTRY_EL_PASS": true,
+    "PHYSICS_DESCRIPTOR_INGRESS_PASS": true,
+    "PHYSICS_BOOT_QEMU_PASS": true,
+    "PHYSICS_FRAME_BOUNDS_PASS": true,
+    "PHYSICS_RESERVED_FRAME_REFUSAL_PASS": true,
+    "PHYSICS_CAP_ROOT_PASS": true,
+    "PHYSICS_EXCEPTION_STATE_CAPTURE_PASS": true,
+    "PHYSICS_CORRUPTION_REFUSAL_PASS": true
+  },
+  "native_qualification": {
+    "PHYSICS_BOOT_NATIVE_PASS": "PENDING (Strictly decoupled; awaits DGX Spark silicon test)"
+  }
+}

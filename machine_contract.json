@@ -1,0 +1,111 @@
+{
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M2",
+  "version": "2.0.0",
+  "target_platform": "qemu-virt-aarch64",
+  "milestone": "PHYSICS_BOOT",
+  "architecture": {
+    "arch": "aarch64",
+    "endianness": "little",
+    "entry_exception_level": "contract-defined (EL1 or EL2)",
+    "physics_target_exception_level": "contract-defined (matches entry EL)"
+  },
+  "memory_map": {
+    "dram_base": "0x40000000",
+    "dram_size_bytes": 134217728,
+    "dram_end": "0x48000000",
+    "atlas_entry_base": "0x00000000",
+    "boot_descriptor_address": "0x401FE000",
+    "boot_descriptor_size_bytes": 64,
+    "physics_payload_base": "0x40200000",
+    "physics_image_base": "0x40200000",
+    "physics_image_size_bytes": 4096,
+    "physics_vector_table_base": "0x40201000",
+    "physics_vector_table_size_bytes": 2048,
+    "kernel_stack_base": "0x40201800",
+    "kernel_stack_top": "0x40205800",
+    "kernel_stack_size_bytes": 16384,
+    "boot_state_base": "0x40205800",
+    "boot_state_size_bytes": 2048,
+    "capability_table_base": "0x40206000",
+    "capability_table_size_bytes": 4096,
+    "static_data_base": "0x40207000",
+    "static_data_size_bytes": 4096,
+    "free_frame_base": "0x40208000",
+    "uart_mmio_base": "0x09000000",
+    "uart_flags_offset": 24,
+    "uart_txff_mask": 32
+  },
+  "anti_bloat_bounds": {
+    "max_text_bytes": 32768,
+    "max_total_image_bytes": 65536
+  },
+  "disjoint_regions": [
+    {
+      "name": "PHYSICS_IMAGE",
+      "start": "0x40200000",
+      "end": "0x40201000",
+      "size_bytes": 4096
+    },
+    {
+      "name": "PHYSICS_VECTOR_TABLE",
+      "start": "0x40201000",
+      "end": "0x40201800",
+      "size_bytes": 2048
+    },
+    {
+      "name": "PHYSICS_KERNEL_STACK",
+      "start": "0x40201800",
+      "end": "0x40205800",
+      "size_bytes": 16384
+    },
+    {
+      "name": "PHYSICS_BOOT_STATE",
+      "start": "0x40205800",
+      "end": "0x40206000",
+      "size_bytes": 2048
+    },
+    {
+      "name": "PHYSICS_CAPABILITY_TABLE",
+      "start": "0x40206000",
+      "end": "0x40207000",
+      "size_bytes": 4096
+    },
+    {
+      "name": "PHYSICS_STATIC_DATA",
+      "start": "0x40207000",
+      "end": "0x40208000",
+      "size_bytes": 4096
+    },
+    {
+      "name": "FREE_FRAME_REGION",
+      "start": "0x40208000",
+      "end": "0x48000000",
+      "size_bytes": 132087808
+    }
+  ],
+  "physics_entry_abi": {
+    "x0": "0x401FE000",
+    "x1_max_size": 65536,
+    "x2_cookie": "0x5048595349435330",
+    "entry_point": "0x40200000"
+  },
+  "vector_table_spec": {
+    "base_address": "0x40201000",
+    "alignment_bytes": 2048,
+    "table_span_bytes": 2048,
+    "num_slots": 16,
+    "slot_stride_bytes": 128
+  },
+  "root_capability_spec": {
+    "anchor_address": "0x40206000",
+    "generation": 1,
+    "slot": 0,
+    "principal_id": "0x0000000000000001",
+    "resource_type": "0x00000001",
+    "allowed_ops": "0xFFFFFFFF",
+    "bound_base": "0x40208000",
+    "bound_size": "0x07DF8000",
+    "revocation_state": 1,
+    "atlas_provenance_digest": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5"
+  }
+}
