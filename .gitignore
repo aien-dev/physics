@@ -13,3 +13,5 @@ build/
 tools/m2tool
 m16/m16_requalify
 m16/m16_concurrent
+tests/test_forge_hwid
+tests/test_forge_seam
