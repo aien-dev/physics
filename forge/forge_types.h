@@ -47,9 +47,14 @@ typedef struct {
  * Only instances constructed by aegis_verify_realization() with
  * verified == true and valid verification_token are accepted
  * by forge_submit_realization().
+ * Contains an immutable sealed copy and hash of the verified machine code
+ * to prevent post-verification code mutation attacks.
  */
 typedef struct {
     ForgeRealizationResult realization;
+    uint8_t                sealed_code[FORGE_MAX_MACHINE_CODE];
+    size_t                 sealed_code_size;
+    uint8_t                sealed_code_hash[FORGE_DIGEST_LEN];
     uint8_t                verification_token[FORGE_DIGEST_LEN];
     uint8_t                verified_descriptor_digest[FORGE_DIGEST_LEN];
     bool                   verified;
@@ -57,12 +62,13 @@ typedef struct {
 
 /*
  * Forge Execution Evidence:
- * Structured observational evidence emitted upon hardware execution.
+ * Structured observational evidence emitted upon physical hardware execution.
  */
 typedef struct {
     uint8_t  candidate_commit[FORGE_COMMIT_LEN];
     uint8_t  physics_commit[FORGE_COMMIT_LEN];
     uint8_t  descriptor_digest[FORGE_DIGEST_LEN];
+    uint8_t  code_digest[FORGE_DIGEST_LEN];
     uint8_t  realization_id[FORGE_DIGEST_LEN];
     uint32_t submission_marker_payload;
     uint64_t execution_duration_ns;
@@ -78,5 +84,8 @@ typedef struct {
 #define FORGE_SEAM_ERR_INVALID_ARG      -105
 #define FORGE_SEAM_ERR_CAPACITY         -106
 #define FORGE_SEAM_ERR_NVRM             -107
+#define FORGE_SEAM_ERR_CODE_MUTATED     -108
+#define FORGE_SEAM_ERR_NULL_NVRM        -109
+#define FORGE_SEAM_ERR_SUBMIT_FAILED    -110
 
 #endif /* FORGE_TYPES_H */

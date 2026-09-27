@@ -74,6 +74,10 @@ int main(void) {
                    (forge_descriptor_verify_alias(&desc, "sm_121") == 0);
     report("RECEIPT_HARDWARE_DERIVED", alias_ok);
 
+    /* 5. SERIALIZATION_KAT_VERIFIED */
+    int kat_rc = forge_descriptor_run_kat();
+    report("SERIALIZATION_KAT_VERIFIED", kat_rc == 0);
+
     /* --- NEGATIVE TESTS --- */
     printf("\n[*] Running Gate 4 Negative Tests...\n");
 
