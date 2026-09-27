@@ -1,0 +1,35 @@
+{
+  "gate": "GATE_3_FORGE_0",
+  "program": "AIEN_M19R_FOUNDATION",
+  "status": "PASS",
+  "timestamp": "2026-09-27T14:49:09Z",
+  "physics_candidate_commit": "df13c87605bf6e5cf876eba22ffe7908ad4cc01c",
+  "omega_dependency_commit": "30e7c704cb1506088b28f08bc7757bf1adf11a6b",
+  "machine_descriptor_digest": "cd9dd0ae12ea25b9d1d315bc5c57af27bce3db3e78bbb9883355bd4ffae513a8",
+  "gates_run": {
+    "FORGE_REALIZE_API_NAMED": "PASS",
+    "AEGIS_VERIFY_API_NAMED": "PASS",
+    "FORGE_TYPED_BOUNDARY_ENFORCED": "PASS",
+    "HISTORICAL_NAMES_PRESERVED": "PASS",
+    "NO_EXISTING_FILE_RENAMED": "PASS",
+    "NEG_UNVERIFIED_REALIZATION_REJECTED": "PASS",
+    "NEG_DESCRIPTOR_MISMATCH_REJECTED": "PASS",
+    "NEG_STALE_REALIZATION_IDENTITY_REJECTED": "PASS",
+    "NEG_VERIFICATION_FAILURE_PREVENTS_SUBMISSION": "PASS"
+  },
+  "total_gates": 9,
+  "passed_gates": 9,
+  "failed_gates": 0,
+  "invariants_verified": [
+    "Unverified realization cannot be submitted through typed FORGE boundary",
+    "Hardware submission strictly requires ForgeVerifiedRealization token",
+    "Realization descriptor digest must match live machine descriptor digest",
+    "Stale realization digest fails admission closed",
+    "Aegis verification failure halts hardware execution without fault"
+  ],
+  "zero_foreign_runtime_checks": {
+    "zero_libcuda": true,
+    "zero_libcudart": true,
+    "direct_nvrm_ioctls_only": true
+  }
+}
