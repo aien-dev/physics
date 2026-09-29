@@ -78,7 +78,8 @@ enum {
     FORGE_V2_ERR_RIGHTS = -23,
     FORGE_V2_ERR_RANGE = -24,         /* offset/length outside referenced object */
     FORGE_V2_ERR_DUPLICATE_ID = -25,
-    FORGE_V2_ERR_OUT_OF_ENVELOPE = -26 /* conditions outside the calibration envelope */
+    FORGE_V2_ERR_OUT_OF_ENVELOPE = -26, /* conditions outside the calibration envelope */
+    FORGE_V2_ERR_NO_DIGITAL_FALLBACK = -27 /* eligible set holds no digital realization */
 };
 
 /* ---- substrate classes (vendor-neutral; numeric ids are frozen) ---- */
@@ -435,6 +436,26 @@ int forge_v2_substrate_eligible(const ForgeSubstrateDescriptor *s,
                                 const ForgeCalibrationArtifact *cal,
                                 uint32_t fault_state,
                                 const ForgeV2Conditions *now);
+
+/* One eligible realization candidate, on any Machine of the Fabric. */
+typedef struct {
+    uint8_t  contract_digest[32];      /* SemanticResultContract digest it satisfies */
+    uint8_t  machine_identity[32];     /* Machine that hosts the substrate */
+    uint8_t  substrate_digest[32];
+    uint32_t substrate_class;
+} ForgeV2Candidate;
+
+/* Digital fallback rule. Returns 1 when some candidate in the eligible set
+ * (on any Machine) is on a DIGITAL_CPU or DIGITAL_GPU substrate and carries
+ * the same contract digest; 0 otherwise (also for NULL or empty input).
+ * Pure. A single Machine need not hold a digital substrate. */
+int forge_v2_eligible_set_has_digital_fallback(const ForgeV2Candidate *set, size_t n,
+                                               const uint8_t contract_digest[32]);
+
+/* Admission of a realization plan for one contract: FORGE_V2_OK when the
+ * eligible set holds a digital fallback for that contract, otherwise
+ * FORGE_V2_ERR_NO_DIGITAL_FALLBACK (AEGIS refuses the plan). */
+int forge_v2_admit_plan(const ForgeV2Candidate *set, size_t n, const uint8_t contract_digest[32]);
 
 /* Authority for a use of a cross-machine reference. effect_class is one
  * FORGE_V2_FX_* value. Hardware-state-changing effects need the matching

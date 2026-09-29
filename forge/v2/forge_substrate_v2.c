@@ -331,7 +331,7 @@ static int val_substrate(const void *o)
 static int val_machine(const void *o)
 {
     const ForgeMachineDescriptorV2 *m = o;
-    int digital = 0, rc;
+    int rc;
     if (is_zero(m->machine_identity, 32) || is_zero(m->authority_domain, 32)) return FORGE_V2_ERR_VALUE;
     if (!in_range(m->memory_coherency, 1, FORGE_V2_COHERENCY_LAST)) return FORGE_V2_ERR_VALUE;
     if (!in_range(m->interconnect_topology, 1, FORGE_V2_TOPO_LAST)) return FORGE_V2_ERR_VALUE;
@@ -339,15 +339,16 @@ static int val_machine(const void *o)
     if (m->substrate_count < 1 || m->substrate_count > FORGE_V2_MAX_SUBSTRATES) return FORGE_V2_ERR_COUNT;
     for (uint32_t i = 0; i < m->substrate_count; i++) {
         if ((rc = val_substrate(&m->substrates[i])) != FORGE_V2_OK) return rc;
-        if (class_digital(m->substrates[i].substrate_class)) digital = 1;
         if (i > 0) {
             int c = memcmp(m->substrates[i - 1].substrate_identity, m->substrates[i].substrate_identity, 32);
             if (c == 0) return FORGE_V2_ERR_DUPLICATE_ID;
             if (c > 0) return FORGE_V2_ERR_ORDER;
         }
     }
-    /* the digital fallback must always exist on the machine */
-    if (!digital) return FORGE_V2_ERR_VALUE;
+    /* A Machine may carry only non-digital substrates (e.g. an external
+     * analog node on the Fabric). The digital fallback is a property of the
+     * eligible set for a contract, not of any one Machine: see
+     * forge_v2_eligible_set_has_digital_fallback(). */
     return FORGE_V2_OK;
 }
 
@@ -737,6 +738,23 @@ int forge_v2_authorize(const ForgeCrossMachineRef *r, uint32_t effect_class, uin
     return FORGE_V2_OK;
 }
 
+int forge_v2_eligible_set_has_digital_fallback(const ForgeV2Candidate *set, size_t n,
+                                               const uint8_t contract_digest[32])
+{
+    if (!set || !contract_digest) return 0;
+    for (size_t i = 0; i < n; i++)
+        if (class_digital(set[i].substrate_class) && memcmp(set[i].contract_digest, contract_digest, 32) == 0)
+            return 1;
+    return 0;
+}
+
+int forge_v2_admit_plan(const ForgeV2Candidate *set, size_t n, const uint8_t contract_digest[32])
+{
+    if (!contract_digest) return FORGE_V2_ERR_ARG;
+    return forge_v2_eligible_set_has_digital_fallback(set, n, contract_digest) ? FORGE_V2_OK
+                                                                              : FORGE_V2_ERR_NO_DIGITAL_FALLBACK;
+}
+
 const char *forge_v2_strerror(int err)
 {
     switch (err) {
@@ -767,6 +785,7 @@ const char *forge_v2_strerror(int err)
     case FORGE_V2_ERR_RANGE: return "offset/length outside referenced object";
     case FORGE_V2_ERR_DUPLICATE_ID: return "duplicate substrate identity";
     case FORGE_V2_ERR_OUT_OF_ENVELOPE: return "conditions outside calibration envelope";
+    case FORGE_V2_ERR_NO_DIGITAL_FALLBACK: return "no digital fallback in eligible set";
     default: return "unknown error";
     }
 }

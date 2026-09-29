@@ -116,7 +116,7 @@ Values are listed in canonical (tag) order. Type `d32` is a 32-byte digest.
 | 0x0130 | u32 | transport_class | ON_PACKAGE 1, PCIE 2, USB 3, ETHERNET 4, RDMA_ETHERNET 5, BOARD_TO_BOARD 6, REMOTE_MACHINE 7 |
 | 0x0131 | u32 | transport_bandwidth_mbps | cost metadata |
 | 0x0132 | u32 | transport_latency_ns | cost metadata |
-| 0x0140 | nested substrate, repeated | substrates | 1..8, ascending unique `substrate_identity`; at least one `DIGITAL_*` |
+| 0x0140 | nested substrate, repeated | substrates | 1..8, ascending unique `substrate_identity`; any classes (no per-Machine digital requirement) |
 
 **ForgeSubstrateDescriptor (kind 2)**
 
@@ -233,8 +233,10 @@ Values are listed in canonical (tag) order. Type `d32` is a 32-byte digest.
 ### 5.1 Machine
 
 A Machine (`ForgeMachineDescriptorV2`) is: machine identity, memory topology, interconnect topology,
-transport, authority domain, and one or more attached substrates. **Every Machine has at least one digital
-substrate** (enforced), so the digital realization is always available as the fallback (§10).
+transport, authority domain, and one or more attached substrates of any class. A Machine **need not** carry
+a digital substrate: an external analog compute node on the Fabric whose only substrate is analog is a valid
+Machine (golden vector §9, `analog_only_machine_roundtrip_strict`). The digital fallback is a property of the
+**eligible set** for a semantic operation, not of any one Machine descriptor (§10).
 
 `machine_identity` is the stable name; the descriptor digest describes the Machine's current declared
 configuration. Changing transport metadata changes the descriptor digest but not `machine_identity`, and not
@@ -404,8 +406,13 @@ The v1 `ir_payload` pointer is an in-process detail: its value is never hashed a
 
 - A substrate that is faulted or unavailable (`fault_state ≠ NONE`) is **excluded from the eligible set**
   (`FORGE_V2_ERR_FAULTED`). Stale or out-of-envelope calibration excludes it the same way.
-- The **digital realization always remains the fallback**: every Machine descriptor must contain a digital
-  substrate, and the exact digital path stays eligible for bounded and exact contracts alike.
+- The **digital realization always remains the fallback**, as a rule on the **eligible set**: a realization
+  plan for a contract is admitted only if the eligible set (across all Machines) contains at least one
+  `DIGITAL_CPU` or `DIGITAL_GPU` candidate for the **same contract digest**
+  (`forge_v2_eligible_set_has_digital_fallback`, `forge_v2_admit_plan`). Otherwise AEGIS refuses the plan
+  (`FORGE_V2_ERR_NO_DIGITAL_FALLBACK`). A digital candidate for a different contract does not count. A single
+  Machine may hold only non-digital substrates. The exact digital path stays eligible for bounded and exact
+  contracts alike.
 - A faulted device **cannot corrupt World state**: its only output path is evidence. A result is published only
   if the semantic contract check passes against the oracle; the device returning a value confers nothing.
 - Decoder failures are total: on any error the output object is zeroed, so a caller cannot act on a
@@ -439,6 +446,9 @@ The v1 `ir_payload` pointer is an in-process detail: its value is never hashed a
   identity, result identity, or realization identity (which uses `machine_identity`, not the descriptor
   digest). Checked by `transport_changes_descriptor_digest_not_realization_identity`.
 - Cross-machine references (§9) are content-addressed, so they mean the same thing on every Machine.
+- A Fabric Machine may be an external analog compute node whose only substrate is analog (golden vector §9).
+  Its candidates join the eligible set like any other. The digital fallback for the same contract may live on
+  a different Machine (§10); the Fabric placement cost of using it enters the cost model, never identity.
 - Fabric state: omega#72 is merged (`f308ac7`); a Fabric-connected analog Machine is AR6 and waits on Fabric
   F5. ARGUS gate status as in §11.
 
@@ -457,7 +467,7 @@ exact strings the test prints.
 | AR1 | `SIMULATED_DEVELOPMENT` provenance explicit | `evidence_encode_without_provenance_refused`, `evidence_decode_missing_provenance_refused`, `evidence_decode_zero_provenance_refused`, `simulated_provenance_explicit_in_kat_evidence` | covered |
 | AR2 | analog simulation provider with digital oracle parity | contract/profile/evidence data model only; anchors in §6.4 | **not covered** (needs the simulation provider) |
 | AR3 | staleness ⇒ ineligible; uncertainty propagates into the contract check; evidence complete | `fresh_calibration_eligible`, `stale_calibration_rejected`, `substrate_bound_looser_than_contract_rejected`, `stochastic_substrate_not_eligible_for_exact_contract`, `recalibration_changes_realization_identity` | partial (data model + eligibility; no live evidence completeness audit) |
-| AR4 | first physical analog operation; clean digital fallback; faulted device cannot corrupt World; no authority bypass; no vendor identity | `faulted_substrate_excluded`, `digital_fallback_eligible_for_bounded_and_exact`, `machine_without_digital_fallback_rejected`, `irreversible_config_without_right_refused`, `irreversible_config_with_right_and_generation_allowed`, `authorize_pure_current_generation`, `reference_range_overflow_refused`, `no_vendor_names_in_v2_identifiers` | preconditions only; **no physical device exists** and none is claimed |
+| AR4 | first physical analog operation; clean digital fallback (a digital realization of the same contract exists somewhere in the eligible set, on any Machine); faulted device cannot corrupt World; no authority bypass; no vendor identity | `faulted_substrate_excluded`, `digital_fallback_eligible_for_bounded_and_exact`, `analog_only_machine_roundtrip_strict`, `eligible_set_analog_only_has_no_digital_fallback`, `digital_candidate_for_other_contract_not_a_fallback`, `eligible_set_digital_on_other_machine_is_fallback`, `irreversible_config_without_right_refused`, `irreversible_config_with_right_and_generation_allowed`, `authorize_pure_current_generation`, `reference_range_overflow_refused`, `no_vendor_names_in_v2_identifiers` | preconditions only; **no physical device exists** and none is claimed |
 
 Also enforced by the gate script: build with `gcc -O2 -Wall -Wextra -Werror -std=c11`
 (`build_gcc_O2_Wall_Wextra_Werror_std_c11`), no hardware includes / no heap in V2 code
@@ -485,3 +495,5 @@ heartbeat, tick, dispatch, schedule, orchestrate, turn, pulse, yield or epoll).
    the canonical bytes is unspecified.
 8. **Verification secret.** v1's AEGIS verification token is a plain prefix hash with a compiled-in constant,
    not an HMAC. V2 defines no token; AEGIS admission for V2 should not inherit the v1 construction.
+9. **Remote fallback.** The fallback digital realization may live on a different Machine; Fabric placement cost
+   applies.

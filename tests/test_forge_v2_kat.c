@@ -44,6 +44,7 @@ static const char FROZEN_CONTRACT[]    = "b32a3577b720087e5877997824123f1177cb7a
 static const char FROZEN_CALIBRATION[] = "f7fd8996c6818081ee918681bf9cf9a0be3e1c23fde8ac522eeb55b3a8565413";
 static const char FROZEN_EVIDENCE[]    = "e1fbcb958b1e7060ba7ee2d366c3688a00bcf6e27f3f9ca71fb8d73c88f150f9";
 static const char FROZEN_REF[]         = "a20384da09d1f46090e553651ba81d1355533d3becbe59c1a798f1321da4b7b5";
+static const char FROZEN_ANALOG_MACHINE[] = "a1c00a5f917889455972a204ec7e83c44cce3ea2042e06efeb87981c67d88d2c";
 
 #define KAT_EPOCH 1000000u      /* calibration epoch of the fixture, seconds */
 #define KAT_WINDOW 3600u        /* one hour validity */
@@ -304,7 +305,28 @@ typedef struct {
     uint8_t ev_digest[32];
     ForgeCrossMachineRef ref;
     uint8_t ref_digest[32];
+    ForgeMachineDescriptorV2 analog_machine;   /* Fabric Machine with only an analog substrate */
+    uint8_t analog_machine_digest[32];
 } Kat;
+
+/* Development fixture: an external analog compute node reached over the
+ * Fabric, whose only substrate is the simulated analog fixture. */
+static void analog_only_machine(ForgeMachineDescriptorV2 *m, const ForgeSubstrateDescriptor *analog)
+{
+    memset(m, 0, sizeof *m);
+    label_id("FORGE-V2-KAT/machine/external-analog-node-fixture", m->machine_identity);
+    label_id("FORGE-V2-KAT/authority-domain/owner", m->authority_domain);
+    m->memory_nominal_bytes = 1ull << 20;
+    m->memory_numa_domains = 1;
+    m->memory_coherency = FORGE_V2_COHERENCY_DISCRETE;
+    m->interconnect_topology = FORGE_V2_TOPO_REMOTE;
+    m->interconnect_links = 1;
+    m->transport_class = FORGE_V2_TRANSPORT_ETHERNET;
+    m->transport_bandwidth_mbps = 10000;
+    m->transport_latency_ns = 50000;
+    m->substrate_count = 1;
+    m->substrates[0] = *analog;
+}
 
 static int build_kat(Kat *k)
 {
@@ -326,6 +348,8 @@ static int build_kat(Kat *k)
     if (forge_v2_digest_evidence(&k->ev, k->ev_digest)) return -1;
     fixture_ref(&k->ref, k->analog_digest);
     if (forge_v2_digest_ref(&k->ref, k->ref_digest)) return -1;
+    analog_only_machine(&k->analog_machine, &k->analog);
+    if (forge_v2_digest_machine(&k->analog_machine, k->analog_machine_digest)) return -1;
     return 0;
 }
 
@@ -486,9 +510,46 @@ static int run_checks(void)
               forge_v2_encode_machine(&m, g_buf, sizeof g_buf, &n) == FORGE_V2_ERR_ORDER);
         m = k.machine; m.substrate_count = 0;
         check("zero_substrates_rejected", forge_v2_encode_machine(&m, g_buf, sizeof g_buf, &n) == FORGE_V2_ERR_COUNT);
-        m.substrate_count = 1; m.substrates[0] = k.analog;
-        check("machine_without_digital_fallback_rejected",
-              forge_v2_encode_machine(&m, g_buf, sizeof g_buf, &n) == FORGE_V2_ERR_VALUE);
+        {
+            /* (a) a Fabric Machine whose only substrate is analog is valid */
+            ForgeMachineDescriptorV2 am;
+            rc = forge_v2_encode_machine(&k.analog_machine, g_buf, sizeof g_buf, &n);
+            check("analog_only_machine_roundtrip_strict",
+                  rc == 0 && forge_v2_decode_machine(g_buf, n, 1, &am) == 0 && am.substrate_count == 1 &&
+                      am.substrates[0].substrate_class == FORGE_V2_SUBSTRATE_ANALOG_IN_MEMORY &&
+                      forge_v2_digest_machine(&am, d) == 0 && memcmp(d, k.analog_machine_digest, 32) == 0);
+            check("frozen_analog_only_machine_digest", digest_is(k.analog_machine_digest, FROZEN_ANALOG_MACHINE));
+        }
+        {
+            /* (b)/(c) the digital fallback is a property of the eligible set */
+            ForgeV2Candidate set[3];
+            memset(set, 0, sizeof set);
+            memcpy(set[0].contract_digest, k.contract_digest, 32);
+            memcpy(set[0].machine_identity, k.analog_machine.machine_identity, 32);
+            memcpy(set[0].substrate_digest, k.analog_digest, 32);
+            set[0].substrate_class = FORGE_V2_SUBSTRATE_ANALOG_IN_MEMORY;
+            set[1] = set[0];
+            set[1].substrate_digest[0] ^= 1;   /* a second analog candidate */
+            check("eligible_set_analog_only_has_no_digital_fallback",
+                  forge_v2_eligible_set_has_digital_fallback(set, 2, k.contract_digest) == 0 &&
+                      forge_v2_admit_plan(set, 2, k.contract_digest) == FORGE_V2_ERR_NO_DIGITAL_FALLBACK);
+            /* a digital candidate for a different contract does not count */
+            const ForgeSubstrateDescriptor *cpu = &k.machine.substrates[0];
+            if (cpu->substrate_class != FORGE_V2_SUBSTRATE_DIGITAL_CPU) cpu = &k.machine.substrates[1];
+            memcpy(set[2].contract_digest, k.contract_digest, 32);
+            set[2].contract_digest[0] ^= 1;
+            memcpy(set[2].machine_identity, k.machine.machine_identity, 32);
+            forge_v2_digest_substrate(cpu, set[2].substrate_digest);
+            set[2].substrate_class = cpu->substrate_class;
+            check("digital_candidate_for_other_contract_not_a_fallback",
+                  forge_v2_eligible_set_has_digital_fallback(set, 3, k.contract_digest) == 0);
+            /* digital realization of the same contract on another Machine */
+            memcpy(set[2].contract_digest, k.contract_digest, 32);
+            check("eligible_set_digital_on_other_machine_is_fallback",
+                  memcmp(set[2].machine_identity, set[0].machine_identity, 32) != 0 &&
+                      forge_v2_eligible_set_has_digital_fallback(set, 3, k.contract_digest) == 1 &&
+                      forge_v2_admit_plan(set, 3, k.contract_digest) == FORGE_V2_OK);
+        }
         ForgeSubstrateDescriptor s = k.analog;
         s.substrate_class = FORGE_V2_SUBSTRATE_FUTURE_RESERVED_FIRST;
         check("reserved_substrate_class_rejected",
@@ -711,6 +772,16 @@ static int dump_vectors(void)
     dump_bytes(g_buf, n);
     printf("\n");
     dump_digest("Reference digest (frozen)", k.ref_digest);
+
+    printf("## 9. Analog-only Fabric Machine (development fixture, frozen)\n\n");
+    printf("An external analog compute node whose only substrate is the simulated ANALOG_IN_MEMORY\n");
+    printf("fixture of section 3. Valid: the digital fallback is required of the eligible set for a\n");
+    printf("contract (any Machine), not of each Machine descriptor.\n\n");
+    forge_v2_encode_machine(&k.analog_machine, g_buf, sizeof g_buf, &n);
+    printf("Canonical bytes (%zu bytes):\n\n", n);
+    dump_bytes(g_buf, n);
+    printf("\n");
+    dump_digest("Analog-only machine descriptor digest (frozen)", k.analog_machine_digest);
     return 0;
 }
 
