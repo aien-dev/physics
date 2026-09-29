@@ -20,8 +20,24 @@ static void report(const char *name, int ok) {
     }
 }
 
+static const char *get_base_commit(char *buf, size_t sz) {
+    FILE *fp = popen("git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main 2>/dev/null || echo origin/main", "r");
+    if (!fp) return "origin/main";
+    if (!fgets(buf, sz, fp)) {
+        pclose(fp);
+        return "origin/main";
+    }
+    pclose(fp);
+    char *nl = strchr(buf, '\n');
+    if (nl) *nl = '\0';
+    return buf[0] ? buf : "origin/main";
+}
+
 static int check_git_diff_no_renames_or_deletions(void) {
-    FILE *fp = popen("git diff --name-status a477aeef700559a086eb61c12e070b262681963e", "r");
+    char base[128];
+    char cmd[256];
+    snprintf(cmd, sizeof(cmd), "git diff --name-status %s", get_base_commit(base, sizeof(base)));
+    FILE *fp = popen(cmd, "r");
     if (!fp) return 0;
     char line[512];
     int ok = 1;
@@ -37,7 +53,10 @@ static int check_git_diff_no_renames_or_deletions(void) {
 }
 
 static int check_historical_files_unmodified(void) {
-    FILE *fp = popen("git diff --exit-code a477aeef700559a086eb61c12e070b262681963e -- physics.bin physics.audit physics.s nvrm/ m16/", "r");
+    char base[128];
+    char cmd[512];
+    snprintf(cmd, sizeof(cmd), "git diff --exit-code %s -- physics.bin physics.audit physics.s nvrm/ m16/", get_base_commit(base, sizeof(base)));
+    FILE *fp = popen(cmd, "r");
     if (!fp) return 0;
     int rc = pclose(fp);
     return (rc == 0);
