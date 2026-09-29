@@ -460,8 +460,8 @@ int forge_v2_admit_plan(const ForgeV2Candidate *set, size_t n, const uint8_t con
 /* Authority for a use of a cross-machine reference. effect_class is one
  * FORGE_V2_FX_* value. Hardware-state-changing effects need the matching
  * CONFIGURE right and a generation equal to current_generation. */
-int forge_v2_authorize(const ForgeCrossMachineRef *r, uint32_t effect_class,
-                       uint64_t current_generation);
+int forge_v2_validate_capability_ref(const ForgeCrossMachineRef *r, uint32_t effect_class,
+                                     uint64_t current_generation);
 
 const char *forge_v2_strerror(int err);
 

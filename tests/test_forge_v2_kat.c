@@ -639,16 +639,16 @@ static int run_checks(void)
         g_buf[6] = 1; g_buf[7] = 0;
         check("legacy_version_1_object_refused", forge_v2_decode_ref(g_buf, n, 1, &r2) == FORGE_V2_ERR_LEGACY_VERSION);
         check("authorize_pure_current_generation",
-              forge_v2_authorize(&k.ref, FORGE_V2_FX_PURE, KAT_GENERATION) == 0);
+              forge_v2_validate_capability_ref(&k.ref, FORGE_V2_FX_PURE, KAT_GENERATION) == 0);
         check("stale_generation_high_bits_refused",
-              forge_v2_authorize(&k.ref, FORGE_V2_FX_PURE, KAT_GENERATION + (1ull << 32)) ==
+              forge_v2_validate_capability_ref(&k.ref, FORGE_V2_FX_PURE, KAT_GENERATION + (1ull << 32)) ==
                   FORGE_V2_ERR_STALE_GENERATION);
         check("irreversible_config_without_right_refused",
-              forge_v2_authorize(&k.ref, FORGE_V2_FX_EXTERNAL_IRREVERSIBLE, KAT_GENERATION) == FORGE_V2_ERR_RIGHTS);
+              forge_v2_validate_capability_ref(&k.ref, FORGE_V2_FX_EXTERNAL_IRREVERSIBLE, KAT_GENERATION) == FORGE_V2_ERR_RIGHTS);
         ForgeCrossMachineRef r = k.ref;
         r.rights |= FORGE_V2_RIGHT_CONFIGURE_IRREVERSIBLE;
         check("irreversible_config_with_right_and_generation_allowed",
-              forge_v2_authorize(&r, FORGE_V2_FX_EXTERNAL_IRREVERSIBLE, KAT_GENERATION) == 0);
+              forge_v2_validate_capability_ref(&r, FORGE_V2_FX_EXTERNAL_IRREVERSIBLE, KAT_GENERATION) == 0);
         r = k.ref; r.range_offset = UINT64_MAX - 10;
         check("reference_range_overflow_refused", forge_v2_encode_ref(&r, g_buf, sizeof g_buf, &n) == FORGE_V2_ERR_RANGE);
     }

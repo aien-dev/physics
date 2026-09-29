@@ -719,7 +719,7 @@ int forge_v2_substrate_eligible(const ForgeSubstrateDescriptor *s, const ForgeSe
     return FORGE_V2_OK;
 }
 
-int forge_v2_authorize(const ForgeCrossMachineRef *r, uint32_t effect_class, uint64_t current_generation)
+int forge_v2_validate_capability_ref(const ForgeCrossMachineRef *r, uint32_t effect_class, uint64_t current_generation)
 {
     uint64_t need;
     int rc;
