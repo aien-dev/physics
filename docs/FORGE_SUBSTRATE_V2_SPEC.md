@@ -210,7 +210,8 @@ Values are listed in canonical (tag) order. Type `d32` is a 32-byte digest.
 - FORGE MACHINE DESCRIPTOR V1 is untouched: same 208-byte layout, same KAT, same receipts.
 - V2 **wraps** v1: the `DIGITAL_GPU` substrate that is the GB10 carries `legacy_v1_descriptor_digest`
   (tag `0x02F0`), the SHA-256 of the v1 208-byte canonical stream. V2 never re-serializes any v1 field, and no
-  v1 bytes appear in V2 canonical bytes (checked by `v2_bytes_carry_no_v1_fields`).
+  v1 bus-address (BDF) field ever appears in V2 canonical bytes (checked by `v2_bytes_carry_no_v1_fields`; the
+  check searches for that 16-byte field, not for every v1 byte sequence).
 - The **only frozen, reproducible v1 identity is the v1 KAT digest**
   `10d63d05f888eaba4fe473c5f17febe22f462f543ae0c2b005a9a8e5417e09fd`. The V2 KAT holds the v1 KAT 208-byte
   stream as a literal, hashes it with `sha256_compute`, asserts that digest, embeds it in the frozen reference
