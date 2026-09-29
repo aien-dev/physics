@@ -606,10 +606,11 @@ static int dec_public(const Schema *sc, const uint8_t *buf, size_t len, int stri
         return rc;
     }
     if (strict) {
-        if ((rc = enc_obj(sc, obj, again, sizeof again, &n)) != FORGE_V2_OK) return rc;
-        if (n != len || memcmp(again, buf, len) != 0) {
+        rc = enc_obj(sc, obj, again, sizeof again, &n);
+        if (rc == FORGE_V2_OK && (n != len || memcmp(again, buf, len) != 0)) rc = FORGE_V2_ERR_NONCANONICAL;
+        if (rc != FORGE_V2_OK) {
             memset(obj, 0, obj_size);
-            return FORGE_V2_ERR_NONCANONICAL;
+            return rc;
         }
     }
     return FORGE_V2_OK;
