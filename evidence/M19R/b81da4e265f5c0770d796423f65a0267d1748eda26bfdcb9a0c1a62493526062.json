@@ -1,0 +1,52 @@
+{
+  "gate": "GATE_4_FORGE_HWID",
+  "program": "AIEN_M19R_FOUNDATION",
+  "status": "PASS",
+  "timestamp": "2026-09-27T15:30:00Z",
+  "physics_candidate_commit": "0fb90426dde17f7d4167abb61b513b561632bc50",
+  "omega_dependency_commit": "c298a186f851ef81d308011d73eace7fb1b8b474",
+  "machine_descriptor_digest": "9f255e15a1cb93efb056be037fd680e5505a3031c8cbabdae91b3932fffb3c8d",
+  "serialization_kat_digest": "10d63d05f888eaba4fe473c5f17febe22f462f543ae0c2b005a9a8e5417e09fd",
+  "derived_display_alias": "sm_121",
+  "hardware_identity": {
+    "pci_vendor_id": "0x10de",
+    "pci_device_id": "0x2e12",
+    "pci_subsystem_vendor_id": "0x10de",
+    "pci_subsystem_device_id": "0x0000",
+    "pci_bdf": "000f:01:00.0",
+    "gpu_uuid": "GPU-8669466e-bc3b-5a1e-d401-447a16f2c699",
+    "rm_compute_class": "0xcec0",
+    "rm_sm_version": "0x0a04",
+    "driver_version": "580.173.02",
+    "firmware_version": "580.173.02",
+    "vbios_version": "9a.0b.2d.00.00",
+    "total_memory_bytes": 130660888576,
+    "dma_mask": "0x1ffffffffff",
+    "warp_size": 32,
+    "max_warps_per_sm": 48,
+    "gpu_core_count": 6144,
+    "sm_per_tpc": 2,
+    "shared_mem_per_block_bytes": 49152,
+    "pci_binding_verification": "Bound to exact NVRM-opened GPU via NV_ESC_CARD_INFO bus/device matching"
+  },
+  "gates_run": {
+    "RAW_HARDWARE_PROBE_CAPTURED": "PASS",
+    "FORGE_DESCRIPTOR_NORMALIZED": "PASS",
+    "DESCRIPTOR_DIGEST_BOUND": "PASS",
+    "RECEIPT_HARDWARE_DERIVED": "PASS",
+    "SERIALIZATION_KAT_VERIFIED": "PASS",
+    "NEG_MISSING_REQUIRED_FIELD_REJECTED": "PASS",
+    "NEG_MALFORMED_PCI_REJECTED": "PASS",
+    "NEG_UNSUPPORTED_COMPUTE_CLASS_REJECTED": "PASS",
+    "NEG_DESCRIPTOR_MUTATION_CAUSES_DIGEST_MISMATCH": "PASS",
+    "NEG_UNBOUND_ALIAS_REJECTED": "PASS"
+  },
+  "total_gates": 10,
+  "passed_gates": 10,
+  "failed_gates": 0,
+  "zero_foreign_runtime_checks": {
+    "zero_libcuda": true,
+    "zero_libcudart": true,
+    "direct_nvrm_ioctls_only": true
+  }
+}
