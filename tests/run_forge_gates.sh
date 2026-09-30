@@ -246,7 +246,7 @@ forge_usage() {
 }
 
 forge_main() {
-    local odir= osha= psha= ev= record=0 receipt_mode=0 run_id rd log g3 g4 rc body receipt ts status
+    local odir= osha= psha= ev= record=0 receipt_mode=0 run_id rd log g3 g4 rc body receipt ts status g3sha g4sha
     while [ $# -gt 0 ]; do
         case $1 in
             --omega-dir) [ $# -ge 2 ] || forge_usage; odir=$2; shift 2;;
@@ -283,6 +283,9 @@ forge_main() {
     flock -x 9 || { echo "cannot take $FORGE_LOCK" >&2; exit 1; }
     ts=$(date -u +%Y-%m-%dT%H:%M:%S.%6NZ)
     forge_run_section "$rd" 2>&1 | tee "$log"
+    # hash the binaries that ran before another run can rebuild them
+    g3sha=$( [ -f tests/test_forge_seam ] && forge_sha_file tests/test_forge_seam)
+    g4sha=$( [ -f tests/test_forge_hwid ] && forge_sha_file tests/test_forge_hwid)
     exec 9>&-
     g3=$(cat "$rd/gate3.rc"); g4=$(cat "$rd/gate4.rc")
     echo -e "\n=== M19R FORGE Gates Complete (gate3 exit $g3, gate4 exit $g4) ==="
@@ -290,9 +293,7 @@ forge_main() {
     [ "$g3" = 0 ] && [ "$g4" = 0 ] || rc=1
     [ "$receipt_mode" = 1 ] || { echo "No receipt written (no candidates given)."; exit "$rc"; }
 
-    body=$(forge_body "$log" "$g3" "$g4" \
-        "$( [ -f tests/test_forge_seam ] && forge_sha_file tests/test_forge_seam)" \
-        "$( [ -f tests/test_forge_hwid ] && forge_sha_file tests/test_forge_hwid)" \
+    body=$(forge_body "$log" "$g3" "$g4" "$g3sha" "$g4sha" \
         "$odir" "$osha" "$FORGE_ROOT" "$psha" "$run_id" "$ts")
     forge_receipt "$body" || { echo "Receipt failed: $FORGE_ERR" >&2; exit 1; }
     receipt=$FORGE_RECEIPT
