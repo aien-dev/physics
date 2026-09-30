@@ -2,30 +2,44 @@
 # tests/test_forge_gates_receipt.sh -- host-only tests (no GPU) for the Gate
 # 3/4 receipt writer in tests/run_forge_gates.sh.
 #
-#   tests/test_forge_gates_receipt.sh OMEGA_DIR
+#   tests/test_forge_gates_receipt.sh [OMEGA_DIR]
 #
-# OMEGA_DIR is an omega checkout; its tools/json_canon.c is the digest helper.
+# Needs jq. The receipt writer itself uses no omega code. When OMEGA_DIR (an
+# omega checkout) is given, the test also builds omega's tools/json_canon.c
+# and checks that every digest the writer makes equals json_canon --sha256
+# on the same content (the check the Gate 14 combiner does). Without it,
+# the same equality is checked with jq -S -c plus a fixed known digest.
 # The PASS fixture tests/fixtures/forge_gates_pass.log is the unedited Gate
 # 3/4 log of the Gate 14 legs run on omega 62f5ba5 + physics f63a6ef.
 set -u
 HERE=$(cd -P "$(dirname "$0")/.." && pwd)
 OMEGA_DIR=${1:-${OMEGA_DIR:-}}
-[ -n "$OMEGA_DIR" ] && [ -f "$OMEGA_DIR/tools/json_canon.c" ] ||
-    { echo "usage: $0 OMEGA_DIR (an omega checkout with tools/json_canon.c)"; exit 2; }
 # shellcheck source=tests/run_forge_gates.sh
 . "$HERE/tests/run_forge_gates.sh"
-forge_build_canon "$OMEGA_DIR" || { echo "FAIL: $FORGE_ERR"; exit 1; }
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP" "$FORGE_TMP"' EXIT
+trap 'rm -rf "$TMP"' EXIT
+JSON_CANON=
+if [ -n "$OMEGA_DIR" ]; then
+    [ -f "$OMEGA_DIR/tools/json_canon.c" ] || { echo "usage: $0 [OMEGA_DIR] (an omega checkout with tools/json_canon.c)"; exit 2; }
+    JSON_CANON=$TMP/json_canon
+    gcc -std=gnu11 -O2 -Wall -Wextra -Werror -I"$OMEGA_DIR/src" -o "$JSON_CANON" \
+        "$OMEGA_DIR/tools/json_canon.c" "$OMEGA_DIR/src/sha256.c" -lm || { echo "FAIL: cannot build json_canon"; exit 1; }
+fi
 fails=0 passes=0
 ok() { echo "  [PASS] $1"; passes=$((passes + 1)); }
 bad() { echo "  [FAIL] $1"; fails=$((fails + 1)); }
 check() { if eval "$2"; then ok "$1"; else bad "$1"; fi; }
-
+# jq_canon -- stdin JSON to sorted compact bytes (no trailing newline)
+jq_canon() { jq -S -c -j .; }
+# ref_digest -- digest of stdin JSON the way the Gate 14 combiner computes it
+ref_digest() { if [ -n "$JSON_CANON" ]; then "$JSON_CANON" --sha256; else jq_canon | sha256sum | cut -d' ' -f1; fi; }
 FIX=$HERE/tests/fixtures/forge_gates_pass.log
+# digest of the PASS body built below (fixed repos, run id and time), made by
+# omega tools/json_canon.c --sha256 at omega 3875223
+KAT_DIGEST=b1a2f42cb95ba7246c71addb3e87f98c94aad95ea61e0c2930462fabe5667573
 mkrepo() {
     git init -q "$1" && echo "$2" > "$1/f" && git -C "$1" add f &&
-        git -C "$1" -c user.name=T -c user.email=t@example.invalid commit -qm c &&
+        GIT_AUTHOR_DATE=2026-09-30T00:00:00Z GIT_COMMITTER_DATE=2026-09-30T00:00:00Z git -C "$1" -c user.name=T -c user.email=t@example.invalid commit -qm c &&
         git -C "$1" rev-parse HEAD
 }
 O=$TMP/omega; P=$TMP/physics
@@ -51,7 +65,9 @@ check "a truncated log (no gate 3) fails" 'v=$(variant "/Running Gate 3:/,\$d");
 
 echo "receipt body and digest"
 body=$(body_of "$FIX")
-check "body is valid JSON" 'printf "%s" "$body" | "$JSON_CANON" --check'
+check "body is valid JSON" 'printf "%s" "$body" | jq -e . > /dev/null'
+check "PASS body is already canonical (sorted keys, compact)" '[ "$(printf "%s" "$body" | jq_canon)" = "$body" ]'
+check "PASS body digest equals the reference canonical digest" '[ "$(printf "%s" "$body" | ref_digest)" = "$(printf "%s" "$body" | sha256sum | cut -d" " -f1)" ]'
 check "status PASS" '[ "$(field "$body" .status)" = PASS ]'
 check "schema" '[ "$(field "$body" .schema)" = AIEN_M19R_FORGE_GATES_V1 ]'
 check "candidate_git_commit is the omega commit" '[ "$(field "$body" .candidate_git_commit)" = "$osha" ]'
@@ -62,7 +78,12 @@ check "observed 21 pass, 0 fail" '[ "$(field "$body" "[.observed_test_count,.obs
 check "descriptor digest from the log" '[ "$(field "$body" .hardware_descriptor_digest)" = 1ce23d57112901c414ddc75ba35b65bc8c38fc0bb5e85f3a995634af456bf24b ]'
 check "log sha256 bound" '[ "$(field "$body" .gate_log_sha256)" = 2c139d36a055dc1e7bfa1e6074d8b14a23d90f74b13216d8d70b529c0f66e805 ]'
 forge_receipt "$body"; receipt=$FORGE_RECEIPT
-check "receipt digest recomputes from the body" '[ "$(printf "%s" "$receipt" | jq -c "del(.receipt_digest)" | "$JSON_CANON" --sha256)" = "$FORGE_DIGEST" ]'
+check "receipt digest recomputes from the body" '[ "$(printf "%s" "$receipt" | jq -c "del(.receipt_digest)" | ref_digest)" = "$FORGE_DIGEST" ]'
+check "receipt with receipt_digest is itself canonical" '[ "$(printf "%s" "$receipt" | jq_canon)" = "$receipt" ]'
+check "PASS body digest is the known value" '[ "$FORGE_DIGEST" = "$KAT_DIGEST" ]'
+fb=$(body_of "$FIX" 3 1)
+check "FAIL body with error is canonical" 'field "$fb" .error | grep -q . && [ "$(printf "%s" "$fb" | jq_canon)" = "$fb" ]'
+check "FAIL body digest equals the reference canonical digest" '[ "$(printf "%s" "$fb" | ref_digest)" = "$(printf "%s" "$fb" | sha256sum | cut -d" " -f1)" ]'
 check "gate 4 exit 1 gives status FAIL with error" 'b=$(body_of "$FIX" 0 1); [ "$(field "$b" .status)" = FAIL ] && [ "$(field "$b" .gates.GATE_4_FORGE_HWID.status)" = FAIL ] && field "$b" .error | grep -q "gate 4 binary exit status 1"'
 echo dirty > "$P/f"
 check "dirty physics tree gives FAIL" 'b=$(body_of "$FIX"); [ "$(field "$b" .status)" = FAIL ] && [ "$(field "$b" .candidate_trees_clean.physics)" = false ]'
@@ -80,7 +101,7 @@ EV=$TMP/evidence
 check "record writes digest-named receipt" 'forge_record "$receipt" "$FIX" "$EV" "$O" "$P" && [ -f "$EV/$FORGE_DIGEST.json" ]'
 check "receipt is 0444" '[ "$(stat -c %a "$EV/$FORGE_DIGEST.json")" = 444 ]'
 check "log blob kept by sha256" '[ -f "$EV/blobs/2c139d36a055dc1e7bfa1e6074d8b14a23d90f74b13216d8d70b529c0f66e805.log" ]'
-check "on-disk receipt digest verifies" '[ "$(jq -c "del(.receipt_digest)" "$EV/$FORGE_DIGEST.json" | "$JSON_CANON" --sha256)" = "$FORGE_DIGEST" ]'
+check "on-disk receipt digest verifies" '[ "$(jq -c "del(.receipt_digest)" "$EV/$FORGE_DIGEST.json" | ref_digest)" = "$FORGE_DIGEST" ]'
 check "second write refused" '! forge_record "$receipt" "$FIX" "$EV" "$O" "$P" 2>/dev/null'
 check "evidence dir inside a candidate tree refused" '! forge_record "$receipt" "$FIX" "$P/evidence" "$O" "$P" && [ ! -e "$P/evidence" ]'
 

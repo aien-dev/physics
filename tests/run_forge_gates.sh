@@ -23,10 +23,12 @@
 # physics_candidate_git_commit the physics commit.
 #
 # The receipt digest is SHA-256 over the canonical JSON of the receipt body
-# (sorted keys, compact), computed by omega's tools/json_canon.c built from
-# --omega-dir, the same helper the other legs use. It shows the receipt was
-# not altered; it is not a signature. Shell + coreutils + git + gcc + awk.
-# No Python.
+# (sorted keys, compact: the form omega tools/json_canon.c and the Gate 14
+# combiner use). forge_body prints the body already in that form, so the
+# digest is plain sha256sum and nothing from omega is compiled or run here;
+# --omega-dir is read only for its git HEAD and clean state. The digest shows
+# the receipt was not altered; it is not a signature. Shell + coreutils +
+# git + gcc + awk. No Python.
 #
 # Exit 0 when both gates pass (and, in receipt mode, the receipt is PASS),
 # 1 on any failure, 2 on bad arguments.
@@ -77,17 +79,6 @@ forge_tree_clean() {
     fi
 }
 
-# forge_build_canon OMEGA_DIR -- build omega's tools/json_canon.c into a
-# private temp directory. Sets JSON_CANON and FORGE_TMP.
-forge_build_canon() {
-    local o=$1
-    FORGE_TMP=$(mktemp -d "${TMPDIR:-/tmp}/forge-receipt.XXXXXX") || return 1
-    JSON_CANON=$FORGE_TMP/json_canon
-    gcc -std=gnu11 -O2 -Wall -Wextra -Werror -I"$o/src" -o "$JSON_CANON" \
-        "$o/tools/json_canon.c" "$o/src/sha256.c" -lm ||
-        forge_fail "cannot build $o/tools/json_canon.c"
-}
-
 # forge_events LOG SECTION -- "id<TAB>status" for each [PASS]/[FAIL] line of
 # one gate section: from "Running Gate N:" up to "Gate N Results:".
 forge_events() {
@@ -127,10 +118,15 @@ forge_gate_verdict() {
 }
 
 # forge_body LOG G3_RC G4_RC G3_BIN_SHA G4_BIN_SHA OMEGA_DIR OMEGA_SHA PHYSICS_DIR PHYSICS_SHA RUN_ID TS
-# Prints the receipt body (JSON object, no receipt_digest). Sets FORGE_STATUS.
+# Prints the receipt body (JSON object, no receipt_digest) ALREADY IN
+# CANONICAL FORM: keys sorted bytewise at every level, no whitespace, strings
+# printable ASCII only. So its bytes are exactly what omega's json_canon
+# (Python json.dumps sort_keys, compact separators) would produce, and
+# sha256sum of it is the receipt digest. Keep every printf below in key
+# order. The receipt holds no floats, so no number reformatting arises.
 forge_body() {
     local log=$1 g3rc=$2 g4rc=$3 g3sha=$4 g4sha=$5 odir=$6 osha=$7 pdir=$8 psha=$9 run_id=${10} ts=${11}
-    local v3 v4 oc pc err= desc alias results np nf nt s3 s4
+    local v3 v4 oc pc err= desc alias results np nf nt s3 s4 status
     v3=$(forge_gate_verdict "$log" 3 "$g3rc" "$FORGE_G3_IDS")
     v4=$(forge_gate_verdict "$log" 4 "$g4rc" "$FORGE_G4_IDS")
     desc=$(sed -n -E 's/^\[\*\] Observed Descriptor Digest: ([0-9a-f]{64})$/\1/p' "$log" | tail -n 1)
@@ -144,39 +140,46 @@ forge_body() {
     [ "$oc" = true ] && [ "$pc" = true ] || err=${err:+$err; }"candidate trees not clean at receipt time"
     [ "$(git -C "$odir" rev-parse HEAD 2>/dev/null)" = "${osha,,}" ] || err=${err:+$err; }"omega HEAD moved during the run"
     [ "$(git -C "$pdir" rev-parse HEAD 2>/dev/null)" = "${psha,,}" ] || err=${err:+$err; }"physics HEAD moved during the run"
-    if [ -z "$err" ]; then FORGE_STATUS=PASS; else FORGE_STATUS=FAIL; fi
+    if [ -z "$err" ]; then status=PASS; else status=FAIL; fi
     results=$( { forge_events "$log" 3 | sed "s/^/$FORGE_G3\t/"; forge_events "$log" 4 | sed "s/^/$FORGE_G4\t/"; } |
-        awk -F'\t' 'BEGIN { printf "[" } { printf "%s{\"suite\":\"%s\",\"id\":\"%s\",\"status\":\"%s\"}", (NR > 1 ? "," : ""), $1, $2, $3 } END { printf "]" }')
+        awk -F'\t' 'BEGIN { printf "[" } { printf "%s{\"id\":\"%s\",\"status\":\"%s\",\"suite\":\"%s\"}", (NR > 1 ? "," : ""), $2, $3, $1 } END { printf "]" }')
     np=$( { forge_events "$log" 3; forge_events "$log" 4; } | grep -c $'\tPASS$')
     nf=$( { forge_events "$log" 3; forge_events "$log" 4; } | grep -c $'\tFAIL$')
     nt=$((np + nf))
-    printf '{"schema":"%s","gate":"%s","program":"AIEN_M19R_FOUNDATION"' "$FORGE_SCHEMA" "$FORGE_GATE"
-    printf ',"run_id":"%s","timestamp_utc":"%s","status":"%s"' "$run_id" "$ts" "$FORGE_STATUS"
-    printf ',"candidate_git_commit":"%s","physics_candidate_git_commit":"%s"' "${osha,,}" "${psha,,}"
+    printf '{"candidate_git_commit":"%s"' "${osha,,}"
     printf ',"candidate_trees_clean":{"omega":%s,"physics":%s}' "$oc" "$pc"
-    printf ',"gates":{"%s":{"status":"%s","gate_binary_exit_status":%d,"candidate_binary_sha256":"%s"}' \
-        "$FORGE_G3" "$s3" "$g3rc" "$g3sha"
-    printf ',"%s":{"status":"%s","gate_binary_exit_status":%d,"candidate_binary_sha256":"%s"' \
-        "$FORGE_G4" "$s4" "$g4rc" "$g4sha"
-    [ -z "$desc" ] || printf ',"hardware_descriptor_digest":"%s"' "$desc"
+    printf ',"digest_meaning":"integrity only, not authenticity: re-hash blobs/<sha256>.log named here"'
+    [ -z "$err" ] || printf ',"error":"%s"' "$(printf '%s' "$err" | LC_ALL=C tr -cd ' -~' | LC_ALL=C tr -d '"\\')"
+    printf ',"gate":"%s","gate_log_sha256":"%s"' "$FORGE_GATE" "$(forge_sha_file "$log")"
+    printf ',"gates":{"%s":{"candidate_binary_sha256":"%s","gate_binary_exit_status":%d,"status":"%s"}' \
+        "$FORGE_G3" "$g3sha" "$g3rc" "$s3"
+    printf ',"%s":{"candidate_binary_sha256":"%s"' "$FORGE_G4" "$g4sha"
     [ -z "$alias" ] || printf ',"derived_alias":"%s"' "$alias"
-    printf '}}'
+    printf ',"gate_binary_exit_status":%d' "$g4rc"
     [ -z "$desc" ] || printf ',"hardware_descriptor_digest":"%s"' "$desc"
-    printf ',"test_results":%s,"observed_test_count":%d,"observed_pass_count":%d,"observed_fail_count":%d' \
-        "$results" "$nt" "$np" "$nf"
-    printf ',"gate_log_sha256":"%s"' "$(forge_sha_file "$log")"
-    [ -z "$err" ] || printf ',"error":"%s"' "$(printf '%s' "$err" | tr -d '"\\')"
-    printf ',"digest_meaning":"integrity only, not authenticity: re-hash blobs/<sha256>.log named here"}'
+    printf ',"status":"%s"}}' "$s4"
+    [ -z "$desc" ] || printf ',"hardware_descriptor_digest":"%s"' "$desc"
+    printf ',"observed_fail_count":%d,"observed_pass_count":%d,"observed_test_count":%d' "$nf" "$np" "$nt"
+    printf ',"physics_candidate_git_commit":"%s","program":"AIEN_M19R_FOUNDATION"' "${psha,,}"
+    printf ',"run_id":"%s","schema":"%s","status":"%s"' "$run_id" "$FORGE_SCHEMA" "$status"
+    printf ',"test_results":%s,"timestamp_utc":"%s"}' "$results" "$ts"
 }
 
-# forge_receipt BODY -- digest BODY with json_canon. Sets FORGE_DIGEST and
-# FORGE_RECEIPT (the full receipt, receipt_digest first).
+# forge_receipt BODY -- digest the canonical BODY (sha256 of its bytes). Sets
+# FORGE_DIGEST and FORGE_RECEIPT (the body with receipt_digest inserted in
+# its sorted place, between "program" and "run_id", so the receipt itself
+# stays canonical).
 forge_receipt() {
     local body=$1
-    FORGE_DIGEST=$(printf '%s' "$body" | "$JSON_CANON" --sha256) || forge_fail "receipt body is not valid JSON" || return 1
-    FORGE_RECEIPT="{\"receipt_digest\":\"$FORGE_DIGEST\",${body#\{}"
+    case $body in *',"run_id":"'*) ;; *) forge_fail "receipt body has no run_id" || return 1;; esac
+    FORGE_DIGEST=$(printf '%s' "$body" | sha256sum | cut -d' ' -f1)
+    FORGE_RECEIPT="${body%%,\"run_id\":\"*},\"receipt_digest\":\"$FORGE_DIGEST\",\"run_id\":\"${body#*,\"run_id\":\"}"
 }
 
+# forge_status RECEIPT -- the top-level status (the one just before test_results).
+forge_status() {
+    printf '%s' "$1" | grep -o '"status":"[A-Z]*","test_results":' | cut -d'"' -f4
+}
 # forge_under DIR TREE -- DIR is TREE or inside it (after resolving links).
 forge_under() {
     local d t
@@ -187,7 +190,7 @@ forge_under() {
 # forge_record RECEIPT LOG EVIDENCE_DIR OMEGA_DIR PHYSICS_DIR -- keep the log as
 # blobs/<sha256>.log (0444) and write <evidence-dir>/<digest>.json exclusively.
 forge_record() {
-    local receipt=$1 log=$2 ev=$3 t sha dst tmp pretty
+    local receipt=$1 log=$2 ev=$3 t sha dst tmp
     for t in "$4" "$5"; do
         ! forge_under "$ev" "$t" || forge_fail "evidence dir $ev is inside $t; receipts must live outside the candidate trees" || return 1
     done
@@ -200,10 +203,15 @@ forge_record() {
         cp "$log" "$tmp" && chmod 0444 "$tmp" && mv -n "$tmp" "$dst" && [ ! -e "$tmp" ] ||
             { rm -f "$tmp"; forge_fail "cannot keep blob $dst"; return 1; }
     fi
-    pretty=$FORGE_TMP/receipt.pretty
-    printf '%s' "$receipt" | "$JSON_CANON" --pretty > "$pretty" || forge_fail "receipt is not valid JSON" || return 1
-    "$JSON_CANON" --write-exclusive "$ev/$FORGE_DIGEST.json" < "$pretty" ||
-        forge_fail "cannot write $ev/$FORGE_DIGEST.json"
+    # exclusive and atomic: full content in a temp file, then a hard link,
+    # which fails when the name already exists
+    dst=$ev/$FORGE_DIGEST.json
+    tmp=$(mktemp "$ev/.tmp.XXXXXX") || return 1
+    if printf "%s\n" "$receipt" > "$tmp" && chmod 0444 "$tmp" && sync "$tmp" && ln -T "$tmp" "$dst" 2>/dev/null; then
+        rm -f "$tmp"; sync "$ev"
+    else
+        rm -f "$tmp"; forge_fail "cannot write $dst (exists already or write error)"; return 1
+    fi
 }
 
 # forge_run_section RUN_DIR -- compile and run both gates; exit statuses go to
@@ -238,7 +246,7 @@ forge_usage() {
 }
 
 forge_main() {
-    local odir= osha= psha= ev= record=0 receipt_mode=0 run_id rd log g3 g4 rc body receipt ts
+    local odir= osha= psha= ev= record=0 receipt_mode=0 run_id rd log g3 g4 rc body receipt ts status
     while [ $# -gt 0 ]; do
         case $1 in
             --omega-dir) [ $# -ge 2 ] || forge_usage; odir=$2; shift 2;;
@@ -260,8 +268,6 @@ forge_main() {
     if [ "$receipt_mode" = 1 ]; then
         forge_candidate "$FORGE_ROOT" "$psha" && forge_candidate "$odir" "$osha" ||
             { echo "Refused before the run: $FORGE_ERR" >&2; exit 1; }
-        forge_build_canon "$odir" || { echo "Refused before the run: $FORGE_ERR" >&2; exit 1; }
-        trap 'rm -rf "$FORGE_TMP"' EXIT
     fi
     run_id=$(date -u +%Y%m%dT%H%M%SZ)-$(head -c 6 /dev/urandom | od -An -tx1 | tr -d ' \n')
     rd=$FORGE_ROOT/build/forge-runs/$run_id
@@ -290,8 +296,8 @@ forge_main() {
         "$odir" "$osha" "$FORGE_ROOT" "$psha" "$run_id" "$ts")
     forge_receipt "$body" || { echo "Receipt failed: $FORGE_ERR" >&2; exit 1; }
     receipt=$FORGE_RECEIPT
-    printf '%s' "$receipt" | "$JSON_CANON" --pretty > "$rd/receipt-preview.json" || exit 1
-    status=$(printf '%s' "$receipt" | grep -o '"status":"[A-Z]*"' | head -n 1 | cut -d'"' -f4)
+    printf "%s\n" "$receipt" > "$rd/receipt-preview.json" || exit 1
+    status=$(forge_status "$receipt")
     echo "Receipt status $status, digest $FORGE_DIGEST (preview $rd/receipt-preview.json)"
     if [ "$record" = 1 ]; then
         forge_record "$receipt" "$log" "$ev" "$odir" "$FORGE_ROOT" || { echo "Record failed: $FORGE_ERR" >&2; exit 1; }
