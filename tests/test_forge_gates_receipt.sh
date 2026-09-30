@@ -104,6 +104,11 @@ check "log blob kept by sha256" '[ -f "$EV/blobs/2c139d36a055dc1e7bfa1e6074d8b14
 check "on-disk receipt digest verifies" '[ "$(jq -c "del(.receipt_digest)" "$EV/$FORGE_DIGEST.json" | ref_digest)" = "$FORGE_DIGEST" ]'
 check "second write refused" '! forge_record "$receipt" "$FIX" "$EV" "$O" "$P" 2>/dev/null'
 check "evidence dir inside a candidate tree refused" '! forge_record "$receipt" "$FIX" "$P/evidence" "$O" "$P" && [ ! -e "$P/evidence" ]'
+check "empty binary hash gives FAIL" 'b=$(forge_body "$FIX" 0 0 "" "$BIN4" "$O" "$osha" "$P" "$psha" r t); [ "$(field "$b" .status)" = FAIL ] && field "$b" .error | grep -q "gate 3 binary hash missing"'
+check "blobs symlink into a candidate tree refused" 'mkdir -p "$TMP/ev3" "$P/planted" && ln -s "$P/planted" "$TMP/ev3/blobs" && ! forge_record "$receipt" "$FIX" "$TMP/ev3" "$O" "$P" && [ -z "$(ls "$P/planted")" ]; rm -rf "$P/planted"'
+check "existing writable blob made read-only" 'mkdir -p "$TMP/ev4/blobs" && cp "$FIX" "$TMP/ev4/blobs/2c139d36a055dc1e7bfa1e6074d8b14a23d90f74b13216d8d70b529c0f66e805.log" && chmod 0666 "$TMP/ev4/blobs/"*.log && forge_record "$receipt" "$FIX" "$TMP/ev4" "$O" "$P" && [ "$(stat -c %a "$TMP/ev4/blobs/"*.log)" = 444 ]'
+check "existing blob that is a symlink refused" 'mkdir -p "$TMP/ev5/blobs" && ln -s "$FIX" "$TMP/ev5/blobs/2c139d36a055dc1e7bfa1e6074d8b14a23d90f74b13216d8d70b529c0f66e805.log" && ! forge_record "$receipt" "$FIX" "$TMP/ev5" "$O" "$P"'
+check "receipt is 0444 under umask 077" 'mkdir -p "$TMP/ev6" && ( umask 077; forge_record "$receipt" "$FIX" "$TMP/ev6" "$O" "$P" ) && [ "$(stat -c %a "$TMP/ev6/$FORGE_DIGEST.json")" = 444 ]'
 
 echo "Gate 3/4 receipt tests: $passes passed, $fails failed"
 [ "$fails" -eq 0 ]

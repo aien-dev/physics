@@ -55,7 +55,8 @@ NEG_DESCRIPTOR_MUTATION_CAUSES_DIGEST_MISMATCH NEG_UNBOUND_ALIAS_REJECTED"
 
 forge_fail() { FORGE_ERR=$1; return 1; }
 
-forge_sha_file() { sha256sum "$1" | cut -d' ' -f1; }
+# forge_sha_file FILE -- hex sha256 of FILE; fails (prints nothing) when unreadable.
+forge_sha_file() { local s; s=$(sha256sum < "$1") || return 1; printf '%s\n' "${s%% *}"; }
 
 # forge_candidate REPO SHA -- SHA is a full 40-hex id equal to HEAD of a clean tree.
 forge_candidate() {
@@ -137,6 +138,8 @@ forge_body() {
     [ "$s3" = PASS ] || err=${v3#FAIL: }
     [ "$s4" = PASS ] || err=${err:+$err; }${v4#FAIL: }
     [ "$s4" != PASS ] || [ -n "$desc" ] || { s4=FAIL; err=${err:+$err; }"gate 4 descriptor digest not printed"; }
+    [[ $g3sha =~ ^[0-9a-f]{64}$ ]] || { s3=FAIL; err=${err:+$err; }"gate 3 binary hash missing"; }
+    [[ $g4sha =~ ^[0-9a-f]{64}$ ]] || { s4=FAIL; err=${err:+$err; }"gate 4 binary hash missing"; }
     [ "$oc" = true ] && [ "$pc" = true ] || err=${err:+$err; }"candidate trees not clean at receipt time"
     [ "$(git -C "$odir" rev-parse HEAD 2>/dev/null)" = "${osha,,}" ] || err=${err:+$err; }"omega HEAD moved during the run"
     [ "$(git -C "$pdir" rev-parse HEAD 2>/dev/null)" = "${psha,,}" ] || err=${err:+$err; }"physics HEAD moved during the run"
@@ -195,9 +198,16 @@ forge_record() {
         ! forge_under "$ev" "$t" || forge_fail "evidence dir $ev is inside $t; receipts must live outside the candidate trees" || return 1
     done
     mkdir -p "$ev/blobs" || forge_fail "cannot create $ev/blobs" || return 1
-    sha=$(forge_sha_file "$log"); dst=$ev/blobs/$sha.log
-    if [ -e "$dst" ]; then
+    [ ! -L "$ev/blobs" ] || forge_fail "$ev/blobs is a symlink" || return 1
+    for t in "$4" "$5"; do
+        ! forge_under "$ev/blobs" "$t" || forge_fail "$ev/blobs resolves inside $t" || return 1
+    done
+    sha=$(forge_sha_file "$log") || forge_fail "cannot hash $log" || return 1
+    dst=$ev/blobs/$sha.log
+    if [ -e "$dst" ] || [ -L "$dst" ]; then
+        [ -f "$dst" ] && [ ! -L "$dst" ] || forge_fail "blob $dst is not a regular file" || return 1
         [ "$(forge_sha_file "$dst")" = "$sha" ] || forge_fail "blob $dst does not hash to its name" || return 1
+        chmod 0444 "$dst" || forge_fail "cannot make blob $dst read-only" || return 1
     else
         tmp=$(mktemp "$ev/blobs/.tmp.XXXXXX") || return 1
         cp "$log" "$tmp" && chmod 0444 "$tmp" && mv -n "$tmp" "$dst" && [ ! -e "$tmp" ] ||
