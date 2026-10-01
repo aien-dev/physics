@@ -54,6 +54,8 @@ All 15 gates complete execution in ~16.2 seconds with zero Python dependencies.
 The five legacy Python files (`generate_physics_audit.py`, `m2_build.py`, `run_milestone2_gates.py`,
 `seam1_physics_audit.py`, `seam2_physics_harness.py`) are deleted. They remain in git history at
 `d52759d` and earlier; `qualification_receipt.json` (historical evidence, untouched) pins their SHA-256.
+Phase 2 (receipt refresh under aien-architecture#12) remains open: the committed receipt still describes the
+retired Python run.
 
 Equivalence check before deletion (scratch copies of `d52759d`, QEMU on the Spark):
 - `python3 run_milestone2_gates.py` and `./run_m2_gates.sh` print the same 15 gate names, all PASS, no FAIL.
