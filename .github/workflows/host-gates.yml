@@ -67,7 +67,7 @@ jobs:
       - name: Install toolchain
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq gcc binutils jq qemu-system-arm
+          sudo apt-get install -y -qq gcc binutils jq socat qemu-system-arm
           aarch64-linux-gnu-gcc --version | head -1
           qemu-system-aarch64 --version | head -1
       - name: Run ${{ matrix.gate }}
