@@ -273,6 +273,9 @@ typedef struct {
 } ForgeSubstrateDescriptor;
 
 typedef struct {
+    /* The canonical AIEN MachineId bytes (omega src/runtime/aien_machine_id.h, M20):
+     * SHA-256("AIENOS-MACHINE-ID-V1\0" || provisioned or owner-key root). KAT
+     * fixtures keep their label digests; FORGE checks only "non-zero". */
     uint8_t  machine_identity[32];
     uint8_t  authority_domain[32];
     uint64_t memory_nominal_bytes;
