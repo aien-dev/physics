@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "name": "tests/fixtures",
+  "layer": "tests/fixtures",
+  "purpose": "Directory tests/fixtures. Purpose not yet described by a human.",
+  "above": {
+    "name": "tests",
+    "path": ".."
+  },
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory tests/fixtures. Purpose not yet described by a human.",
+      "files": [
+        "forge_gates_pass.log"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 1,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "e95e3ed",
+          "timestamp": "2026-09-30T17:28:32-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #18 from aien-dev/feat/gate34-receipt",
+          "pr": 18
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "Taken on omega 7211b59 + physics e95e3ed: 26/26 tests, 45 GB10 parity lines, all with 0 mismatches, 0 libm, 0 libcuda.",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "#134 GB10 SUM receipt: committed to repo evidence/E1-REDUCE/be9d61ce...json via omega #143 (merge 0580ef8); it binds omega 6da80bf, physics e95e3ed.",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane22",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "Blockers: none. Note: gate builds need physics pinned at e95e3ed (../physics at fecbedb fails lock check).",
+          "ref": "2026-10-01-push-lane22-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane7",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "`PHYSICS_DIR=../physics-gate14-e95e3ed ./tests/searchtrace/run_m23_corpus_gate.sh`: PASS. Two runs identical;",
+          "ref": "2026-10-01-push-lane7-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane7",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "3. Environment note: ~/workspace/hive-worktrees/physics is not at the pinned commit e95e3ed; the gate used physics-gate14-e95e3ed.",
+          "ref": "2026-10-01-push-lane7-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "schema_version": "1.0.0",
+  "name": "cs-physics",
+  "layer": "root",
+  "purpose": "Repository root cs-physics. Purpose not yet described by a human.",
+  "below": [
+    {
+      "name": "contracts",
+      "role": ""
+    },
+    {
+      "name": "docs",
+      "role": ""
+    },
+    {
+      "name": "forge",
+      "role": ""
+    },
+    {
+      "name": "m15",
+      "role": ""
+    },
+    {
+      "name": "m3",
+      "role": ""
+    },
+    {
+      "name": "tests",
+      "role": ""
+    },
+    {
+      "name": "third_party",
+      "role": ""
+    },
+    {
+      "name": "tools",
+      "role": ""
+    }
+  ],
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Repository root cs-physics. Purpose not yet described by a human.",
+      "files": [
+        "CONTRIBUTORS.md",
+        "README.md",
+        "TRANSITION_PLAN_M2.md",
+        "atlas.bin",
+        "atlas.sha256",
+        "atlas_m2.bin",
+        "atlas_m2.s",
+        "capability.s",
+        "m2_build.sh",
+        "machine_contract.json",
+        "memory_alloc.s",
+        "physics.audit",
+        "physics.bin",
+        "physics.control-flow",
+        "physics.decode",
+        "physics.ld",
+        "physics.manifest",
+        "physics.memory-map",
+        "physics.s",
+        "physics.sha256",
+        "physics_pin.inc",
+        "qualification_receipt.json",
+        "run_m2_gates.sh",
+        "sha256_clean.c",
+        "vector_table.s"
+      ],
+      "git": {
+        "remote": "git@github.com:aien-dev/physics.git",
+        "branch": "docs/crumb-seed",
+        "head": "62bd2c5"
+      }
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 27,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "62bd2c5",
+          "timestamp": "2026-10-01T08:31:44-05:00",
+          "author": "aien-dev",
+          "subject": "docs: rewrite README to match current status and standing rules (#24)",
+          "pr": 24
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane40",
+          "sha": "62bd2c5",
+          "pr": 24,
+          "note": "| physics | PHYSICS as \"trusted machine authority\" (now FORGE realization), dead file:///home/drakestapleton links, hardware-qualification ambiguity, no FORGE/Physics Zero/DIRAC clarification, no rea",
+          "ref": "2026-10-01-push-lane40-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane40",
+          "sha": "62bd2c5",
+          "pr": 24,
+          "note": "13:48Z Lane 40 DONE (verified all 7 merged): .github#5 c6ee555, arch#87 24f04f6, aienos#207 84e2962, physics#24 62bd2c5, protocols#8 4b97ea6, omega#162 fac1b87, sovereign-core#139 06da469. READMEs tr",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "79b30a5",
+          "timestamp": "2026-10-01T07:46:03-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #23 from aien-dev/ci/lane34-physics-ci",
+          "pr": 23
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane34",
+          "sha": "79b30a5",
+          "pr": 23,
+          "note": "PR physics#23 \"CI: host gates workflow (first CI for physics)\", merge 79b30a593344d50783b463e01ed59fd485043cb7.",
+          "ref": "2026-10-01-push-lane34-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane34",
+          "sha": "79b30a5",
+          "pr": 23,
+          "note": "Main push run 36863980989 at 79b30a5: success, same 5 green + 4 skipped.",
+          "ref": "2026-10-01-push-lane34-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane37",
+          "sha": "79b30a5",
+          "pr": 23,
+          "note": "12:41Z Check-in: all lanes progressing; open PRs omega #136d,#153(retitled truthfully),#154,#155,#156d; aienos #205,#206; arch #76,#82; physics #23. Keeper first verdict pending. Launched Lane 37 (So",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane36",
+          "sha": "79b30a5",
+          "pr": 23,
+          "note": "12:51Z physics #23 MERGED 79b30a5 (first CI, 'Host gates'); board in active use by lanes 15/33/34/35/36; Lane 36 Atlas C2S = Addendum A, PR pending; Lane 35 arch #83 (ADR 0023 + DIRAC spec) rebases a",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "006e426",
+          "timestamp": "2026-09-30T21:49:08-05:00",
+          "author": "aien-dev",
+          "subject": "chore: remove Python from physics repo (shell/C rewrites); AR2 status lines (#22)",
+          "pr": 22
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane33",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "12:33Z Review track 1 DONE (track1-repos-drift.md): omega 7e713e3, aienos c3878bb, arch 921797b, physics 006e426, sovereign-core 7011f2b; #152 green, #153 red for stale head, #136 never ran checks; h",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "d52759d",
+          "timestamp": "2026-09-30T21:41:03-05:00",
+          "author": "aien-dev",
+          "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
+          "pr": 21
+        },
+        {
+          "source": "backfill-git",
+          "sha": "2877a11",
+          "timestamp": "2026-09-30T20:33:25-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
+          "pr": 20
+        },
+        {
+          "source": "backfill-git",
+          "sha": "b55f3da",
+          "timestamp": "2026-09-30T19:11:16-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #19 from aien-dev/docs/contributors",
+          "pr": 19
+        },
+        {
+          "source": "backfill-git",
+          "sha": "e95e3ed",
+          "timestamp": "2026-09-30T17:28:32-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #18 from aien-dev/feat/gate34-receipt",
+          "pr": 18
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "Taken on omega 7211b59 + physics e95e3ed: 26/26 tests, 45 GB10 parity lines, all with 0 mismatches, 0 libm, 0 libcuda.",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "#134 GB10 SUM receipt: committed to repo evidence/E1-REDUCE/be9d61ce...json via omega #143 (merge 0580ef8); it binds omega 6da80bf, physics e95e3ed.",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane22",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "Blockers: none. Note: gate builds need physics pinned at e95e3ed (../physics at fecbedb fails lock check).",
+          "ref": "2026-10-01-push-lane22-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane7",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "`PHYSICS_DIR=../physics-gate14-e95e3ed ./tests/searchtrace/run_m23_corpus_gate.sh`: PASS. Two runs identical;",
+          "ref": "2026-10-01-push-lane7-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane7",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "3. Environment note: ~/workspace/hive-worktrees/physics is not at the pinned commit e95e3ed; the gate used physics-gate14-e95e3ed.",
+          "ref": "2026-10-01-push-lane7-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "e95e3ed",
+          "pr": 18,
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "f63a6ef",
+          "timestamp": "2026-09-29T10:50:52-05:00",
+          "author": "aien-dev",
+          "subject": "fix(evidence): normalize Gate 3 and Gate 4 receipts to digest-named files (#17)",
+          "pr": 17
+        },
+        {
+          "source": "backfill-git",
+          "sha": "5969159",
+          "timestamp": "2026-09-29T10:36:47-05:00",
+          "author": "aien-dev",
+          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
+          "pr": 13
+        },
+        {
+          "source": "backfill-git",
+          "sha": "1f7c321",
+          "timestamp": "2026-09-29T10:11:28-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "pr": 16
+        },
+        {
+          "source": "backfill-git",
+          "sha": "fecbedb",
+          "timestamp": "2026-09-27T19:39:35-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #15 from aien-dev/feat/nvrm-alloc-uncached",
+          "pr": 15
+        },
+        {
+          "source": "backfill-git",
+          "sha": "32f308d",
+          "timestamp": "2026-09-27T12:05:43-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #14 from aien-dev/fix/m19r-resource-lifecycle-closure",
+          "pr": 14
+        },
+        {
+          "source": "backfill-git",
+          "sha": "a477aee",
+          "timestamp": "2026-09-27T07:32:37-05:00",
+          "author": "aien-dev",
+          "subject": "fix(m19r): add nvrm_free with VA reuse and monotonic completion wait (#12)",
+          "pr": 12
+        },
+        {
+          "source": "backfill-git",
+          "sha": "b64753d",
+          "timestamp": "2026-09-26T08:16:00-05:00",
+          "author": "aien-dev",
+          "subject": "fix(m16): corrective requalification of native Blackwell path without libcuda (#11)",
+          "pr": 11
+        },
+        {
+          "source": "backfill-git",
+          "sha": "f72e297",
+          "timestamp": "2026-09-26T06:23:49-05:00",
+          "author": "Drake Stapleton",
+          "subject": "evidence(m16): record qualification receipt for native Blackwell path (run-20260926-10)"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "102b42c",
+          "timestamp": "2026-09-26T05:26:42-05:00",
+          "author": "Drake Stapleton",
+          "subject": "evidence(m15): record formal qualification receipt for commit b5444bb"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "b5444bb",
+          "timestamp": "2026-09-26T05:26:26-05:00",
+          "author": "Drake Stapleton",
+          "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
+          "pr": 10
+        },
+        {
+          "source": "backfill-git",
+          "sha": "b1ef69d",
+          "timestamp": "2026-09-26T04:52:56-05:00",
+          "author": "Drake Stapleton",
+          "subject": "evidence(m15): update qualification receipt for native seam commit 4335c0c"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "4335c0c",
+          "timestamp": "2026-09-26T04:50:14-05:00",
+          "author": "Drake Stapleton",
+          "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
+          "pr": 10
+        },
+        {
+          "source": "backfill-git",
+          "sha": "ffb67bf",
+          "timestamp": "2026-09-26T04:28:09-05:00",
+          "author": "Drake Stapleton",
+          "subject": "evidence(m15): record formal qualification receipt for merged commit b2c5f3c"
+        }
+      ]
+    }
+  }
+}

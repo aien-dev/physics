@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "name": "docs",
+  "layer": "docs",
+  "purpose": "Directory docs. Purpose not yet described by a human.",
+  "above": {
+    "name": "cs-physics",
+    "path": ".."
+  },
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory docs. Purpose not yet described by a human.",
+      "files": [
+        "FORGE_SUBSTRATE_V2_SPEC.md",
+        "forge-v2-golden-vectors.md",
+        "native-frame-authority.md"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 4,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "006e426",
+          "timestamp": "2026-09-30T21:49:08-05:00",
+          "author": "aien-dev",
+          "subject": "chore: remove Python from physics repo (shell/C rewrites); AR2 status lines (#22)",
+          "pr": 22
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "ref": "2026-10-01-push-lane2-report.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane2",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-lane-report",
+          "lane": "lane33",
+          "sha": "006e426",
+          "pr": 22,
+          "note": "12:33Z Review track 1 DONE (track1-repos-drift.md): omega 7e713e3, aienos c3878bb, arch 921797b, physics 006e426, sovereign-core 7011f2b; #152 green, #153 red for stale head, #136 never ran checks; h",
+          "ref": "2026-10-01-next-major-push-orchestrator.md"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "2877a11",
+          "timestamp": "2026-09-30T20:33:25-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
+          "pr": 20
+        },
+        {
+          "source": "backfill-git",
+          "sha": "1f7c321",
+          "timestamp": "2026-09-29T10:11:28-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "pr": 16
+        },
+        {
+          "source": "backfill-git",
+          "sha": "ff13208",
+          "timestamp": "2026-09-26T01:12:33-05:00",
+          "author": "aien-dev",
+          "subject": "design: native DGX Spark frame authority (physics#2) (#4)",
+          "pr": 4
+        }
+      ]
+    }
+  },
+  "below": [
+    {
+      "name": "crumbs",
+      "role": ""
+    }
+  ]
+}
