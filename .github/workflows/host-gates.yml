@@ -1,0 +1,102 @@
+name: Host gates
+
+# Host-runnable physics gates on a GitHub AArch64 hosted runner (same instruction
+# set as the DGX Spark, but NOT the Spark). Nothing here is a chip or hardware
+# qualification; every PASS below is a host/QEMU/simulation result only.
+#
+# Layout: physics is checked out at $GITHUB_WORKSPACE/physics with sibling
+# checkouts of omega (main) and aien-architecture (main), because several gate
+# scripts look for ../omega or ../aien-architecture next to this repo.
+#
+# Coverage map (Lane 34, 2026-10-01):
+#   forge-v2      tests/run_forge_v2_gates.sh            FORGE V2 KAT + golden doc
+#   analog-sim    tests/run_forge_analog_sim_gates.sh    AR2 simulated analog provider,
+#                 receipt reproduced byte for byte; oracle gate compares against omega main
+#   gate34-writer tests/test_forge_gates_receipt.sh      Gate 3/4 receipt writer (no GPU),
+#                 digests cross-checked with omega tools/json_canon.c
+#   m2            run_m2_gates.sh                        M2 PHYSICS_BOOT, 15 gates (QEMU)
+#   m3            m3/tests/run_m3_gates.sh               M3 PHYSICS_EFFECTS, 19 gates (QEMU)
+#   SKIP jobs (shown grey, never green): GB10-only runners
+#       tests/run_forge_gates.sh (Gate 3/4 on the GB10), tests/run_m15_gates.sh
+#       (reads the real GPU's sysfs), tests/run_m16_requalification.sh (native
+#       GB10 submission), tests/run_nvrm_lifecycle_gates.sh (NVRM on the GB10).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    name: ${{ matrix.gate }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gate: forge-v2
+            cmd: tests/run_forge_v2_gates.sh
+          - gate: analog-sim
+            cmd: tests/run_forge_analog_sim_gates.sh
+          - gate: gate34-writer
+            cmd: tests/test_forge_gates_receipt.sh "$GITHUB_WORKSPACE/omega"
+          - gate: m2
+            cmd: ./run_m2_gates.sh
+          - gate: m3
+            cmd: m3/tests/run_m3_gates.sh
+    steps:
+      # pull_request: default ref is refs/pull/N/merge, so the merged result is tested.
+      - uses: actions/checkout@v4
+        with:
+          path: physics
+      - uses: actions/checkout@v4
+        with:
+          repository: aien-dev/omega
+          ref: main
+          path: omega
+      - uses: actions/checkout@v4
+        with:
+          repository: aien-dev/aien-architecture
+          ref: main
+          path: aien-architecture
+      - name: Install toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gcc binutils jq socat qemu-system-arm
+          aarch64-linux-gnu-gcc --version | head -1
+          qemu-system-aarch64 --version | head -1
+      - name: Run ${{ matrix.gate }}
+        working-directory: physics
+        env:
+          OMEGA_DIR: ${{ github.workspace }}/omega
+        run: ${{ matrix.cmd }}
+
+  gb10-forge-gates:
+    name: "forge Gate 3/4 (SKIP: needs GB10 chip)"
+    if: ${{ false }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - run: exit 1
+  gb10-m15:
+    name: "m15 gates (SKIP: reads real GB10 GPU sysfs)"
+    if: ${{ false }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - run: exit 1
+  gb10-m16:
+    name: "m16 requalification (SKIP: needs GB10 native submission)"
+    if: ${{ false }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - run: exit 1
+  gb10-nvrm:
+    name: "nvrm lifecycle gates (SKIP: needs GB10 + NVRM)"
+    if: ${{ false }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - run: exit 1
