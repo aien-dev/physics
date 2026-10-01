@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "name": "forge",
+  "layer": "forge",
+  "purpose": "Directory forge. Purpose not yet described by a human.",
+  "above": {
+    "name": "cs-physics",
+    "path": ".."
+  },
+  "below": [
+    {
+      "name": "analog-sim",
+      "role": ""
+    },
+    {
+      "name": "v2",
+      "role": ""
+    }
+  ],
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory forge. Purpose not yet described by a human.",
+      "files": [
+        "forge_descriptor.c",
+        "forge_descriptor.h",
+        "forge_realize.c",
+        "forge_realize.h",
+        "forge_types.h"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 4,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "d52759d",
+          "timestamp": "2026-09-30T21:41:03-05:00",
+          "author": "aien-dev",
+          "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
+          "pr": 21
+        },
+        {
+          "source": "backfill-git",
+          "sha": "2877a11",
+          "timestamp": "2026-09-30T20:33:25-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
+          "pr": 20
+        },
+        {
+          "source": "backfill-git",
+          "sha": "5969159",
+          "timestamp": "2026-09-29T10:36:47-05:00",
+          "author": "aien-dev",
+          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
+          "pr": 13
+        },
+        {
+          "source": "backfill-git",
+          "sha": "1f7c321",
+          "timestamp": "2026-09-29T10:11:28-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "pr": 16
+        }
+      ]
+    }
+  }
+}

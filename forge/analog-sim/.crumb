@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "name": "forge/analog-sim",
+  "layer": "forge/analog-sim",
+  "purpose": "Directory forge/analog-sim. Purpose not yet described by a human.",
+  "above": {
+    "name": "forge",
+    "path": ".."
+  },
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory forge/analog-sim. Purpose not yet described by a human.",
+      "files": [
+        "forge_analog_sim.c",
+        "forge_analog_sim.h"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 1,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "d52759d",
+          "timestamp": "2026-09-30T21:41:03-05:00",
+          "author": "aien-dev",
+          "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
+          "pr": 21
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "name": "contracts",
+  "layer": "contracts",
+  "purpose": "Directory contracts. Purpose not yet described by a human.",
+  "above": {
+    "name": "cs-physics",
+    "path": ".."
+  },
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory contracts. Purpose not yet described by a human.",
+      "files": [
+        "native-dgx-spark-draft.json"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 1,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "ff13208",
+          "timestamp": "2026-09-26T01:12:33-05:00",
+          "author": "aien-dev",
+          "subject": "design: native DGX Spark frame authority (physics#2) (#4)",
+          "pr": 4
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "name": "m3",
+  "layer": "m3",
+  "purpose": "Directory m3. Purpose not yet described by a human.",
+  "above": {
+    "name": "cs-physics",
+    "path": ".."
+  },
+  "below": [
+    {
+      "name": "tests",
+      "role": ""
+    },
+    {
+      "name": "tools",
+      "role": ""
+    }
+  ],
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory m3. Purpose not yet described by a human.",
+      "files": [
+        "atlas_m3.s",
+        "build.sh",
+        "capability.s",
+        "effect_broker.s",
+        "m3_qualification_receipt.json",
+        "machine_contract.json",
+        "memory_alloc.s",
+        "physics.ld",
+        "physics.s",
+        "receipt_ledger.s",
+        "replay_cache.s",
+        "sha256_be.s",
+        "vector_table.s"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 2,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "a7dc4ef",
+          "timestamp": "2026-09-26T02:28:54-05:00",
+          "author": "Drake Stapleton",
+          "subject": "evidence(m3): record formal qualification receipt for merged commit 766f8fd"
+        },
+        {
+          "source": "backfill-git",
+          "sha": "766f8fd",
+          "timestamp": "2026-09-26T02:28:27-05:00",
+          "author": "aien-dev",
+          "subject": "feat(m3): Milestone 3 — PHYSICS_EFFECTS capability ledger, effect broker, and execution receipts (#9)",
+          "pr": 9
+        }
+      ]
+    }
+  }
+}

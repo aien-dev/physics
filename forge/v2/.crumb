@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "name": "forge/v2",
+  "layer": "forge/v2",
+  "purpose": "Directory forge/v2. Purpose not yet described by a human.",
+  "above": {
+    "name": "forge",
+    "path": ".."
+  },
+  "extensions": {
+    "seed": {
+      "purpose_auto": "Directory forge/v2. Purpose not yet described by a human.",
+      "files": [
+        "forge_sha256.h",
+        "forge_substrate_v2.c",
+        "forge_substrate_v2.h"
+      ]
+    },
+    "owner_lane": "",
+    "provenance": {
+      "source": "backfill",
+      "total_commits": 3,
+      "ledger_cap": 20,
+      "entries": [
+        {
+          "source": "backfill-git",
+          "sha": "2877a11",
+          "timestamp": "2026-09-30T20:33:25-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
+          "pr": 20
+        },
+        {
+          "source": "backfill-git",
+          "sha": "5969159",
+          "timestamp": "2026-09-29T10:36:47-05:00",
+          "author": "aien-dev",
+          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
+          "pr": 13
+        },
+        {
+          "source": "backfill-git",
+          "sha": "1f7c321",
+          "timestamp": "2026-09-29T10:11:28-05:00",
+          "author": "aien-dev",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "pr": 16
+        }
+      ]
+    }
+  }
+}
