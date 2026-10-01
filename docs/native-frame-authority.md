@@ -457,7 +457,7 @@ scheduling).
 | `PHYSICS_DETERMINISTIC_ALLOCATION_PASS` | Two independent runs with the same profile and call sequence produce identical address sequences and identical metadata SHA-256; grants are ascending lowest-free. |
 | `PHYSICS_RELEASE_INTEGRITY_PASS` | Double, unaligned, reserved, hole and out-of-range releases refused with no state change; release without an SMMU-unmap + TLBI-sync receipt refused. |
 | `PHYSICS_NO_DISCRETE_VRAM_ASSUMPTION_PASS` | Static audit: no VRAM/HBM class or constant; the accelerator pool is carved from DRAM; a contract with `ACCEL_COHERENT_POOL` size 0 boots and qualifies. |
-| `PHYSICS_QEMU_M2_REGRESSION_PASS` | `physics.bin` SHA-256 unchanged and the M2 suite (`run_milestone2_gates.py`) passes unchanged. |
+| `PHYSICS_QEMU_M2_REGRESSION_PASS` | `physics.bin` SHA-256 unchanged and the M2 suite (`run_m2_gates.sh`) passes unchanged. |
 | `PHYSICS_RECEIPT_SEPARATION_PASS` | Native receipts live in their own namespace; the checker rejects a QEMU receipt for a native gate and vice versa. |
 | `PHYSICS_BOOT_NATIVE_PASS` | **Pending.** Physical DGX Spark boot, ATLAS to PHYSICS with the real UEFI-derived profile, every native gate above re-run with `evidence_class = native_hardware`, profile and metadata digests recorded. |
 

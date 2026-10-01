@@ -55,7 +55,7 @@ AIEN OBSERVES, THINKS, HYPOTHESIZES, SEARCHES, DISCOVERS, AND INVENTS.
 
 ## Qualification Architecture (Dual Verification Seams)
 
-### Seam 1: Independent Artifact-Audit Seam (`seam1_physics_audit.py`)
+### Seam 1: Independent Artifact-Audit Seam (`tools/m2tool audit-verify`)
 Validates static artifact properties without requiring execution:
 1. `PHYSICS_ARTIFACT_IDENTITY_PASS`: `physics.bin` matches `physics.sha256`.
 2. `PHYSICS_MACHINE_CONTRACT_PASS`: Code size $\le 32\text{ KiB}$ (actual: 1,856 B), total image $\le 64\text{ KiB}$ (actual: 6,144 B), anti-bloat law satisfied.
@@ -66,8 +66,8 @@ Validates static artifact properties without requiring execution:
 6. `PHYSICS_MEMORY_DISJOINTNESS_PASS`: Static mathematical proof that all 7 physical memory regions (`IMAGE`, `VBAR`, `STACK`, `STATE`, `CAP_TABLE`, `STATIC_DATA`, `FREE_FRAME_REGION`) are pairwise disjoint.
 7. `PHYSICS_STATIC_MEMORY_BOUNDS_PASS`: Memory operations confined strictly to declared regions; initial kernel SP is `0x40205800`.
 
-### Seam 2: External Execution Seam (`seam2_physics_harness.py`)
-Boots PHYSICS in QEMU virt (AArch64, cortex-a57, 128 MiB) and qualifies it by reading guest memory over QMP (`xp`), not by trusting UART strings. Every image is rebuilt from source on every run (`m2_build.py`); nothing is cached.
+### Seam 2: External Execution Seam (`run_m2_gates.sh` + `tools/qemu_inspect.sh`)
+Boots PHYSICS in QEMU virt (AArch64, cortex-a57, 128 MiB) and qualifies it by reading guest memory over QMP (`pmemsave`), not by trusting UART strings. Every image is rebuilt from source on every run (`m2_build.sh`); nothing is cached.
 1. `PHYSICS_ENTRY_EL_PASS`: recorded `CurrentEL` (boot state +0x40) equals the contract's `expected_entry_el_value` (EL1); a real EL2 entry (`virt,virtualization=on`) is refused with `PANIC_UNCONTRACTED_EL` before any authority exists.
 2. `PHYSICS_DESCRIPTOR_INGRESS_PASS`: the PHYSICS-owned 64-byte descriptor copy equals the contract descriptor word for word; every header (magic, version, length, reserved) and machine-profile violation is refused before bitmap initialization.
 3. `PHYSICS_BOOT_QEMU_PASS`: `physics.bin` and `atlas_m2.bin` rebuild byte-identically; telemetry is exactly the golden sequence; allocator header is exactly `DRAM_END=0x48000000`, 32,248 frames; no exception taken.
@@ -77,7 +77,7 @@ Boots PHYSICS in QEMU virt (AArch64, cortex-a57, 128 MiB) and qualifies it by re
 7. `PHYSICS_EXCEPTION_STATE_CAPTURE_PASS`: two faults (BRK and an alignment Data Abort) with sentinel values in x0..x30; the trap frame at `0x40205880` holds every sentinel, the interrupted SP, vector slot 4, `CurrentEL`, ESR, ELR (== fault site symbol), SPSR `0x3C5`, FAR and FAR_VALID (0 for BRK, 1 with the faulting address for the abort).
 8. `PHYSICS_CORRUPTION_REFUSAL_PASS`: 23 hostile cases (cookie, payload size, descriptor pointer, magic, version, length, reserved bits, zero/overflowing/oversized/undersized/shifted/out-of-profile RAM, UART, PHYSICS base/size, EL2 entry) each end in the expected panic with the entry record, allocator header and CAP_ROOT slot still zero in memory.
 
-`run_milestone2_gates.py` deletes `build/`, regenerates every artifact from source, runs both seams, and writes `qualification_receipt.json` bound to the SHA-256 of the contract, audit, gate scripts, sources and both artifacts, plus the QEMU version and base commit.
+`run_m2_gates.sh` (also reachable as `run_milestone2_gates.sh`) rebuilds every artifact from source via `m2_build.sh`, checks the rebuilt binaries against the committed ones, and runs both seams. It leaves the committed `qualification_receipt.json` untouched unless `--write-receipt` is passed. That committed receipt is historical evidence from the retired Python harness (it pins the SHA-256 of the old `.py` scripts, retrievable from git history; see `TRANSITION_PLAN_M2.md`).
 
 ---
 
@@ -91,6 +91,6 @@ Boots PHYSICS in QEMU virt (AArch64, cortex-a57, 128 MiB) and qualifies it by re
 ## Reproduction & Verification
 To execute the complete Milestone 2 qualification suite:
 ```bash
-python3 run_milestone2_gates.py
+./run_m2_gates.sh
 ```
-Outputs formal qualification receipt to `qualification_receipt.json`.
+Prints all 15 gate results. `./run_m2_gates.sh --write-receipt` also rewrites `qualification_receipt.json` (only on a recorded requalification decision, aien-architecture#12).
