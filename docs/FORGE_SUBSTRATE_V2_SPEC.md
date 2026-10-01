@@ -36,7 +36,7 @@ Non-goals:
 - FORGE MACHINE DESCRIPTOR V1 remains **the qualified first implementation** on GB10. V2 does not replace,
   modify or re-qualify it. No v1 type, file or receipt changes. Historical receipts stay historical.
 - No hardware access, no driver calls, no submission path. V2 here is a data contract plus a host-only
-  reference serializer. Realization on a V2-described substrate is later work (AR2 onward).
+  reference serializer. Realization on a V2-described substrate starts at AR2 (simulated analog provider, merged in physics #21, `d52759d`; see `forge/analog-sim/`).
 - No change to the Omega runtime (R16 owns it until it closes) and no ARGUS ABI change.
 
 ## 2. Wire format
@@ -465,7 +465,7 @@ exact strings the test prints.
 | AR1 | stale calibration refused | `stale_calibration_rejected`, `missing_calibration_rejected`, `calibration_from_future_rejected`, `calibration_window_capped_by_substrate`, `calibration_for_other_substrate_rejected`, `out_of_envelope_conditions_rejected` | covered |
 | AR1 | v1 generation refused | `v1_32bit_generation_refused`, `legacy_version_1_object_refused`, `stale_generation_high_bits_refused` | covered |
 | AR1 | `SIMULATED_DEVELOPMENT` provenance explicit | `evidence_encode_without_provenance_refused`, `evidence_decode_missing_provenance_refused`, `evidence_decode_zero_provenance_refused`, `simulated_provenance_explicit_in_kat_evidence` | covered |
-| AR2 | analog simulation provider with digital oracle parity | contract/profile/evidence data model only; anchors in §6.4 | **not covered** (needs the simulation provider) |
+| AR2 | analog simulation provider with digital oracle parity | `forge/analog-sim/forge_analog_sim.{h,c}`, `tests/test_forge_analog_sim.c`, `tests/run_forge_analog_sim_gates.sh`, receipt `evidence/AR2/`; anchors in §6.4 | **covered by physics #21** (`d52759d`), simulated only (`SIMULATED_DEVELOPMENT`); not by this V2 gate script |
 | AR3 | staleness ⇒ ineligible; uncertainty propagates into the contract check; evidence complete | `fresh_calibration_eligible`, `stale_calibration_rejected`, `substrate_bound_looser_than_contract_rejected`, `stochastic_substrate_not_eligible_for_exact_contract`, `recalibration_changes_realization_identity` | partial (data model + eligibility; no live evidence completeness audit) |
 | AR4 | first physical analog operation; clean digital fallback (a digital realization of the same contract exists somewhere in the eligible set, on any Machine); faulted device cannot corrupt World; no authority bypass; no vendor identity | `faulted_substrate_excluded`, `digital_fallback_eligible_for_bounded_and_exact`, `analog_only_machine_roundtrip_strict`, `eligible_set_analog_only_has_no_digital_fallback`, `digital_candidate_for_other_contract_not_a_fallback`, `eligible_set_digital_on_other_machine_is_fallback`, `irreversible_config_without_right_refused`, `irreversible_config_with_right_and_generation_allowed`, `authorize_pure_current_generation`, `reference_range_overflow_refused`, `no_vendor_names_in_v2_identifiers` | preconditions only; **no physical device exists** and none is claimed |
 
