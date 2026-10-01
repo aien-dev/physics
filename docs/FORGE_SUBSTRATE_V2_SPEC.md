@@ -486,7 +486,10 @@ heartbeat, tick, dispatch, schedule, orchestrate, turn, pulse, yield or epoll).
 3. **ULP bounds.** ARCH-0018 lists ULP as a unit. V2 has only relative (ppb) and absolute (LSB) bounds. A ULP
    bound needs a declared float format; defer until a float contract is needed.
 4. **Machine identity source.** `machine_identity` is opaque here. Should it be the owner-enrolled key digest
-   (TRUST-1), and how is it re-derived on a Machine rebuild?
+   (TRUST-1), and how is it re-derived on a Machine rebuild? *Answered by M20 (omega `src/runtime/aien_machine_id.h`):*
+   `machine_identity` carries the canonical AIEN MachineId, `SHA-256("AIENOS-MACHINE-ID-V1\0" || root)`, where the root
+   is the owner-enrolled key digest when the Machine has one, else the opaque bytes provisioned once. A rebuild that
+   keeps the root keeps the identity. FORGE encoding and the golden vectors are unchanged.
 5. **Calibration clock.** `epoch_s` and `execution_epoch_s` assume one authority clock per Machine. Cross-machine
    calibration comparison needs a Fabric time source or a monotonic counter instead of seconds.
 6. **Omega empirical model.** omega#60's cost model has no substrate axis and its observations have no error
