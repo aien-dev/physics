@@ -357,6 +357,8 @@ sha256sum \
   "$REPO_ROOT/m16/m16_native.c" \
   "$REPO_ROOT/m16/m16_requalify.c" \
   "$REPO_ROOT/m16/m16_concurrent.c" \
+  "$REPO_ROOT/m16/m16_gpu_wait.h" \
+  "$REPO_ROOT/m16/m16_gpu_wait.c" \
   "$REPO_ROOT/nvrm/nvrm.h" \
   "$REPO_ROOT/nvrm/nvrm.c" \
   "$REPO_ROOT/tests/run_m16_requalification.sh" \
