@@ -19,7 +19,8 @@ name: Host gates
 #   SKIP jobs (shown grey, never green): GB10-only runners
 #       tests/run_forge_gates.sh (Gate 3/4 on the GB10), tests/run_m15_gates.sh
 #       (reads the real GPU's sysfs), tests/run_m16_requalification.sh (native
-#       GB10 submission), tests/run_nvrm_lifecycle_gates.sh (NVRM on the GB10).
+#       GB10 submission), tests/run_nvrm_lifecycle_gates.sh (NVRM on the GB10),
+#       tests/run_submission_visibility_gates.sh (GB10 queue/pushbuffer visibility).
 
 on:
   push:
@@ -96,6 +97,12 @@ jobs:
       - run: exit 1
   gb10-nvrm:
     name: "nvrm lifecycle gates (SKIP: needs GB10 + NVRM)"
+    if: ${{ false }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - run: exit 1
+  gb10-submission-visibility:
+    name: "submission visibility gates (SKIP: needs GB10 + NVRM)"
     if: ${{ false }}
     runs-on: ubuntu-24.04-arm
     steps:
