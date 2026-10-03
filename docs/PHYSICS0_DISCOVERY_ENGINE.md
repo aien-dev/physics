@@ -36,6 +36,7 @@ I6. **No law by fit alone.** Nothing is called a law because it fits. The ladder
 I7. **No reward, no human preference.** Training signal is prediction minus observation. See the non-goals in the PD-0 spec section 10.
 I8. **Everything is a receipt.** Gate results are written as new receipts. Old receipts are never overwritten (`README.md:25`).
 I9. **No Python anywhere.** Not in code, build, CI, tests or helper tooling (`README.md:25`).
+I10. **The harness holds the split.** The learner receives only `FIT` and `SELECT` raw records. `HOLDOUT-0`, `TRIAL` and `REP` records reach it only as scorer verdicts until the instance is closed (PD-0 spec section 5, gate G5).
 
 ## 4. Architecture
 

@@ -10,7 +10,7 @@
 
 A learner is given a black box: a dynamical system whose equations it cannot see. It may reset the box to a chosen starting state, apply bounded pushes, and read back measurements, within a fixed budget. It must produce a **compact written relation** that predicts the box on situations it has not seen, and it must reach that relation through the law ladder (section 5), not by curve fit alone. A relation that fits but is not compact, or that was not tested by deliberate experiments, does not pass.
 
-PD-0 is a plumbing and validity benchmark. It is not a blind scientific test, because the generators are written in this public repository (section 2.4).
+PD-0 is a plumbing and validity benchmark. It is not a blind scientific test, because the generators are written in this public repository (section 2.4). PD-0 makes no scientific claim.
 
 ## 2. Black-box world interface
 
@@ -28,7 +28,7 @@ All world values are signed 64-bit integers in **micro-units** (1 unit = 1_000_0
 | `dt_micro` | i64 | time per tick, micro-units |
 | `chan_min[n_channels]`, `chan_max[n_channels]` | i64 | inclusive intervention bounds |
 | `reset_min`, `reset_max` | i64 | inclusive box for each observed variable at reset |
-| `episode_max_steps` | u32 | steps per episode, fixed 100 |
+| `episode_max_steps` | u32 | steps per episode: 50 for L0, 100 for L1 to L6 |
 | `budget_steps` | u32 | total steps for this world instance |
 | `budget_episodes` | u32 | total resets for this world instance |
 
@@ -97,12 +97,12 @@ A reader recomputes the chain on load and refuses a broken chain. An unknown `ve
 
 ## 4. Level ladder and hidden generators
 
-Notation: `s` observed state, `u` the applied intervention on the channel named, `dt` = `dt_micro`. All updates use the **old** state on the right side (explicit Euler, simultaneous update). `*` means `mul`. Variables are `s0, s1, ...`. The equation text below appears only here and in the world crate. The learner never sees it.
+Notation: `s` observed state, `u` the applied intervention on the channel named, `dt` = `dt_micro`. All updates use the **old** state on the right side (explicit Euler, simultaneous update). All generators are discrete maps: the hidden law is the map written here, not the continuous differential equation it resembles, and the map's effective coefficients are what a learner must recover. `*` means `mul`. Variables are `s0, s1, ...`. The equation text below appears only here and in the world crate. The learner never sees it.
 
 | Level | Name | Observed | Hidden | Channels | `dt` | Intervention bounds | Instance budget |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| L0 | kinematics | s0, s1 | none | c0 | 1.0 | [-1.0, 1.0] | 3000 steps, 300 episodes |
-| L1 | spring | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
+| L0 | kinematics | s0, s1 | none | c0 | 1.0 | [-0.1, 0.1] | 3000 steps, 60 episodes of 50 steps |
+| L1 | spring (`k` in [1.0, 4.0]) | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
 | L2 | damped spring | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
 | L3 | coupled oscillators | s0 to s3 | none | c0, c1 | 0.05 | [-2.0, 2.0] each | 3000 steps, 300 episodes |
 | L4 | nonlinear spring | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
@@ -115,7 +115,7 @@ Reset box for all levels: each observed variable in `[-2.0, 2.0]` (the training 
 
 **L0 kinematics.** No constants. `s0' = s0 + s1`, `s1' = s1 + u`. (Drake's form: `x(t+1) = x + v`, `v(t+1) = v + a`, with `a` the intervention.)
 
-**L1 spring.** Constant `k` in `[1.0, 9.0]`.
+**L1 spring.** Constant `k` in `[1.0, 4.0]` (capped so explicit-Euler amplitude growth over 100 steps stays under 1.5x; review B1).
 `s0' = s0 + s1 * dt`
 `s1' = s1 + (-(k * s0) + u) * dt`
 
@@ -145,7 +145,7 @@ Only `s0, s1` are observed. The scale of `h` is not identifiable, so no coeffici
 
 - V1 (positive control): a test-only **oracle solver** that is handed the generator form and fits only constants passes every level (section 6). Failure means the benchmark is broken, not the learner.
 - V2: for L6, the best model **without** a latent variable (best of the library at the level's size bound) must fail the L6 prediction bound. Failure means the hidden variable is not necessary and L6 is invalid.
-- V3: under a uniform random intervention schedule, no seed in the development set `1..20` produces `OUT_OF_BOUNDS` in more than 5% of episodes at any level. Stability of L3 and L6 over the stated constant ranges is UNVERIFIED (confidence: medium; `m*q/w <= 1` and `k >= 2` were chosen to keep L6 stable by hand argument only).
+- V3: under a uniform random intervention schedule, no seed in the development set `1..20` produces `OUT_OF_BOUNDS` in more than 5% of episodes at any level. The builder records the measured breach rate per level in the G1 receipt. Stability of L3 and L6 over the stated constant ranges is UNVERIFIED (confidence: medium; `m*q/w <= 1` and `k >= 2` were chosen to keep L6 stable by hand argument only).
 
 ## 5. The law ladder (state machine)
 
@@ -159,7 +159,7 @@ side states: REFUTED (kills one hypothesis), REJECTED (nothing found)
 
 A transition happens only when every item of its evidence list exists as recorded, hash-referenced data. The learner proposes; the **scorer-side ladder checker** (part of the harness, outside the learner) decides. A transition the checker cannot verify does not happen.
 
-Data splits. Every record the learner has ever seen is tagged by the checker as `FIT` (60% of episodes), `SELECT` (20%, model selection only) or `HOLDOUT-0` (20%, never used for fitting or selection). Records gathered after a prediction is registered are new, tagged `TRIAL`. Records gathered for replication are tagged `REP` and may never have influenced any fit.
+Data splits. Every record the learner has ever seen is tagged by the checker as `FIT` (60% of episodes), `SELECT` (20%, model selection only) or `HOLDOUT-0` (20%, never used for fitting or selection). Records gathered after a prediction is registered are new, tagged `TRIAL`. Records gathered for replication are tagged `REP` and may never have influenced any fit. The harness, not the learner, holds the split. The learner process receives only `FIT` and `SELECT` records. `HOLDOUT-0`, `TRIAL` and `REP` records are delivered to the learner only as scorer verdicts (pass/fail, error), never as raw `vars_after`, until the instance is closed (overview invariant I10).
 
 | # | Transition | Evidence required | Failure path |
 | --- | --- | --- | --- |
@@ -187,7 +187,7 @@ A level passes when **all 5** independent world instances (5 fresh seeds, each w
 
 The scorer holds the generator. After a learner declares its final relation on an instance, the scorer generates held-out scoring episodes: 20 episodes of 20 steps from the `"score"` stream, with initial states and intervention schedules the learner has never seen. Half start inside the training box `[-2, 2]`, half in the extrapolation box `[-3, 3]` (reset restricted to `[-2, 2]` for the learner, so extrapolation episodes are scorer-only). For L6 every episode starts with `h = 0`.
 
-The learner supplies a prediction for each episode from the initial observed state and the intervention sequence. The scorer compares with the **noise-free true trajectory**.
+The learner supplies a prediction for each episode from the initial state and the intervention sequence. For scoring episodes the scorer supplies the noise-free initial state on every level, including L5. Scoring tests the relation, not the learner's denoising. The scorer compares with the **noise-free true trajectory**.
 
 `NRMSE = max over variables j of ( RMSE_j / std_j )`, where `RMSE_j` is the root mean square error of variable `j` over all steps and episodes and `std_j` is the standard deviation of the true values of variable `j` over the same set.
 
@@ -215,11 +215,13 @@ Size of a relation `|R|` = (number of nonzero monomial terms summed over all equ
 
 (`Dx` is the one-tick change of `x`; the `dt` factor sits in the coefficient.) Further rules: monomial degree at most 3; no lookup tables, no stored trajectories, no non-parametric component; any such component counts one term per stored number, so a memoriser fails by size. The relation must be expressible in the canonical form of section 7.
 
+Description length in bits (`description_bits` in the `PDLAW1` record, fixed rule so later programs compute explanatory gain from the record alone): per term, 8 bits per exponent entry (`n_vars + n_channels` entries) plus 24 bits for the coefficient (quantised to 24-bit precision for this count only; the stored `coef` stays i64 micro-units), plus 8 bits per declared latent variable. `description_bits = sum over terms (8 * (n_vars + n_channels) + 24) + 8 * n_latent`.
+
 ### 6.3 Structure and constants
 
 - **Support:** every true term (L0 to L5) must appear. Extra terms are limited only by the size bound of 6.2.
 - **Constants:** every true coefficient (in micro-units) within 5% of the true value (L0 to L4), 10% (L5). L6: no coefficient is scored, but the relation must declare at least one latent variable and its observed-only prediction must meet 6.1.
-- **L6 additional condition:** the learner's best latent-free model, evaluated by the scorer, must **fail** the 6.1 bound by at least a factor of 3. This proves the learner's improvement came from the latent and not from loose bounds.
+- **L6 additional condition:** the harness-fitted best latent-free model (the V2 reference solver on the same `FIT`/`SELECT` data) must **fail** the 6.1 bound by at least a factor of 3. The learner supplies nothing here. This proves the improvement came from the latent and not from loose bounds.
 
 ### 6.4 Replication
 
@@ -247,7 +249,7 @@ A canonical fixed byte layout (language-neutral, version-refused-if-unknown), wi
 | `chain_root` | 32 bytes | `record_hash` of the last record the law depends on |
 | `claim_text` | length-prefixed bytes | generated only from the template below |
 
-`relationship` block: `n_vars` u8 (observed plus latent), `n_latent` u8, `n_equations` u8, then per equation: `target` u8 (variable index), `n_terms` u16, then per term: `coef` i64 (micro-units), `exponents[n_vars + n_channels]` u8 each (powers of each variable then each channel; an intervention term has exponent 1 on its channel and 0 elsewhere). Variable order: observed, then latent. Equation form: `Dtarget = sum of coef * monomial`, where `Dtarget` is the one-tick change.
+`relationship` block: `n_vars` u8 (observed plus latent), `n_latent` u8, `n_channels` u8, `description_bits` u32 (rule in section 6.2), `n_refutations` u16 (number of times this instance passed through `REFUTED` before this record), `n_equations` u8, then per equation: `target` u8 (variable index), `n_terms` u16, then per term: `coef` i64 (micro-units), `exponents[n_vars + n_channels]` u8 each (powers of each variable then each channel; an intervention term has exponent 1 on its channel and 0 elsewhere). Variable order: observed, then latent. Equation form: `Dtarget = sum of coef * monomial`, where `Dtarget` is the one-tick change.
 
 `observed_domain` block: per observed variable `min` i64, `max` i64 (the range actually visited in `FIT`, `SELECT` and `TRIAL` records); per channel `min` i64, `max` i64 applied; `dt_micro` i64; `n_observations` u64 (all `status = OK` records used); `n_episodes` u32; `boundary_conditions` as the fixed set: reset box, episode length, latent reset value (0 when declared).
 
@@ -290,6 +292,7 @@ Language-neutral contract; the algorithm is free.
 3. Never repeats a schedule hash already in `FIT`, `SELECT`, `HOLDOUT-0`, `TRIAL` or `REP`.
 4. If the best `D < 3` (rivals indistinguishable at three residual standard deviations), the planner returns `NO_DISCRIMINATING_EXPERIMENT`. The learner must then widen its domain (it may not repeat a tested range) or report `REJECTED`. It may not fake a divergence.
 5. It must push into regions rarely visited: at least 20% of planner schedules in a run must start or reach outside the middle 50% of the visited range of some variable. UNVERIFIED that 20% is a good number (confidence: low); it is a starting value to prevent a planner that only re-tests the comfortable centre.
+ 6. A `PD0EXP1` record is a proposal. Its schedule executes only after the recorder has chained the preregistration record (`PD0EXP1` with its hash and the predicted trajectories) ahead of any `TRIAL` record; the guard refuses a `TRIAL` step whose schedule hash has no earlier chained preregistration. The planner cannot authorize its own experiment.
 
 ## 9. Negative controls and PD-1 pointer
 
@@ -336,7 +339,7 @@ Builder order (each step receipted, no step skipped):
 4. G2 ladder checker unit tests: each transition accepts valid evidence and refuses every missing-evidence case; skipping a state is refused.
 5. G3 planner contract tests (section 8 behaviours 1 to 4).
 6. G4 negative controls NC-1 to NC-3 and the positive control (`PD0_CONTROLS_PASS`).
-7. G5 isolation check: the learner crate's dependency graph has no path to the world crate; the world runs in a separate process.
+7. G5 isolation check: the learner crate's dependency graph has no path to the world crate; the world runs in a separate process; the learner binary never opens the recorder's `HOLDOUT-0`, `TRIAL` or `REP` files (invariant I10).
 8. Only then score a learner, level by level (section 6.5).
 
 Suggested crates (names only, layout open): `pd0-wire` (byte layouts), `pd0-world` (generators, own binary), `pd0-recorder` (stand-in for PHYSICS, labelled `STAND_IN`), `pd0-guard` (stand-in for AEGIS range check, labelled `STAND_IN`), `pd0-ladder` (checker), `pd0-score`, `pd0-planner`, `pd0-learner`. Boundaries between crates follow ADR 0024 lines 30 to 35.
