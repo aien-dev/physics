@@ -16,8 +16,8 @@
  *   6. Prove non-collision and dynamic resource independence.
  *
  * Waits use the canonical primitive m16/m16_gpu_wait.c: monotonic clock, hard
- * 2000 ms deadline that is never extended, 1000 ms stall deadline that restarts
- * only on progress, barrier before every read, PASS needs marker AND marker2.
+ * 2000 ms deadline that is never extended, 2000 ms stall deadline (equal, so the
+ * old 2 s pass window is unchanged) that restarts only on progress, barrier before every read, PASS needs marker AND marker2.
  * Every failure prints one line tagged
  *   class=<submission_fail|no_progress|late_progress|wrong_marker|output_parity>
  * followed by the full wait report.
@@ -29,7 +29,11 @@
  *   4 cross-talk: B executed on A's doorbell (wrong_marker)
  *   5 markerB wait failed (no_progress / late_progress / wrong_marker)
  *   6 root handle collision
- *   7 NEW: marker reached its value but the re-read after PASS disagrees (output_parity)
+ *   7 NEW: output_parity. Either a marker re-read right after its PASS disagrees
+ *     with the value just accepted (nearly a tautology, it only catches a torn
+ *     or unstable word), or, new tightening, the final check that both pages still
+ *     hold their payload and 0x46464646 after B completed fails.
+ *     This test has no output buffer; the markers are the output.
  *
  * The doorbell is a plain store (nvrm_ring, nvrm/nvrm.c:742, returns void), so a
  * doorbell write that fails cannot be detected; one that never reaches the chip
@@ -47,7 +51,7 @@
 #define MARKER2_PAYLOAD 0x46464646u
 #define MARKER2_OFF 0x10u
 #define WAIT_TOTAL_MS 2000u  /* hard deadline: same 2 s window as the old wait */
-#define WAIT_STALL_MS 1000u
+#define WAIT_STALL_MS 2000u  /* >= hard bound so the pass window is not narrower than the old wait */
 
 static void fence(void) { __asm__ volatile("dsb sy" ::: "memory"); }
 
@@ -223,6 +227,18 @@ int main(void) {
     }
     printf("[OBSERVED] After Doorbell B: markerA=0x%08x markerB=0x%08x (expected A=0x16000001, B=0x16000002)\n",
            *markerA, *markerB);
+    /* output_parity, final: B's work must not have disturbed A's page. The old log
+     * printed this as "expected" but never enforced it (NEW tightening). */
+    fence();
+    if (*markerA != PAYLOAD_A || *marker2A != MARKER2_PAYLOAD || *markerB != PAYLOAD_B || *marker2B != MARKER2_PAYLOAD) {
+        char what[200];
+        snprintf(what, sizeof what, "final markerA=0x%08x marker2A=0x%08x markerB=0x%08x marker2B=0x%08x",
+                 *markerA, *marker2A, *markerB, *marker2B);
+        print_simple("output_parity", "final", 7, what);
+        m16_native_close(&ctxA);
+        m16_native_close(&ctxB);
+        return 7;
+    }
 
     /* Verify distinct resource handles */
     printf("\n--- VERIFYING RESOURCE INDEPENDENCE ---\n");

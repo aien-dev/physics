@@ -100,8 +100,10 @@ bool m16_gpu_wait_sequence(volatile uint32_t *word, uint32_t target,
                              m16_gpu_wait_report_t *rpt, const m16_gpu_wait_cfg_t *cfg);
 
 /* Failure class of a failed wait, for tagged test output (additive, not in omega's copy):
- *   "wrong_marker"  INVALID_STATE, or the wait STALLED on a nonzero value other
- *                   than the expected one (word or marker2)
+ *   "wrong_marker"  INVALID_STATE; or, for a FIXED wait, the word holds a nonzero
+ *                   value other than the expected one; or marker2 holds a nonzero
+ *                   value other than marker2_want. (A SEQUENCE word below its
+ *                   target is progress, never wrong.) Independent of TIMEOUT vs STALLED.
  *   "late_progress" something moved (progress_count > 0, or the word already held
  *                   its value but marker2 never arrived) yet the wait did not finish
  *                   (hard TIMEOUT while still moving, or stalled after moving)
