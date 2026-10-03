@@ -151,10 +151,9 @@ bool m16_gpu_wait_sequence(volatile uint32_t *word, uint32_t target,
 
 const char *m16_gpu_wait_failure_class(const m16_gpu_wait_report_t *r, uint32_t m2_want) {
     if (r->result == M16_GPU_WAIT_INVALID_STATE) return "wrong_marker";
-    if (r->result == M16_GPU_WAIT_STALLED) {
-        if (r->last_observed != 0 && r->last_observed != r->expected) return "wrong_marker";
-        if (r->last_marker2 != 0 && r->last_marker2 != m2_want) return "wrong_marker";
-    }
+    if (r->wait_kind == M16_GPU_WAIT_FIXED && r->last_observed != 0 && r->last_observed != r->expected)
+        return "wrong_marker";
+    if (r->last_marker2 != 0 && r->last_marker2 != m2_want) return "wrong_marker";
     if (r->progress_count > 0 || r->last_observed == r->expected ||
         (m2_want != 0 && r->last_marker2 == m2_want))
         return "late_progress";

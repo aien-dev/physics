@@ -232,9 +232,9 @@ static int scenario(const char *name, WaitFn fx, WaitFn sq, int which) {
         setup(&f, &cfg); w = 0;
         cfg.total_timeout_ms = 200;
         for (int i = 0; i < 30; i++) sched(&f, (uint64_t)(20 * (i + 1)), &w, (uint32_t)(i + 1));
-        ok = fx(&w, 99, &r, &cfg);
+        ok = sq(&w, 99, &r, &cfg); /* counter climbing toward 99 */
         cl = m16_gpu_wait_failure_class(&r, 0);
-        CHECK(!ok && !strcmp(cl, "late_progress"), "%s: moved, missed hard deadline -> late_progress (got %s)", name, cl);
+        CHECK(!ok && r.result == M16_GPU_WAIT_TIMEOUT && !strcmp(cl, "late_progress"), "%s: counter moved, missed hard deadline -> late_progress (got %s)", name, cl);
         setup(&f, &cfg); w = 0;
         sched(&f, 10, &w, 5);
         ok = fx(&w, 3, &r, &cfg);
@@ -253,6 +253,19 @@ static int scenario(const char *name, WaitFn fx, WaitFn sq, int which) {
         ok = fx(&w, 3, &r, &cfg);
         cl = m16_gpu_wait_failure_class(&r, 0x46464646u);
         CHECK(!ok && !strcmp(cl, "wrong_marker"), "%s: marker2 wrong value -> wrong_marker (got %s)", name, cl);
+        setup(&f, &cfg); w = 0; w2 = 0;
+        cfg.total_timeout_ms = 200; cfg.progress_timeout_ms = 200; /* stall bound == hard bound, as in m16_concurrent */
+        cfg.marker2 = &w2; cfg.marker2_want = 0x46464646u;
+        sched(&f, 150, &w, 3);
+        ok = fx(&w, 3, &r, &cfg);
+        cl = m16_gpu_wait_failure_class(&r, 0x46464646u);
+        CHECK(!ok && r.result == M16_GPU_WAIT_TIMEOUT && !strcmp(cl, "late_progress"), "%s: marker lands at 150 ms of 200, marker2 never -> TIMEOUT late_progress (got %s)", name, cl);
+        setup(&f, &cfg); w = 0;
+        cfg.total_timeout_ms = 200; cfg.progress_timeout_ms = 200;
+        sched(&f, 150, &w, 5);
+        ok = fx(&w, 3, &r, &cfg);
+        cl = m16_gpu_wait_failure_class(&r, 0);
+        CHECK(!ok && r.result == M16_GPU_WAIT_TIMEOUT && !strcmp(cl, "wrong_marker"), "%s: wrong value then hard TIMEOUT still wrong_marker (got %s)", name, cl);
         break;
     }
     }
