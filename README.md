@@ -22,7 +22,7 @@ Research-grade and pre-alpha.
 
 ## Standing rules
 
-C is the target language, with assembly only where measured. No Python (the old Python harness was removed; tools are C or shell). No CUDA toolkit or CUDA library dependence: the GB10 is driven natively through its open kernel interface. No systemd. Offline builds. Never overwrite old receipts.
+Per ADR 0024 (aien-architecture, accepted 2026-10-01): Rust is scaffolding, Omega is the destination, and C is used only where hardware justifies it, with assembly only where measured. In this repository that is the C of FORGE and the AArch64 boot artifacts. No Python (the old Python harness was removed; tools are C or shell). No CUDA toolkit or CUDA library dependence: the GB10 is driven natively through its open kernel interface. No systemd. Offline builds. Never overwrite old receipts.
 
 ## Build and verify
 
