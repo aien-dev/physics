@@ -56,7 +56,7 @@ echo -e "\n[*] Step 1: Compiling M16 binaries..."
     -I./third_party/nvidia-open-580.173.02/kernel-open/common/inc \
     -I./third_party/nvidia-open-580.173.02/kernel-open/nvidia-uvm \
     -I./third_party/nvidia-open-580.173.02/src/nvidia/arch/nvalloc/unix/include \
-    nvrm/nvrm.c m16/m16_native.c m16/m16_concurrent.c -o m16/m16_concurrent
+    nvrm/nvrm.c m16/m16_native.c m16/m16_gpu_wait.c m16/m16_concurrent.c -o m16/m16_concurrent
 } > "$EVIDENCE_DIR/build.log" 2>&1
 
 if [ -x m16/m16_requalify ] && [ -x m16/m16_concurrent ]; then
