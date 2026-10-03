@@ -35,7 +35,7 @@ tests/run_forge_analog_sim_gates.sh  # simulated analog provider vs digital orac
 m3/tests/run_m3_gates.sh             # M3 PHYSICS_EFFECTS, 19 gates in QEMU
 ```
 
-`./run_m2_gates.sh` leaves the committed receipt untouched unless `--write-receipt` is passed, which is only for a recorded requalification decision. Gates that need the real GB10 (`tests/run_forge_gates.sh`, `tests/run_m15_gates.sh`, `tests/run_m16_requalification.sh`, `tests/run_nvrm_lifecycle_gates.sh`) run on the DGX Spark one at a time and are never killed mid-run; CI declares them SKIP, never PASS.
+`./run_m2_gates.sh` leaves the committed receipt untouched unless `--write-receipt` is passed, which is only for a recorded requalification decision. Gates that need the real GB10 (`tests/run_forge_gates.sh`, `tests/run_m15_gates.sh`, `tests/run_m16_requalification.sh`, `tests/run_nvrm_lifecycle_gates.sh`, `tests/run_submission_visibility_gates.sh`) run on the DGX Spark one at a time and are never killed mid-run; CI declares them SKIP, never PASS.
 
 ## Contributing
 
