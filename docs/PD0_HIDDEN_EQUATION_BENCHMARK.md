@@ -50,7 +50,7 @@ Bounded intervention rules:
 
 - A `step` value outside `[chan_min, chan_max]`, an unknown channel, or a `reset` value outside the reset box returns an observation record with `status = REFUSED_RANGE`, the state unchanged, and still costs the step or episode. A refused reset returns status REFUSED_RANGE with no episode opened and costs one episode. Probing the bounds is therefore not free.
 - A step that would take any observed or hidden variable outside `|v| <= 10_000_000` (10.0 units) ends the episode with `status = OUT_OF_BOUNDS`. No post-step state is revealed.
-- After `episode_max_steps` steps the episode ends with `status = EPISODE_END` on the last record.
+- After `episode_max_steps` steps the episode ends with `status = EPISODE_END` on the last record. The EPISODE_END record carries a valid `vars_after` and counts as an observation for T1 and for rollouts; only REFUSED_RANGE, OUT_OF_BOUNDS and BUDGET_EXHAUSTED records carry no outcome (revision 6; with 20-step L0 episodes the 20th record is EPISODE_END and a 20-step rollout needs it).
 - When either budget is spent, every call returns `status = BUDGET_EXHAUSTED`.
 - Exactly one channel is driven per step. All other channels are 0 for that step.
 
@@ -177,8 +177,10 @@ Data splits. Every record the learner has ever seen is tagged by the checker as 
 | T4 | CANDIDATE -> HYPOTHESIS | at least one **rival** relation (a different term set, or the explicit null "no relation") also recorded; a **falsifier** declared and hashed before any `TRIAL` data: declared prediction bound `eps` (rollout NRMSE over 20 steps) with `eps <=` the level bound of section 6.1 (noisy levels: section 6.1 note), and a minimum trial count | stay |
 | T5 | HYPOTHESIS -> PREDICTED | at least 5 intervention schedules chosen by the planner (section 8), none equal to any schedule hash in `FIT`, `SELECT` or `HOLDOUT-0`, each with predicted trajectories from the hypothesis **and** from each rival, hashed and recorded before the schedule is run | stay The schedule hash is SHA-256 over the REQUESTED reset values (n_obs i64) followed by the (channel u8, value i64) steps in order, never over observed values; on noisy levels the observed reset differs from the requested one and must not enter the hash (revision 5, found by the first learner run: L5 preregistration could never match). |
 | T6 | PREDICTED -> INTERVENED | all registered schedules executed through the bounded API; records tagged `TRIAL`; each trial passes if rollout NRMSE (20 steps) is within the declared `eps`; **all** trials pass | any failing trial: the hypothesis moves to REFUTED, the failing record is appended to its `exceptions` list, and the learner returns to CANDIDATE with those records now in `FIT` |
-| T7 | INTERVENED -> REPLICATED | at least 3 independent `REP` batches, each at least 10 episodes of 20 steps, schedules drawn from fresh streams never used before, half planner-chosen and half uniform random; each batch within `eps` and no single episode above `3 * eps` | a failing batch: REFUTED as in T6 |
+| T7 | INTERVENED -> REPLICATED | at least 3 independent `REP` batches, each at least 10 episodes of 20 steps, schedules drawn from fresh streams never used before, half planner-chosen and half uniform random; each batch within `eps` and no single episode above `3 * eps` | a failing batch: REFUTED as in T6 Error normalisation as in the paragraph below (revision 6). |
 | T8 | REPLICATED -> PROVISIONAL_LAW | the law record of section 7 written with `confidence_ppm` computed by the section 7 rule, `exceptions` listed, all experiment hashes included, every record reference verifying against the chain | stay |
+
+Trial and replication error normalisation (revision 6): the rollout NRMSE of a single trial or REP episode divides each variable's RMSE by the pooled standard deviation of that variable over the FIT records (the observed domain), never by the spread inside the trial itself. A quiet trial with little motion would otherwise fail on measurement noise alone even under the true relation (found by the first learner run on L5).
 
 Rules:
 
