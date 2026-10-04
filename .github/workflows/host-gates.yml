@@ -11,6 +11,7 @@ name: Host gates
 # Coverage map (Lane 34, 2026-10-01):
 #   forge-v2      tests/run_forge_v2_gates.sh            FORGE V2 KAT + golden doc
 #   analog-sim    tests/run_forge_analog_sim_gates.sh    AR2 simulated analog provider,
+#   form0         tests/run_forge_form_gates.sh         FORM0 realization-form IR (ADR 0034),
 #                 receipt reproduced byte for byte; oracle gate compares against omega main
 #   gate34-writer tests/test_forge_gates_receipt.sh      Gate 3/4 receipt writer (no GPU),
 #                 digests cross-checked with omega tools/json_canon.c
@@ -44,6 +45,8 @@ jobs:
             cmd: tests/run_forge_v2_gates.sh
           - gate: analog-sim
             cmd: tests/run_forge_analog_sim_gates.sh
+          - gate: form0
+            cmd: tests/run_forge_form_gates.sh
           - gate: gate34-writer
             cmd: tests/test_forge_gates_receipt.sh "$GITHUB_WORKSPACE/omega"
           - gate: m2
