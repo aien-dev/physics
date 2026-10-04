@@ -1,0 +1,16 @@
+{
+  "receipt": "PD0B_VALIDITY", "seal": "seal-1", "recorded_utc": "2026-10-04T01:21:17Z",
+  "sealed_commit": "c6f58e53504d2a3207132bf33e35325d7babbc6c",
+  "method": "PD-0 section 4.2 (V1 oracle positive control, V2 latent necessity, V3 breach rate) and section 11 step 3 threshold calibration, run inside aien-sealed with the copied pd0-oracle tool (omega ab38c38 tests/physics0) against each sealed family; development seeds 1..5 (V1, V2, calibration) and 1..20 (V3); thresholds inherited from PD-0 unchanged",
+  "overall": "PASS (PHYSICS0_ORACLE: PASS; every level passed; two families were replaced or corrected inside the sealed repository before commitment, as the spec requires)",
+  "levels": [
+    {"index": 0, "class": "clean",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 1, "class": "clean",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 2, "class": "clean",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 3, "class": "clean",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 4, "class": "clean",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 5, "class": "noisy",  "V1": "PASS", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"},
+    {"index": 6, "class": "latent", "V1": "PASS", "V2": "PASS (latent-free sparse reference exceeds the inherited in-box bound on all five seeds; latent oracle within bound)", "V3": "PASS", "worst_breach_rate": 0.0, "calibration": "PASS"}
+  ],
+  "not_published": "equations, constant ranges, seeds and per-seed scores stay in aien-sealed until PD0B_REVEAL"
+}
