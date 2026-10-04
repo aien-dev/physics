@@ -1,0 +1,6 @@
+PD-0b sealed family S1 (presented index 1, clean class)
+s0' = s0 + s1 dt
+s1' = s1 + (-k s0 - c s1 + u + p s0 u) dt
+constants (draw order): k in [1.0, 4.0], c in [0.2, 1.5], p in [0.3, 0.8]
+observed 2, channels 1, reset box [-2, 2]
+budget: 8000 steps, 300 episodes of 100 steps, dt 0.05, channel bounds [-2, 2], micro-unit explicit Euler (PD-0 section 4)

@@ -1,0 +1,4 @@
+PD-0b sealed family S5 (presented index 5, noisy class)
+same equations and constant ranges as S1, with observation noise sigma_obs 0.02 on every observation
+observed 2, channels 1, reset box [-2, 2]
+budget: 8000 steps, 300 episodes of 100 steps, dt 0.05, channel bounds [-2, 2], micro-unit explicit Euler (PD-0 section 4)
