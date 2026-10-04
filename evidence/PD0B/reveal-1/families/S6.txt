@@ -1,0 +1,7 @@
+PD-0b sealed family S6 (presented index 6, latent class)
+s0' = s0 + s1 dt
+s1' = s1 + (-k s0 - m h + u) dt
+h'  = h + (-w h + q s1) dt      (h hidden, h = 0 at reset; only m*q is identifiable)
+constants (draw order): k in [1.0, 3.0], w in [0.5, 1.5], m in [0.5, 1.5], q in [0.5, 1.5]
+observed 2, channels 1, reset box [-2, 2]
+budget: 8000 steps, 300 episodes of 100 steps, dt 0.05, channel bounds [-2, 2], micro-unit explicit Euler (PD-0 section 4)
