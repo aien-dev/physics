@@ -22,16 +22,18 @@ All world values are signed 64-bit integers in **micro-units** (1 unit = 1_000_0
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `magic` | 8 bytes | `PD0DESC1` |
+| `magic` | 8 bytes | `PD0DESC2` |
 | `n_obs` | u8 | number of observed variables (labels `s0`, `s1`, ...) |
 | `n_channels` | u8 | number of intervention channels (labels `c0`, ...) |
 | `dt_micro` | i64 | time per tick, micro-units |
 | `chan_min[n_channels]`, `chan_max[n_channels]` | i64 | inclusive intervention bounds |
-| `reset_min`, `reset_max` | i64 | inclusive box for each observed variable at reset |
+| `reset_min[n_obs]`, `reset_max[n_obs]` | i64 each | inclusive reset box per observed variable |
 | `episode_max_steps` | u32 | steps per episode: 20 for L0, 100 for L1 to L6 |
 | `budget_steps` | u32 | total steps for this world instance |
 | `budget_episodes` | u32 | total resets for this world instance |
 
+
+Readers refuse `PD0DESC1`. Revision 4: the single pair could not express the L0 reset box for `s1` (omega #248 limit).
 The learner is **not** told: the level number, the generator, any constant, the number or existence of hidden variables, the noise level, or the seed. The `describe` record has no free-text field.
 
 ### 2.3 Calls
