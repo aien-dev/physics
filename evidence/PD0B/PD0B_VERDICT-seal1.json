@@ -1,0 +1,40 @@
+{
+  "receipt": "PD0B_VERDICT",
+  "seal": "seal-1",
+  "recorded_utc": "2026-10-04T02:08:47Z",
+  "spec": "docs/PD0B_SEALED_BENCHMARK.md section 6 item 5; inherited criteria docs/PD0_HIDDEN_EQUATION_BENCHMARK.md rev 7 section 6",
+  "verdict": "FAIL",
+  "first_failing_condition": "every level passed under the inherited criteria: sealed level index 6 (latent family) failed, 0 of 5 instances (ladder stopped at INTERVENED x3 (code 261, T7 batch too small) and CANDIDATE x2 (code 251, T6 trial failed); scorer FAIL 5/5, code 307 L6 latent missing)",
+  "levels_passed": "sealed level indexes 0,1,2,3,4,5: each 5 of 5 instances REPLICATED on the ladder, law record state PROVISIONAL_LAW, scorer PASS, refusal counters 0",
+  "levels_failed": "sealed level index 6: 0 of 5",
+  "conditions": {
+    "commitments_match": {"result": true, "evidence": "evidence/PD0B/PD0B_REVEAL-seal1.json: 43 of 43 items (ORDER, 7 families, 35 seeds) revealed sha256 equal committed sha256; the family and seed hash set is identical across PD0B_COMMIT-seal1, -seal1b and -seal1c (the amendments changed only the sealed-repository commit for the protocol v2 world binary)"},
+    "freeze_preceded_run": {"result": true, "evidence": "PD0B_COMMIT seal1 2026-10-04T01:21:15Z -> PD0B_FREEZE 01:26:04Z (physics #40, omega learner f9a1797) -> PD0B_RUN 01:57:28Z (omega harness 965edfb) -> PD0B_REVEAL 01:58:36Z; the four frozen trees (learner, ladder, score, controls) have identical git tree ids at f9a1797 and 965edfb, sha256 over the four ids 3f0307cce00ba855f8d71278b727e675ffe474cb6f9c25fdf130bd96416977c9 as in the freeze receipt"},
+    "separation_confirmation_present": {"result": true, "evidence": "PD0B_COMMIT-seal1c.json field separation_confirmation: sealing author helper session 69f80259 wrote the families and seeds alone inside the sealed repository and does not brief, review or advise the learner lane; the learner lane (queen session) read nothing under the sealed checkout except executing the world binary, and the run receipts restate that"},
+    "controls_passed": {"result": true, "evidence": "omega evidence/physics0/verify/PD0_CONTROLS_PASS-965edfbf35e9.txt (omega #262): make test-physics0-verify at the frozen harness, purity + formats 25/25 + ladder 148/148 + scorer and negative controls 103/103, plain and ASan/UBSan, exit 0, 880 control receipts by sha256 manifest"},
+    "every_level_passed": {"result": false, "evidence": "omega evidence/physics0/pd0b/PD0B_RUN-965edfbf35e9-58c1fac11f47.txt (omega #259), run_validity VALID, every refusal counter 0; replay with retained law records omega evidence/physics0/pd0b/PD0B_RUN-d3a4063dc1a3-58c1fac11f47.txt (omega #260, merged 8a2e268) identical on all 35 instances"}
+  },
+  "run": {
+    "learner_repo": "aien-dev/omega", "learner_commit": "f9a17970ea00c4ead5bbb18dbf5e5509ad2977d0", "harness_commit": "965edfbf35e90edf01abbaba6a5ef39d97b583f3",
+    "harness_binary_sha256": "ee8223221abbefdfcbc432097e447f3eecf4b3d9f8e7bd4177713644f1e72520",
+    "sealed_commit": "74bdba3d5fd745edf261db7deeecb1e33a946ca6", "world_binary_sha256": "58c1fac11f474e15efc883b32aa44b54387a923fd172896ba10753023064eacd", "seeds_file_sha256": "b22c9712e1bdd3a7e836cff73774dcf6c1e8cbc5335652c175a5e5c75cbb7038",
+    "instances": 35, "valid_instances": 35,
+    "per_level": [
+      {"level_index": 0, "n_vars": 2, "n_latent": 0, "n_channels": 1, "size_bound": 4, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 1, "n_vars": 2, "n_latent": 0, "n_channels": 1, "size_bound": 5, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 2, "n_vars": 2, "n_latent": 0, "n_channels": 1, "size_bound": 4, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 3, "n_vars": 3, "n_latent": 0, "n_channels": 2, "size_bound": 7, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 4, "n_vars": 2, "n_latent": 0, "n_channels": 1, "size_bound": 5, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 5, "n_vars": 2, "n_latent": 0, "n_channels": 1, "size_bound": 5, "replicated": 5, "provisional_law_records": 5, "scorer_pass": 5, "passed": true},
+      {"level_index": 6, "n_vars": 3, "n_latent": 1, "n_channels": 1, "size_bound": 7, "replicated": 0, "provisional_law_records": 0, "law_record_states": "REFUTED x2, HYPOTHESIS x3", "scorer_pass": 0, "scorer_code": 307, "passed": false}
+    ]
+  },
+  "law_records": "the first PD0B_RUN receipt omitted the law field; omega #260 adds law and law_sha256 per instance and retains the .law and .json bundles under evidence/physics0/pd0b/PD0B_RUN-d3a4063dc1a3-58c1fac11f47-laws/ (ledgers by sha256 manifest LEDGERS.sha256, archived outside git at ~/workspace/evidence-archive/omega/physics0/pd0b/PD0B_RUN-d3a4063dc1a3-58c1fac11f47-ledgers (35 hashes verified by the queen)); the queen read the state byte of all 35 retained PDLAW1 records: 30 PROVISIONAL_LAW (levels 0-5), 2 REFUTED and 3 HYPOTHESIS (level 6)",
+  "what_may_be_said": "The verdict is FAIL under the sealed rule, so the section 7 sentence may not be claimed. What the receipts do show: the frozen learner, with no access to the sealed families, reached REPLICATED with PROVISIONAL_LAW records and scorer PASS on all 30 instances of the six latent-free sealed families, and on none of the 5 instances of the sealed latent family. Every threshold is PD-0's and still provisional. No claim about physics, generality or the latent case follows.",
+  "open_items": [
+    "L6 margin: PD-0 6.3 factor-3 margin met on 3 of 5 calibration seeds (physics rev 7 section 6.3 note); decision with Drake, no threshold changed for this run",
+    "the learner has no latent-variable mechanism; the sealed level 6 result is consistent with the development result on the public L6",
+    "a second seal (new families, new seeds, same frozen learner or a new frozen learner) is required before any repeated claim"
+  ],
+  "recorded_by": "queen session physics-0 (learner lane); sealed source unread"
+}
