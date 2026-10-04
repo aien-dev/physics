@@ -1,34 +1,46 @@
 {
-  "schema_version": "1.0.0",
-  "name": "contracts",
-  "layer": "contracts",
-  "purpose": "Directory contracts. Purpose not yet described by a human.",
   "above": {
     "name": "cs-physics",
     "path": ".."
   },
   "extensions": {
-    "seed": {
-      "purpose_auto": "Directory contracts. Purpose not yet described by a human.",
-      "files": [
-        "native-dgx-spark-draft.json"
-      ]
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:7f1255ac5d9ecb72d0171ad2fb7d58d02cdddc7d292ac99fdd5e01996a7ea78d",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 1,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:de6604c8ba9b72d3d5782a3f8ef105cff6428fcc3a766d081efd646c921ef262"
     },
     "owner_lane": "",
     "provenance": {
-      "source": "backfill",
-      "total_commits": 1,
-      "ledger_cap": 20,
       "entries": [
         {
-          "source": "backfill-git",
-          "sha": "ff13208",
-          "timestamp": "2026-09-26T01:12:33-05:00",
           "author": "aien-dev",
+          "pr": 4,
+          "sha": "ff13208",
+          "source": "backfill-git",
           "subject": "design: native DGX Spark frame authority (physics#2) (#4)",
-          "pr": 4
+          "timestamp": "2026-09-26T01:12:33-05:00"
         }
-      ]
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 1
+    },
+    "seed": {
+      "files": [
+        "native-dgx-spark-draft.json"
+      ],
+      "purpose_auto": "Directory contracts. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "contracts",
+  "name": "contracts",
+  "purpose": "Directory contracts. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }

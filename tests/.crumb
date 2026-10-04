@@ -1,8 +1,4 @@
 {
-  "schema_version": "1.0.0",
-  "name": "tests",
-  "layer": "tests",
-  "purpose": "Directory tests. Purpose not yet described by a human.",
   "above": {
     "name": "cs-physics",
     "path": ".."
@@ -14,8 +10,194 @@
     }
   ],
   "extensions": {
+    "generated": {
+      "children": [
+        {
+          "digest": "a2e68156ea2de4f24bf983b6e22b15249a19605957fb20a271ecb90f18f487af",
+          "last_commit": "ff3d8b3",
+          "name": "fixtures",
+          "purpose": "Directory tests/fixtures. Purpose not yet described by a human."
+        }
+      ],
+      "children_root": "sha256:be29e4df8a1e9e426d7723fccf6e09f23eb6fb07a6b21490cd019c75d6fed6cd",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:c19ebd3b17c1ead4c0ed77e8945c8d765aa9de45074bc4e32d5e9d3a2b17f241",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 13,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:c965592c10514646573af182eb826a805b5b1733d89eb316271bdbed49f1d280"
+    },
+    "owner_lane": "",
+    "provenance": {
+      "entries": [
+        {
+          "author": "aien-dev",
+          "pr": 22,
+          "sha": "006e426",
+          "source": "backfill-git",
+          "subject": "chore: remove Python from physics repo (shell/C rewrites); AR2 status lines (#22)",
+          "timestamp": "2026-09-30T21:49:08-05:00"
+        },
+        {
+          "lane": "lane2",
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "pr": 22,
+          "ref": "2026-10-01-push-lane2-report.md",
+          "sha": "006e426",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane2",
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "pr": 22,
+          "ref": "2026-10-01-next-major-push-orchestrator.md",
+          "sha": "006e426",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane33",
+          "note": "12:33Z Review track 1 DONE (track1-repos-drift.md): omega 7e713e3, aienos c3878bb, arch 921797b, physics 006e426, sovereign-core 7011f2b; #152 green, #153 red for stale head, #136 never ran checks; h",
+          "pr": 22,
+          "ref": "2026-10-01-next-major-push-orchestrator.md",
+          "sha": "006e426",
+          "source": "backfill-lane-report"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 21,
+          "sha": "d52759d",
+          "source": "backfill-git",
+          "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
+          "timestamp": "2026-09-30T21:41:03-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 18,
+          "sha": "e95e3ed",
+          "source": "backfill-git",
+          "subject": "Merge pull request #18 from aien-dev/feat/gate34-receipt",
+          "timestamp": "2026-09-30T17:28:32-05:00"
+        },
+        {
+          "lane": "lane2",
+          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane2-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane2",
+          "note": "Taken on omega 7211b59 + physics e95e3ed: 26/26 tests, 45 GB10 parity lines, all with 0 mismatches, 0 libm, 0 libcuda.",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane2-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane2",
+          "note": "#134 GB10 SUM receipt: committed to repo evidence/E1-REDUCE/be9d61ce...json via omega #143 (merge 0580ef8); it binds omega 6da80bf, physics e95e3ed.",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane2-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane22",
+          "note": "Blockers: none. Note: gate builds need physics pinned at e95e3ed (../physics at fecbedb fails lock check).",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane22-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane7",
+          "note": "`PHYSICS_DIR=../physics-gate14-e95e3ed ./tests/searchtrace/run_m23_corpus_gate.sh`: PASS. Two runs identical;",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane7-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane7",
+          "note": "3. Environment note: ~/workspace/hive-worktrees/physics is not at the pinned commit e95e3ed; the gate used physics-gate14-e95e3ed.",
+          "pr": 18,
+          "ref": "2026-10-01-push-lane7-report.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "lane": "lane2",
+          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
+          "pr": 18,
+          "ref": "2026-10-01-next-major-push-orchestrator.md",
+          "sha": "e95e3ed",
+          "source": "backfill-lane-report"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 13,
+          "sha": "5969159",
+          "source": "backfill-git",
+          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
+          "timestamp": "2026-09-29T10:36:47-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 16,
+          "sha": "1f7c321",
+          "source": "backfill-git",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "timestamp": "2026-09-29T10:11:28-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 12,
+          "sha": "a477aee",
+          "source": "backfill-git",
+          "subject": "fix(m19r): add nvrm_free with VA reuse and monotonic completion wait (#12)",
+          "timestamp": "2026-09-27T07:32:37-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 11,
+          "sha": "b64753d",
+          "source": "backfill-git",
+          "subject": "fix(m16): corrective requalification of native Blackwell path without libcuda (#11)",
+          "timestamp": "2026-09-26T08:16:00-05:00"
+        },
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "b5444bb",
+          "source": "backfill-git",
+          "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
+          "timestamp": "2026-09-26T05:26:26-05:00"
+        },
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "4335c0c",
+          "source": "backfill-git",
+          "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
+          "timestamp": "2026-09-26T04:50:14-05:00"
+        },
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "b2c5f3c",
+          "source": "backfill-git",
+          "subject": "feat(physics): complete Milestone 15 PHYSICS_ACCELERATOR_LINK substrate (#10)",
+          "timestamp": "2026-09-26T04:27:55-05:00"
+        }
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 10
+    },
     "seed": {
-      "purpose_auto": "Directory tests. Purpose not yet described by a human.",
       "files": [
         "run_forge_analog_sim_gates.sh",
         "run_forge_gates.sh",
@@ -28,175 +210,12 @@
         "test_forge_hwid.c",
         "test_forge_seam.c",
         "test_forge_v2_kat.c"
-      ]
-    },
-    "owner_lane": "",
-    "provenance": {
-      "source": "backfill",
-      "total_commits": 10,
-      "ledger_cap": 20,
-      "entries": [
-        {
-          "source": "backfill-git",
-          "sha": "006e426",
-          "timestamp": "2026-09-30T21:49:08-05:00",
-          "author": "aien-dev",
-          "subject": "chore: remove Python from physics repo (shell/C rewrites); AR2 status lines (#22)",
-          "pr": 22
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "006e426",
-          "pr": 22,
-          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
-          "ref": "2026-10-01-push-lane2-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "006e426",
-          "pr": 22,
-          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
-          "ref": "2026-10-01-next-major-push-orchestrator.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane33",
-          "sha": "006e426",
-          "pr": 22,
-          "note": "12:33Z Review track 1 DONE (track1-repos-drift.md): omega 7e713e3, aienos c3878bb, arch 921797b, physics 006e426, sovereign-core 7011f2b; #152 green, #153 red for stale head, #136 never ran checks; h",
-          "ref": "2026-10-01-next-major-push-orchestrator.md"
-        },
-        {
-          "source": "backfill-git",
-          "sha": "d52759d",
-          "timestamp": "2026-09-30T21:41:03-05:00",
-          "author": "aien-dev",
-          "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
-          "pr": 21
-        },
-        {
-          "source": "backfill-git",
-          "sha": "e95e3ed",
-          "timestamp": "2026-09-30T17:28:32-05:00",
-          "author": "aien-dev",
-          "subject": "Merge pull request #18 from aien-dev/feat/gate34-receipt",
-          "pr": 18
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "2. Default `make` fails on a plain checkout because the shared ../physics is at 006e426 while physics.lock pins e95e3ed. I ran with PHYSICS_DIR pointing at hive-worktrees/physics-gate14-e95e3ed. The ",
-          "ref": "2026-10-01-push-lane2-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "Taken on omega 7211b59 + physics e95e3ed: 26/26 tests, 45 GB10 parity lines, all with 0 mismatches, 0 libm, 0 libcuda.",
-          "ref": "2026-10-01-push-lane2-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "#134 GB10 SUM receipt: committed to repo evidence/E1-REDUCE/be9d61ce...json via omega #143 (merge 0580ef8); it binds omega 6da80bf, physics e95e3ed.",
-          "ref": "2026-10-01-push-lane2-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane22",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "Blockers: none. Note: gate builds need physics pinned at e95e3ed (../physics at fecbedb fails lock check).",
-          "ref": "2026-10-01-push-lane22-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane7",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "`PHYSICS_DIR=../physics-gate14-e95e3ed ./tests/searchtrace/run_m23_corpus_gate.sh`: PASS. Two runs identical;",
-          "ref": "2026-10-01-push-lane7-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane7",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "3. Environment note: ~/workspace/hive-worktrees/physics is not at the pinned commit e95e3ed; the gate used physics-gate14-e95e3ed.",
-          "ref": "2026-10-01-push-lane7-report.md"
-        },
-        {
-          "source": "backfill-lane-report",
-          "lane": "lane2",
-          "sha": "e95e3ed",
-          "pr": 18,
-          "note": "~05:50Z Lane 2 WP-A (E1 scalar contract CPU tier) MERGED omega#124 d3194f6; test-numeric-cpu 21 PASS + 5 declared chip-only SKIP; env note: shared ../physics at 006e426 vs lock e95e3ed (second lane t",
-          "ref": "2026-10-01-next-major-push-orchestrator.md"
-        },
-        {
-          "source": "backfill-git",
-          "sha": "5969159",
-          "timestamp": "2026-09-29T10:36:47-05:00",
-          "author": "aien-dev",
-          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
-          "pr": 13
-        },
-        {
-          "source": "backfill-git",
-          "sha": "1f7c321",
-          "timestamp": "2026-09-29T10:11:28-05:00",
-          "author": "aien-dev",
-          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
-          "pr": 16
-        },
-        {
-          "source": "backfill-git",
-          "sha": "a477aee",
-          "timestamp": "2026-09-27T07:32:37-05:00",
-          "author": "aien-dev",
-          "subject": "fix(m19r): add nvrm_free with VA reuse and monotonic completion wait (#12)",
-          "pr": 12
-        },
-        {
-          "source": "backfill-git",
-          "sha": "b64753d",
-          "timestamp": "2026-09-26T08:16:00-05:00",
-          "author": "aien-dev",
-          "subject": "fix(m16): corrective requalification of native Blackwell path without libcuda (#11)",
-          "pr": 11
-        },
-        {
-          "source": "backfill-git",
-          "sha": "b5444bb",
-          "timestamp": "2026-09-26T05:26:26-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
-          "pr": 10
-        },
-        {
-          "source": "backfill-git",
-          "sha": "4335c0c",
-          "timestamp": "2026-09-26T04:50:14-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
-          "pr": 10
-        },
-        {
-          "source": "backfill-git",
-          "sha": "b2c5f3c",
-          "timestamp": "2026-09-26T04:27:55-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(physics): complete Milestone 15 PHYSICS_ACCELERATOR_LINK substrate (#10)",
-          "pr": 10
-        }
-      ]
+      ],
+      "purpose_auto": "Directory tests. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "tests",
+  "name": "tests",
+  "purpose": "Directory tests. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }

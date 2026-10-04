@@ -1,50 +1,62 @@
 {
-  "schema_version": "1.0.0",
-  "name": "m15/tools",
-  "layer": "m15/tools",
-  "purpose": "Directory m15/tools. Purpose not yet described by a human.",
   "above": {
     "name": "m15",
     "path": ".."
   },
   "extensions": {
-    "seed": {
-      "purpose_auto": "Directory m15/tools. Purpose not yet described by a human.",
-      "files": [
-        "m15tool.c"
-      ]
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:3a38ea84e06d7c2039939331ed0a2524692bc64de608aa08786a043f0797b8af",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 1,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:c1df63e86c980c4c336cad6483988c174a05653463336f4bbca3003f0edd1f70"
     },
     "owner_lane": "",
     "provenance": {
-      "source": "backfill",
-      "total_commits": 3,
-      "ledger_cap": 20,
       "entries": [
         {
-          "source": "backfill-git",
+          "author": "Drake Stapleton",
+          "pr": 10,
           "sha": "b5444bb",
-          "timestamp": "2026-09-26T05:26:26-05:00",
-          "author": "Drake Stapleton",
+          "source": "backfill-git",
           "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
-          "pr": 10
+          "timestamp": "2026-09-26T05:26:26-05:00"
         },
         {
-          "source": "backfill-git",
+          "author": "Drake Stapleton",
+          "pr": 10,
           "sha": "4335c0c",
-          "timestamp": "2026-09-26T04:50:14-05:00",
-          "author": "Drake Stapleton",
+          "source": "backfill-git",
           "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
-          "pr": 10
+          "timestamp": "2026-09-26T04:50:14-05:00"
         },
         {
-          "source": "backfill-git",
-          "sha": "b2c5f3c",
-          "timestamp": "2026-09-26T04:27:55-05:00",
           "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "b2c5f3c",
+          "source": "backfill-git",
           "subject": "feat(physics): complete Milestone 15 PHYSICS_ACCELERATOR_LINK substrate (#10)",
-          "pr": 10
+          "timestamp": "2026-09-26T04:27:55-05:00"
         }
-      ]
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 3
+    },
+    "seed": {
+      "files": [
+        "m15tool.c"
+      ],
+      "purpose_auto": "Directory m15/tools. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "m15/tools",
+  "name": "m15/tools",
+  "purpose": "Directory m15/tools. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }
