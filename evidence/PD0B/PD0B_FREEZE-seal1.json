@@ -1,0 +1,10 @@
+{
+  "receipt": "PD0B_FREEZE", "seal": "seal-1", "recorded_utc": "2026-10-04T01:26:04Z",
+  "after_commit_receipt": "evidence/PD0B/PD0B_COMMIT-seal1.json (physics main 26d936143008867738af38eda49814473866621e)",
+  "learner_repo": "aien-dev/omega", "learner_commit": "f9a17970ea00c4ead5bbb18dbf5e5509ad2977d0",
+  "frozen_trees": ["src/physics0/learner", "src/physics0/ladder", "src/physics0/score", "src/physics0/controls"],
+  "frozen_tree_hash_sha256_of_git_tree_ids": "3f0307cce00ba855f8d71278b727e675ffe474cb6f9c25fdf130bd96416977c9",
+  "harness_rule": "run tooling (external world binary, score protocol call, PD0B_RUN target) may be added after this receipt only if the four frozen tree ids are unchanged; the PD0B_RUN receipt must restate this hash and the learner binary digest",
+  "recorded_by": "queen session physics-0 spec review (learner lane); sealed families unread",
+  "status": "FROZEN"
+}
