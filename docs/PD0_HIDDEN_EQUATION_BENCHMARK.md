@@ -1,7 +1,7 @@
 # PD-0: HIDDEN-EQUATION BENCHMARK
 
 **Status:** DRAFT, docs only. Part of [`PHYSICS0_DISCOVERY_ENGINE.md`](PHYSICS0_DISCOVERY_ENGINE.md). No code exists yet. Every threshold below is a **frozen initial value** that no one has yet run a reference solver against; see section 11 for what must happen before any learner is scored.
-**Language:** Rust scaffolding per ADR 0024 (aien-architecture `docs/adr/0024-rust-scaffolding-omega-destination.md:21`), wire formats language-neutral (same file, lines 30 to 35). No Python anywhere.
+**Language:** Rust or C per the host repository's toolchain (the first implementation is C in omega, ADR 0024 toolchain clause); wire formats unchanged.
 **Wire conventions:** little-endian, fixed-width integers, no floating point in any canonical byte, fractions as integers. This copies the rule of `docs/FORGE_SUBSTRATE_V2_SPEC.md:42-45`.
 
 ---
@@ -28,7 +28,7 @@ All world values are signed 64-bit integers in **micro-units** (1 unit = 1_000_0
 | `dt_micro` | i64 | time per tick, micro-units |
 | `chan_min[n_channels]`, `chan_max[n_channels]` | i64 | inclusive intervention bounds |
 | `reset_min`, `reset_max` | i64 | inclusive box for each observed variable at reset |
-| `episode_max_steps` | u32 | steps per episode: 50 for L0, 100 for L1 to L6 |
+| `episode_max_steps` | u32 | steps per episode: 20 for L0, 100 for L1 to L6 |
 | `budget_steps` | u32 | total steps for this world instance |
 | `budget_episodes` | u32 | total resets for this world instance |
 
@@ -46,7 +46,7 @@ Three calls, as a language-neutral byte protocol over a pipe or socket between t
 
 Bounded intervention rules:
 
-- A `step` value outside `[chan_min, chan_max]`, an unknown channel, or a `reset` value outside the reset box returns an observation record with `status = REFUSED_RANGE`, the state unchanged, and still costs the step or episode. Probing the bounds is therefore not free.
+- A `step` value outside `[chan_min, chan_max]`, an unknown channel, or a `reset` value outside the reset box returns an observation record with `status = REFUSED_RANGE`, the state unchanged, and still costs the step or episode. A refused reset returns status REFUSED_RANGE with no episode opened and costs one episode. Probing the bounds is therefore not free.
 - A step that would take any observed or hidden variable outside `|v| <= 10_000_000` (10.0 units) ends the episode with `status = OUT_OF_BOUNDS`. No post-step state is revealed.
 - After `episode_max_steps` steps the episode ends with `status = EPISODE_END` on the last record.
 - When either budget is spent, every call returns `status = BUDGET_EXHAUSTED`.
@@ -101,7 +101,7 @@ Notation: `s` observed state, `u` the applied intervention on the channel named,
 
 | Level | Name | Observed | Hidden | Channels | `dt` | Intervention bounds | Instance budget |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| L0 | kinematics | s0, s1 | none | c0 | 1.0 | [-0.1, 0.1] | 3000 steps, 60 episodes of 50 steps |
+| L0 | kinematics | s0, s1 | none | c0 | 1.0 | [-0.1, 0.1] | 3000 steps, 150 episodes of 20 steps |
 | L1 | spring (`k` in [1.0, 4.0]) | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
 | L2 | damped spring | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 3000 steps, 300 episodes |
 | L3 | coupled oscillators | s0 to s3 | none | c0, c1 | 0.05 | [-2.0, 2.0] each | 3000 steps, 300 episodes |
@@ -109,11 +109,11 @@ Notation: `s` observed state, `u` the applied intervention on the channel named,
 | L5 | noisy observations | s0, s1 | none | c0 | 0.05 | [-2.0, 2.0] | 8000 steps, 300 episodes |
 | L6 | hidden variable | s0, s1 | h | c0 | 0.05 | [-2.0, 2.0] | 8000 steps, 300 episodes |
 
-Reset box for all levels: each observed variable in `[-2.0, 2.0]` (the training box).
+Reset box: each observed variable in `[-2.0, 2.0]` (the training box), except L0 `s1`, which is in `[-0.2, 0.2]` (`s0` stays `[-2.0, 2.0]`), and L4, where both variables are in `[-1.0, 1.0]` (revision 3, calibration 2026-10-04).
 
 ### 4.1 Generators
 
-**L0 kinematics.** No constants. `s0' = s0 + s1`, `s1' = s1 + u`. (Drake's form: `x(t+1) = x + v`, `v(t+1) = v + a`, with `a` the intervention.)
+**L0 kinematics.** No constants. `s0' = s0 + s1`, `s1' = s1 + u`. Revision 3: `episode_max_steps` is 20, the instance budget is 3000 steps (150 episodes), the reset box for `s1` is `[-0.2, 0.2]` (`s0` stays `[-2, 2]`), and the push range is `[-0.1, 0.1]`. (Drake's form: `x(t+1) = x + v`, `v(t+1) = v + a`, with `a` the intervention.)
 
 **L1 spring.** Constant `k` in `[1.0, 4.0]` (capped so explicit-Euler amplitude growth over 100 steps stays under 1.5x; review B1).
 `s0' = s0 + s1 * dt`
@@ -129,13 +129,13 @@ Reset box for all levels: each observed variable in `[-2.0, 2.0]` (the training 
 `s2' = s2 + s3 * dt`
 `s3' = s3 + (-(k * s2) - g * (s2 - s0) + u1) * dt`
 
-**L4 nonlinear spring (cubic).** Constants in order: `k` in `[1.0, 4.0]`, `b` in `[0.5, 2.0]`.
+**L4 nonlinear spring (cubic).** Constants in order: `k` in `[1.0, 4.0]`, `b` in `[0.5, 2.0]`. Reset box `[-1.0, 1.0]` for both variables (revision 3).
 `s0' = s0 + s1 * dt`
 `s1' = s1 + (-(k * s0) - b * (s0 * s0 * s0) + u) * dt`
 
 **L5 noisy observations.** The L2 world (constants drawn the same way) with measurement noise: the learner sees `s_obs = s + e` for each observed variable, `e` from the `"noise"` stream with `sigma_obs = 0.02` (20_000 micro). The underlying state evolves noise-free. Noise applies to every observation including `reset` records.
 
-**L6 hidden variable.** Constants in order: `k` in `[2.0, 5.0]`, `m` in `[0.5, 1.0]`, `w` in `[1.0, 2.0]`, `q` in `[0.5, 1.0]`. Hidden `h`, 0 at every reset.
+**L6 hidden variable.** Constants in order: `k` in `[3, 5]`, `w` in `[0.5, 1.0]`, `m` in `[1.0, 2.0]`, `q` in `[1.0, 2.0]` (revision 3; order of drawing is k, w, m, q). Deterministic rule: after drawing k, w, m, q in order, while m*q/w > 0.7*k redraw m then q from the same stream; the redraw count is recorded in the instance receipt; an instance that reaches 1000 redraws is invalid and the seed is skipped and recorded. Hidden `h`, 0 at every reset.
 `s0' = s0 + s1 * dt`
 `s1' = s1 + (-(k * s0) + m * h + u) * dt`
 `h'  = h + (-(w * h) + q * s0) * dt`
@@ -146,6 +146,12 @@ Only `s0, s1` are observed. The scale of `h` is not identifiable, so no coeffici
 - V1 (positive control): a test-only **oracle solver** that is handed the generator form and fits only constants passes every level (section 6). Failure means the benchmark is broken, not the learner.
 - V2: for L6, the best model **without** a latent variable (best of the library at the level's size bound) must fail the L6 prediction bound. Failure means the hidden variable is not necessary and L6 is invalid.
 - V3: under a uniform random intervention schedule, no seed in the development set `1..20` produces `OUT_OF_BOUNDS` in more than 5% of episodes at any level. The builder records the measured breach rate per level in the G1 receipt. Stability of L3 and L6 over the stated constant ranges is UNVERIFIED (confidence: medium; `m*q/w <= 1` and `k >= 2` were chosen to keep L6 stable by hand argument only).
+
+Measured V3 breach rate (worst seed) for the revision 3 parameters, measured 2026-10-04, seeds 1..20, omega commit 652670378a71f8fafbc85e21e83d880f76450d23 (the latest omega main commit touching `docs/physics0/CALIBRATION.md`, which itself records no hash for its run):
+
+| Level | L0 | L1 | L2 | L3 | L4 | L5 | L6 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Worst-seed breach rate | 0.020 | 0 | 0 | 0.032 | 0 | 0 | 0 |
 
 ## 5. The law ladder (state machine)
 
@@ -197,6 +203,8 @@ The learner supplies a prediction for each episode from the initial state and th
 | L5 | 0.02 (versus noise-free truth) | 0.06 | 0.01 (versus noise-free truth) |
 | L6 | 0.03 | 0.08 | not scored (hidden state not given) |
 
+The in-box scoring region is the level's reset box; the extrapolation box is 1.5 times it in every observed variable.
+
 Note for the T4 and T6 trials on L5: the learner can only compare with noisy observations, so the in-ladder declared `eps` for L5 is capped at 0.05. The final 6.1 score still uses noise-free truth.
 
 ### 6.2 Compactness
@@ -223,6 +231,8 @@ Description length in bits (`description_bits` in the `PDLAW1` record, fixed rul
 - **Constants:** every true coefficient (in micro-units) within 5% of the true value (L0 to L4), 10% (L5). L6: no coefficient is scored, but the relation must declare at least one latent variable and its observed-only prediction must meet 6.1.
 - **L6 additional condition:** the harness-fitted best latent-free model (the V2 reference solver on the same `FIT`/`SELECT` data) must **fail** the 6.1 bound by at least a factor of 3. The learner supplies nothing here. This proves the improvement came from the latent and not from loose bounds.
 
+Calibration 2026-10-04: with the revision 3 constants the harness latent-free reference reaches in-box NRMSE 0.069 to 0.138 across seeds 1..5 (V2 PASS on all five); the factor-3 margin (0.09) is met on three of five seeds. Whether the margin changes is an operator decision pending; until then L6 cannot pass and no learner is scored on it.
+
 ### 6.4 Replication
 
 5 of 5 instances pass 6.1 to 6.3, and within each instance the ladder of section 5 reaches `PROVISIONAL_LAW` with T7 satisfied.
@@ -244,10 +254,10 @@ A canonical fixed byte layout (language-neutral, version-refused-if-unknown), wi
 | `relationship` | block | see below |
 | `observed_domain` | block | see below |
 | `confidence_ppm` | u32 | see rule below, 0 to 1_000_000 |
-| `exceptions` | list | each: `record_seq` u64, `record_hash` 32 bytes, `predicted` i64, `observed` i64, `error_micro` i64 |
-| `experiments` | list | each: `experiment_id` 32 bytes (hash), `kind` u8 (0 trial, 1 replication batch), `prereg_hash` 32 bytes, `outcome_hash` 32 bytes, `result` u8 (0 pass, 1 fail), `first_seq` u64, `last_seq` u64 |
+| `exceptions` | u16 count, then list | each: `record_seq` u64, `record_hash` 32 bytes, `predicted` i64, `observed` i64, `error_micro` i64 |
+| `experiments` | u16 count, then list | each: `experiment_id` 32 bytes (hash), `kind` u8 (0 trial, 1 replication batch), `prereg_hash` 32 bytes, `outcome_hash` 32 bytes, `result` u8 (0 pass, 1 fail), `first_seq` u64, `last_seq` u64 |
 | `chain_root` | 32 bytes | `record_hash` of the last record the law depends on |
-| `claim_text` | length-prefixed bytes | generated only from the template below |
+| `claim_text` | u16 length-prefixed bytes | generated only from the template below |
 
 `relationship` block: `n_vars` u8 (observed plus latent), `n_latent` u8, `n_channels` u8, `description_bits` u32 (rule in section 6.2), `n_refutations` u16 (number of times this instance passed through `REFUTED` before this record), `n_equations` u8, then per equation: `target` u8 (variable index), `n_terms` u16, then per term: `coef` i64 (micro-units), `exponents[n_vars + n_channels]` u8 each (powers of each variable then each channel; an intervention term has exponent 1 on its channel and 0 elsewhere). Variable order: observed, then latent. Equation form: `Dtarget = sum of coef * monomial`, where `Dtarget` is the one-tick change.
 
@@ -349,4 +359,8 @@ Suggested crates (names only, layout open): `pd0-wire` (byte layouts), `pd0-worl
 - Where the code lives (this repository or a new one): operator decision.
 - PD-0b, a blind variant with sealed generator families: operator decision (section 2.4).
 - Whether the doctrine owner accepts the P0 tier mapping (overview, section 2).
+- L0 and L4 validity (V3 breach above 5%) were resolved by calibration 2026-10-04 (omega `docs/physics0/CALIBRATION.md`, sweep rounds 1 to 3); constants applied in section 4.
+- L6 factor-3 margin (section 6.3): the revision 3 constants meet it on three of five development seeds only. Operator decision pending on whether the margin changes; until then L6 cannot pass and no learner is scored on it.
+- `PDLAW1` list counts and `claim_text` length widths: u16 amendments applied in section 7.
+- Refused reset behaviour specified in section 2.3 (REFUSED_RANGE, no episode opened, one episode charged).
 - All numeric bounds: UNVERIFIED until step 3 of section 11.
