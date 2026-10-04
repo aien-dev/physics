@@ -1,0 +1,195 @@
+{
+  "receipt": "PD0B_COMMIT",
+  "seal": "seal-1",
+  "recorded_utc": "2026-10-04T01:53:59Z",
+  "sealed_repo": "aien-dev/aien-sealed (private)",
+  "sealed_branch": "pd0b/seal-1",
+  "sealed_commit": "74bdba3d5fd745edf261db7deeecb1e33a946ca6",
+  "substrate": "omega main ab38c38 src/physics0 + tests/physics0, copied into the sealed repo, omega not edited",
+  "ladder": {
+    "levels": 7,
+    "instances_per_level": 5,
+    "class_positions": "kept from PD-0: index 5 noisy, index 6 latent, indices 0..4 clean",
+    "clean_level_order": "sealed permutation, revealed with the families (hash of ORDER.txt below)",
+    "budgets": "equalised: every level 8000 steps, 300 episodes of 100 steps, dt 0.05"
+  },
+  "hash_algorithm": "SHA-256 over the exact file bytes that PD0B_REVEAL will publish",
+  "commitments": [
+    {
+      "item": "ORDER.txt",
+      "sha256": "05a94d2a83b79ca23f4e3f992cffd2fceecc8012b94e774fddd800f5c2e7b5c0"
+    },
+    {
+      "item": "families/S0.txt",
+      "sha256": "d19bd717135b28e531b32d50ae28cfd836ffa87e15070a30e55d95cba0d4e314"
+    },
+    {
+      "item": "families/S1.txt",
+      "sha256": "b9d3c990b0595183be18c082e896f85fbfffaf54b59cddfa2da7d0d4a7cd2b44"
+    },
+    {
+      "item": "families/S2.txt",
+      "sha256": "7113152aee5628fc4d2d820c6b7491e9188fd99ca884bfa89f6600ed254a9d8f"
+    },
+    {
+      "item": "families/S3.txt",
+      "sha256": "6ee55be0355bbaa69f6a729c960ec21e9e42789d51d764c5353c2e8bd1e68a3a"
+    },
+    {
+      "item": "families/S4.txt",
+      "sha256": "3abb4dd83d16f3b7f433e10793ed66f71e00ce8e359f6cbcdc5e98ccc84a5e3b"
+    },
+    {
+      "item": "families/S5.txt",
+      "sha256": "155375b11f8acf5bdd8a7f053e2cfd91dd7e5ce8fb1edf177b02285c60fca787"
+    },
+    {
+      "item": "families/S6.txt",
+      "sha256": "dbc6b844b29b39e76d145fd3b77fa7f474a4d9b320996a2fd5f5e8f1a9205d23"
+    },
+    {
+      "item": "seeds/S0-1.txt",
+      "sha256": "c66bbc41d20ff2f3b1120865248ba48947b3016ee4b14be9c6e77db1b3c105f7"
+    },
+    {
+      "item": "seeds/S0-2.txt",
+      "sha256": "528a174105af2c5d63265e5df2d4724508f13f9157fab3facf1d3edfe255a760"
+    },
+    {
+      "item": "seeds/S0-3.txt",
+      "sha256": "16e630983ed9e0a4563fa64ee7a44a66ba6b4c8af662c11e6f7bb86e782c931b"
+    },
+    {
+      "item": "seeds/S0-4.txt",
+      "sha256": "0117bed0704d8250a20ccb2f8368335e59b0b4b0b3c29549f292cfdffe7cefb0"
+    },
+    {
+      "item": "seeds/S0-5.txt",
+      "sha256": "12db979083b39fe603f158cc2cfb04074e75244ca797e01a2e0b96a21702bc79"
+    },
+    {
+      "item": "seeds/S1-1.txt",
+      "sha256": "4fa393c282aebde2476b2c0b01e36dbc27a16052b06c4e5d8669a2552885b0ab"
+    },
+    {
+      "item": "seeds/S1-2.txt",
+      "sha256": "eaeb227110bbf4383811aaa02b637498b95c7098078c691931452476d9690bd0"
+    },
+    {
+      "item": "seeds/S1-3.txt",
+      "sha256": "ea3dea84c8b325a8f21005e245f761f5ab3b29214f2ad4b0afdef117fd4f0b4a"
+    },
+    {
+      "item": "seeds/S1-4.txt",
+      "sha256": "c4e252366c61036f034216c94a6a932b52606ff8ec276642254e56ce52a6a10f"
+    },
+    {
+      "item": "seeds/S1-5.txt",
+      "sha256": "e06a72ac054bc9215388f3e8f29bdf2996b2743acd339809a43f844adcc5bd23"
+    },
+    {
+      "item": "seeds/S2-1.txt",
+      "sha256": "08c0ea5e9d9742b2facd87fc49d1c4771a05e0fafb7e4e6b9d7959e847d927c5"
+    },
+    {
+      "item": "seeds/S2-2.txt",
+      "sha256": "8ef29acbbfa63ce44479353e46d32ffcd8bd4f2c281fa634fcf196f5c6eb77b2"
+    },
+    {
+      "item": "seeds/S2-3.txt",
+      "sha256": "8edc59d45aad3f3df3ae93cc755770ee10a2bc2494f67d27a273304c8cd4443c"
+    },
+    {
+      "item": "seeds/S2-4.txt",
+      "sha256": "8472298d46e75da3bde128b2cc6e34f08d04ea779d4a41e71f0efc3050c97587"
+    },
+    {
+      "item": "seeds/S2-5.txt",
+      "sha256": "a1bdf69e7acc2c4ee19816edfc0d24772fc967ddd345bbbe598d9a23d9595911"
+    },
+    {
+      "item": "seeds/S3-1.txt",
+      "sha256": "90e8fa52a1cb45540b1c70c6d5eaeda331f109ba8c17b4f3903fccb8b7053a41"
+    },
+    {
+      "item": "seeds/S3-2.txt",
+      "sha256": "bba0b6207519ddfef2bc1d9dae58c0db0f3e5519003485abfef21f407b1b6168"
+    },
+    {
+      "item": "seeds/S3-3.txt",
+      "sha256": "b2f662fc984bdf74de441dc112a2e2304cbe3343a4e22e7d9ded55920fe50dbb"
+    },
+    {
+      "item": "seeds/S3-4.txt",
+      "sha256": "6cc8a2b90f8cfb66eaf5610ace8b0ca1029a77aab3b6a112b2dd6ccf2e5d7903"
+    },
+    {
+      "item": "seeds/S3-5.txt",
+      "sha256": "83a6420f3943b9145f53b4def681876060eba6850ad2164a428bd69feda84a5a"
+    },
+    {
+      "item": "seeds/S4-1.txt",
+      "sha256": "d2c571d7ced5c3f716ecd08365b8005cda4c6a559faaec1e04ac247495e5e463"
+    },
+    {
+      "item": "seeds/S4-2.txt",
+      "sha256": "534c9fe3c7c2bc0a057fbb16e492b5145e7df47d2c8e01b0187f53f46b12c1fa"
+    },
+    {
+      "item": "seeds/S4-3.txt",
+      "sha256": "79405c62f7c76c7ed875002f547da9157089e635dda1090ec069bfec2807822d"
+    },
+    {
+      "item": "seeds/S4-4.txt",
+      "sha256": "b5633c7161c92c93c410d541e8c6b8ef88197ec0ad6049c11718638e95727d5d"
+    },
+    {
+      "item": "seeds/S4-5.txt",
+      "sha256": "13171fc57c27f32cbc7450868bbf520c51a74d9fc0f1c85b9b9dd728ac51e881"
+    },
+    {
+      "item": "seeds/S5-1.txt",
+      "sha256": "084676e3d4b7d197381e9235d431ba8d8e11e7f6f9a57fc7308af710d48b7ea3"
+    },
+    {
+      "item": "seeds/S5-2.txt",
+      "sha256": "74b8f406790e9ed31a9f9ca42648209819ad3ded244ab2f97848426259492854"
+    },
+    {
+      "item": "seeds/S5-3.txt",
+      "sha256": "7ed684a7f1dde142705606e0c7a1d6c9efcadbda05a00b3f8deefa5f64dcace6"
+    },
+    {
+      "item": "seeds/S5-4.txt",
+      "sha256": "c3438e6b3dab388f6c6c59c0528f56ad5467118e5397e3d868274e77ad5b4e59"
+    },
+    {
+      "item": "seeds/S5-5.txt",
+      "sha256": "7351404508c1db97a3c4e99fdc281b4cbe0c750e6ff61044f696d6fb376cb4ed"
+    },
+    {
+      "item": "seeds/S6-1.txt",
+      "sha256": "ef5835311df3ba760bbd1d6aceea730129adceb7d9477e1265a2a62d15c8805d"
+    },
+    {
+      "item": "seeds/S6-2.txt",
+      "sha256": "f386b146556c534ee71cc4ead02e54c233ff108f7138cbd87acb32f278a38847"
+    },
+    {
+      "item": "seeds/S6-3.txt",
+      "sha256": "1040da511d70a3f79ee00f42574a1b70ea0253193f06d2db31cb4e7201874719"
+    },
+    {
+      "item": "seeds/S6-4.txt",
+      "sha256": "fc811811cdbd72164e8b1de48c050eae3a8766f74da2bb7fbb9e8b95ce8be7dd"
+    },
+    {
+      "item": "seeds/S6-5.txt",
+      "sha256": "2ed2a719e18ec752353399fe0df74481530de9f222d50b1c6e4b036ce74c70ad"
+    }
+  ],
+  "separation_confirmation": "Section 4 confirmed: the sealing author (helper session 69f80259) wrote the families and seeds alone, ran validity inside the sealed repository, and from this record on does not brief, review or advise the learner lane. Nothing about the families exists outside aien-sealed (no Cortex, mind map, handoff, crumb or chat content).",
+  "validity_receipt": "evidence/PD0B/PD0B_VALIDITY-seal1.json (unchanged result; rerun at the amended commit)",
+  "supersedes": "evidence/PD0B/PD0B_COMMIT-seal1b.json",
+  "amendment": "seal1c: the sealed world binary implements PD0 protocol v2 revision 2 as merged on omega main 965edfb (shape answers dimensions before final and the full terms after; score refused until final; play refused after; refusal counters; audit). Families, scored seeds and level order are unchanged: every commitment hash below is identical to seal1. Validity rerun at this commit: all seven levels PASS (PHYSICS0_ORACLE PASS). Merged-harness smoke run against the sealed binary on a development seed: mode=SEALED, VALID, all four refusal counters 0."
+}
