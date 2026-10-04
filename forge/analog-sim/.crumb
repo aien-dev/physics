@@ -1,35 +1,47 @@
 {
-  "schema_version": "1.0.0",
-  "name": "forge/analog-sim",
-  "layer": "forge/analog-sim",
-  "purpose": "Directory forge/analog-sim. Purpose not yet described by a human.",
   "above": {
     "name": "forge",
     "path": ".."
   },
   "extensions": {
-    "seed": {
-      "purpose_auto": "Directory forge/analog-sim. Purpose not yet described by a human.",
-      "files": [
-        "forge_analog_sim.c",
-        "forge_analog_sim.h"
-      ]
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:9c9c4d06dfa1aae64dc3a63cabf35f42baefd5493862090a7759eec30be07d5f",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 2,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:26b1f9d5af3e0e269fd9acb462e54c83bc75481782581cc7f3523d56fb54ae0d"
     },
     "owner_lane": "",
     "provenance": {
-      "source": "backfill",
-      "total_commits": 1,
-      "ledger_cap": 20,
       "entries": [
         {
-          "source": "backfill-git",
-          "sha": "d52759d",
-          "timestamp": "2026-09-30T21:41:03-05:00",
           "author": "aien-dev",
+          "pr": 21,
+          "sha": "d52759d",
+          "source": "backfill-git",
           "subject": "AR2: simulated analog provider with digital oracle parity (new files) (#21)",
-          "pr": 21
+          "timestamp": "2026-09-30T21:41:03-05:00"
         }
-      ]
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 1
+    },
+    "seed": {
+      "files": [
+        "forge_analog_sim.c",
+        "forge_analog_sim.h"
+      ],
+      "purpose_auto": "Directory forge/analog-sim. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "forge/analog-sim",
+  "name": "forge/analog-sim",
+  "purpose": "Directory forge/analog-sim. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }

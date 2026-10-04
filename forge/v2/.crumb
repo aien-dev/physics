@@ -1,52 +1,64 @@
 {
-  "schema_version": "1.0.0",
-  "name": "forge/v2",
-  "layer": "forge/v2",
-  "purpose": "Directory forge/v2. Purpose not yet described by a human.",
   "above": {
     "name": "forge",
     "path": ".."
   },
   "extensions": {
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:ccbca195c2d8d5e78ab7326fc75a72c6ecd4c7c0e76afa98b7e99cbd5c1bc766",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 3,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:7c1a1f5072fb767d51768fee256290960a9b90abbfeb9aea0b3a5ee000f4bdab"
+    },
+    "owner_lane": "",
+    "provenance": {
+      "entries": [
+        {
+          "author": "aien-dev",
+          "pr": 20,
+          "sha": "2877a11",
+          "source": "backfill-git",
+          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
+          "timestamp": "2026-09-30T20:33:25-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 13,
+          "sha": "5969159",
+          "source": "backfill-git",
+          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
+          "timestamp": "2026-09-29T10:36:47-05:00"
+        },
+        {
+          "author": "aien-dev",
+          "pr": 16,
+          "sha": "1f7c321",
+          "source": "backfill-git",
+          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
+          "timestamp": "2026-09-29T10:11:28-05:00"
+        }
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 3
+    },
     "seed": {
-      "purpose_auto": "Directory forge/v2. Purpose not yet described by a human.",
       "files": [
         "forge_sha256.h",
         "forge_substrate_v2.c",
         "forge_substrate_v2.h"
-      ]
-    },
-    "owner_lane": "",
-    "provenance": {
-      "source": "backfill",
-      "total_commits": 3,
-      "ledger_cap": 20,
-      "entries": [
-        {
-          "source": "backfill-git",
-          "sha": "2877a11",
-          "timestamp": "2026-09-30T20:33:25-05:00",
-          "author": "aien-dev",
-          "subject": "Merge pull request #20 from aien-dev/m20/identity-convergence",
-          "pr": 20
-        },
-        {
-          "source": "backfill-git",
-          "sha": "5969159",
-          "timestamp": "2026-09-29T10:36:47-05:00",
-          "author": "aien-dev",
-          "subject": "feat(forge): implement FORGE-0 seam, FORGE-HWID probe, and rename capability check (#13)",
-          "pr": 13
-        },
-        {
-          "source": "backfill-git",
-          "sha": "1f7c321",
-          "timestamp": "2026-09-29T10:11:28-05:00",
-          "author": "aien-dev",
-          "subject": "Merge pull request #16 from aien-dev/feat/forge-substrate-v2",
-          "pr": 16
-        }
-      ]
+      ],
+      "purpose_auto": "Directory forge/v2. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "forge/v2",
+  "name": "forge/v2",
+  "purpose": "Directory forge/v2. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }

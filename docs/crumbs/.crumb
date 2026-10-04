@@ -1,19 +1,31 @@
 {
-  "schema_version": "1.0.0",
-  "name": "docs/crumbs",
-  "layer": "docs/crumbs",
-  "purpose": "Directory docs/crumbs. Purpose not yet described by a human.",
   "above": {
     "name": "docs",
     "path": ".."
   },
   "extensions": {
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:334d5a27b7ba52bab8c11cc6ec857edc02099c09aace452df9e74b4bfd1a7d1e",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 1,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:c3b7fafd6de4d3d90a8c3df0fd75dd127badb97e9a357fca6c386bb1564629b8"
+    },
+    "owner_lane": "",
     "seed": {
-      "purpose_auto": "Directory docs/crumbs. Purpose not yet described by a human.",
       "files": [
         "BACKFILL.md"
-      ]
-    },
-    "owner_lane": ""
-  }
+      ],
+      "purpose_auto": "Directory docs/crumbs. Purpose not yet described by a human."
+    }
+  },
+  "layer": "docs/crumbs",
+  "name": "docs/crumbs",
+  "purpose": "Directory docs/crumbs. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }

@@ -1,8 +1,4 @@
 {
-  "schema_version": "1.0.0",
-  "name": "m15",
-  "layer": "m15",
-  "purpose": "Directory m15. Purpose not yet described by a human.",
   "above": {
     "name": "cs-physics",
     "path": ".."
@@ -14,47 +10,70 @@
     }
   ],
   "extensions": {
+    "generated": {
+      "children": [
+        {
+          "digest": "3a38ea84e06d7c2039939331ed0a2524692bc64de608aa08786a043f0797b8af",
+          "last_commit": "b5444bb",
+          "name": "tools",
+          "purpose": "Directory m15/tools. Purpose not yet described by a human."
+        }
+      ],
+      "children_root": "sha256:e9dec6e1208db057afbabf37b6895b76babf0b1d116205f3c9ea30ecc153fa45",
+      "compiled_at": "2026-10-04T13:47:27Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:082c08b40f0b9c64dca91cfa5bd9c4e79fe2f5ec3e61ff6d765147ad8adb0458",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 6,
+      "generated_at_commit": "e0be0e765af3353984b65f8c822a5bb9616272de",
+      "source_tree": "sha256:e3a620962065b194870797b37673e2a80a89a39b8afe84d0e1e0d9bd1c92675b"
+    },
+    "owner_lane": "",
+    "provenance": {
+      "entries": [
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "b5444bb",
+          "source": "backfill-git",
+          "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
+          "timestamp": "2026-09-26T05:26:26-05:00"
+        },
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "4335c0c",
+          "source": "backfill-git",
+          "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
+          "timestamp": "2026-09-26T04:50:14-05:00"
+        },
+        {
+          "author": "Drake Stapleton",
+          "pr": 10,
+          "sha": "b2c5f3c",
+          "source": "backfill-git",
+          "subject": "feat(physics): complete Milestone 15 PHYSICS_ACCELERATOR_LINK substrate (#10)",
+          "timestamp": "2026-09-26T04:27:55-05:00"
+        }
+      ],
+      "ledger_cap": 20,
+      "source": "backfill",
+      "total_commits": 3
+    },
     "seed": {
-      "purpose_auto": "Directory m15. Purpose not yet described by a human.",
       "files": [
         "build.sh",
         "physics_accel.c",
         "physics_accel.h",
         "physics_accel_native.c",
         "physics_accel_native.h"
-      ]
-    },
-    "owner_lane": "",
-    "provenance": {
-      "source": "backfill",
-      "total_commits": 3,
-      "ledger_cap": 20,
-      "entries": [
-        {
-          "source": "backfill-git",
-          "sha": "b5444bb",
-          "timestamp": "2026-09-26T05:26:26-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(m15): qualify truthful accelerator authority and observed hardware boundary (#10)",
-          "pr": 10
-        },
-        {
-          "source": "backfill-git",
-          "sha": "4335c0c",
-          "timestamp": "2026-09-26T04:50:14-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(m15): implement native hardware seam for physical SMMUv3 and Blackwell GB10 (#10)",
-          "pr": 10
-        },
-        {
-          "source": "backfill-git",
-          "sha": "b2c5f3c",
-          "timestamp": "2026-09-26T04:27:55-05:00",
-          "author": "Drake Stapleton",
-          "subject": "feat(physics): complete Milestone 15 PHYSICS_ACCELERATOR_LINK substrate (#10)",
-          "pr": 10
-        }
-      ]
+      ],
+      "purpose_auto": "Directory m15. Purpose not yet described by a human."
     }
-  }
+  },
+  "layer": "m15",
+  "name": "m15",
+  "purpose": "Directory m15. Purpose not yet described by a human.",
+  "schema_version": "1.0.0"
 }
