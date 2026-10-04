@@ -182,6 +182,8 @@ Data splits. Every record the learner has ever seen is tagged by the checker as 
 
 Trial and replication error normalisation (revision 6): the rollout NRMSE of a single trial or REP episode divides each variable's RMSE by the pooled standard deviation of that variable over the FIT records (the observed domain), never by the spread inside the trial itself. A quiet trial with little motion would otherwise fail on measurement noise alone even under the true relation (found by the first learner run on L5).
 
+Void episodes (revision 7): a TRIAL or REP episode in which the world ends the episode with OUT_OF_BOUNDS before the rollout horizon is void, not a failed prediction; the harness records it as void and draws a replacement episode from the same fresh stream within the same batch; at most 3 voids per batch, a fourth voids the batch and it is redrawn; void episodes never count toward p or f in the confidence rule (found by the first learner run: an L0 replication batch came up one episode short).
+
 Rules:
 
 - `PROVISIONAL_LAW` is the top. There is no promotion beyond it. A later refuting record demotes the law to HYPOTHESIS, appends an exception, and recomputes confidence. Only evidence moves confidence (invariant I5).
