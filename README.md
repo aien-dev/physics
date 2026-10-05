@@ -37,6 +37,11 @@ m3/tests/run_m3_gates.sh             # M3 PHYSICS_EFFECTS, 19 gates in QEMU
 
 `./run_m2_gates.sh` leaves the committed receipt untouched unless `--write-receipt` is passed, which is only for a recorded requalification decision. Gates that need the real GB10 (`tests/run_forge_gates.sh`, `tests/run_m15_gates.sh`, `tests/run_m16_requalification.sh`, `tests/run_nvrm_lifecycle_gates.sh`, `tests/run_submission_visibility_gates.sh`) run on the DGX Spark one at a time and are never killed mid-run; CI declares them SKIP, never PASS.
 
+## Evidence notes
+
+- `evidence/m16-blackwell-native-path-receipt.json` still says `QUALIFIED / PASS`. It is the original M16 receipt (commit `f72e297`) and it is superseded: it failed an independent runtime audit (it linked `libcuda`, reused stale session state, and cited raw evidence that was never committed). Do not cite it as a qualification. Its own requalification record is `evidence/m16-blackwell-native-path-requalification-receipt.json` with the audit in `evidence/m16-requalification/M16_REQUALIFICATION_AUDIT.md` (implementation `a2c0d7f`). Evidence files are add-only, so the original receipt is left unchanged on purpose.
+- Even the requalification binds the code of its own time. It is historical evidence, not a claim about the current candidate. Source: `reports/L2-EVID.md` of the 2026-10-05 candidate audit (CAND-0 physics pin `6d7cf0d`).
+
 ## Contributing
 
 Open a pull request with the command you ran and its output. Do not edit committed receipts or binaries without the matching rebuilt evidence. Contact: aien@aienos.com.
