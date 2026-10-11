@@ -1,0 +1,21 @@
+# tests/gates/physics-submission-visibility.gate
+# Mirrors hosted: host-gates.yml job 'submission visibility gates (SKIP: needs GB10 + NVRM)' names tests/run_submission_visibility_gates.sh
+gate: PHYSICS-SUBMISSION-VISIBILITY
+manifest_version: 2
+owner: physics
+requires:
+  - nvrm
+inputs:
+  - nvrm/
+  - tests/run_submission_visibility_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["submission-visibility"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 30m
+exactness: EXACT
+cache_scope: hardware

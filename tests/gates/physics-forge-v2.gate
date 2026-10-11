@@ -1,0 +1,21 @@
+# tests/gates/physics-forge-v2.gate
+# Mirrors hosted: host-gates.yml matrix forge-v2 'tests/run_forge_v2_gates.sh' (hosted ~47 s)
+gate: PHYSICS-FORGE-V2
+manifest_version: 2
+owner: physics
+requires:
+  - host
+inputs:
+  - forge/
+  - tests/run_forge_v2_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["forge-v2"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 10m
+exactness: EXACT
+cache_scope: machine

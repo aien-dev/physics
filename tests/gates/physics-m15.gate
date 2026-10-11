@@ -1,0 +1,21 @@
+# tests/gates/physics-m15.gate
+# Mirrors hosted: host-gates.yml job 'm15 gates (SKIP: reads real GB10 GPU sysfs)' names tests/run_m15_gates.sh
+gate: PHYSICS-M15
+manifest_version: 2
+owner: physics
+requires:
+  - gb10
+inputs:
+  - m15/
+  - tests/run_m15_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["m15"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 30m
+exactness: EXACT
+cache_scope: hardware

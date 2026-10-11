@@ -1,0 +1,21 @@
+# tests/gates/physics-forge-gate34.gate
+# Mirrors hosted: host-gates.yml job 'forge Gate 3/4 (SKIP: needs GB10 chip)' names tests/run_forge_gates.sh
+gate: PHYSICS-FORGE-GATE34
+manifest_version: 2
+owner: physics
+requires:
+  - gb10
+inputs:
+  - forge/
+  - tests/run_forge_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["forge-gate34"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 30m
+exactness: EXACT
+cache_scope: hardware
