@@ -41,7 +41,18 @@ case "$step" in
   form0)           need_sibling omega; tests/run_forge_form_gates.sh ;;
   gate34-writer)   need_sibling omega; tests/test_forge_gates_receipt.sh "$OMEGA_DIR" ;;
   m2)              ./run_m2_gates.sh ;;
-  m3)              need_sibling aien-architecture; m3/tests/run_m3_gates.sh ;;
+  m3)
+    need_sibling aien-architecture
+    # run_m3_gates.sh rewrites the tracked m3/m3_qualification_receipt.json (new generated_at and
+    # git_commit) on every run. A gate must leave the tree as it found it, and gates run in parallel,
+    # so keep the fresh receipt in the log and put the tracked file back, whatever the exit status.
+    receipt=m3/m3_qualification_receipt.json
+    saved=$(mktemp)
+    trap 'cp "$saved" "$receipt"; rm -f "$saved"' EXIT
+    cp "$receipt" "$saved"
+    rc=0; m3/tests/run_m3_gates.sh || rc=$?
+    echo "run.sh: receipt written by this run (tracked copy restored):"; cat "$receipt"
+    exit "$rc" ;;
   # The five jobs below are SKIP on GitHub (if: false, never green). Their manifests declare
   # the real requirement (gb10 or nvrm) and the commands are the scripts those jobs name.
   forge-gate34)    tests/run_forge_gates.sh ;;

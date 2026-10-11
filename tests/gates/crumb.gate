@@ -1,11 +1,13 @@
 # tests/gates/crumb.gate
 # Mirrors hosted: crumb.yml 'crumb verify .' with the tool built from crumb.lock (hosted job 7 s)
+# requires host, not portable: the step builds crumb from the sibling ../aien-architecture checkout at the
+# crumb.lock commit, and a gate that needs a sibling is a host gate (LOCAL_VERIFICATION.md, sibling checkouts).
 # cache: never because crumbs live in many directories and inputs are literal paths; the check is sub-second.
 gate: CRUMB-VERIFY
 manifest_version: 2
 owner: physics
 requires:
-  - portable
+  - host
 inputs:
   - .crumb
   - crumb.lock
@@ -18,5 +20,5 @@ expects:
   verdict: PASS
 timeout: 5m
 exactness: EXACT
-cache_scope: portable
+cache_scope: machine
 cache: never
