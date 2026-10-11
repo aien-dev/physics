@@ -25,7 +25,16 @@ export OMEGA_DIR="${OMEGA_DIR:-$ROOT/../omega}"
 case "$step" in
   crumb-verify)
     # Hosted crumb.yml: crumb tool built from the aien-architecture commit in crumb.lock.
-    "${CRUMB:-crumb}" verify .
+    # Same here: build that exact commit from the sibling checkout into a temp dir outside
+    # the tree, so a newer crumb on PATH can never change the verdict.
+    need_sibling aien-architecture
+    pin=$(tr -d '[:space:]' < crumb.lock)
+    tool=$(mktemp -d)
+    trap 'rm -rf "$tool"' EXIT
+    git -C ../aien-architecture archive "$pin" tools/crumb | tar -x -C "$tool"
+    make -s -C "$tool/tools/crumb" crumb
+    obs crumb_tool_commit "\"$pin\""
+    "$tool/tools/crumb/crumb" verify .
     ;;
   forge-v2)        tests/run_forge_v2_gates.sh ;;
   analog-sim)      need_sibling omega; tests/run_forge_analog_sim_gates.sh ;;
