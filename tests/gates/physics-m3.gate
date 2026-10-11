@@ -1,0 +1,22 @@
+# tests/gates/physics-m3.gate
+# Mirrors hosted: host-gates.yml matrix m3 'm3/tests/run_m3_gates.sh' (M3 PHYSICS_EFFECTS, 19 gates under qemu; needs ../aien-architecture; hosted ~47 s)
+gate: PHYSICS-M3
+manifest_version: 2
+owner: physics
+requires:
+  - qemu
+inputs:
+  - m3/
+  - physics.s
+  - physics.ld
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["m3"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 15m
+exactness: EXACT
+cache_scope: machine

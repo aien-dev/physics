@@ -1,0 +1,31 @@
+# tests/gates/physics-m2.gate
+# Mirrors hosted: host-gates.yml matrix m2 './run_m2_gates.sh' (M2 PHYSICS_BOOT, 15 gates under qemu-system-aarch64; hosted ~47 s)
+gate: PHYSICS-M2
+manifest_version: 2
+owner: physics
+requires:
+  - qemu
+inputs:
+  - physics.s
+  - physics.ld
+  - vector_table.s
+  - memory_alloc.s
+  - capability.s
+  - atlas_m2.s
+  - build.sh
+  - m2_build.sh
+  - run_m2_gates.sh
+  - physics.bin
+  - physics.sha256
+  - atlas_m2.bin
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["m2"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 15m
+exactness: EXACT
+cache_scope: machine

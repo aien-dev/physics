@@ -1,0 +1,24 @@
+# tests/gates/physics-analog-sim.gate
+# Mirrors hosted: host-gates.yml matrix analog-sim 'tests/run_forge_analog_sim_gates.sh' with OMEGA_DIR=../omega (hosted ~47 s)
+# cache: never because the gate reads the sibling omega checkout, which is outside this repository.
+gate: PHYSICS-ANALOG-SIM
+manifest_version: 2
+owner: physics
+requires:
+  - host
+inputs:
+  - forge/
+  - evidence/AR2/
+  - tests/run_forge_analog_sim_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["analog-sim"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 10m
+exactness: EXACT
+cache_scope: machine
+cache: never

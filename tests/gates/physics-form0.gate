@@ -1,0 +1,24 @@
+# tests/gates/physics-form0.gate
+# Mirrors hosted: host-gates.yml matrix form0 'tests/run_forge_form_gates.sh' (oracle gate compares against omega main; hosted ~47 s)
+# cache: never because the oracle gate reads the sibling omega checkout.
+gate: PHYSICS-FORM0
+manifest_version: 2
+owner: physics
+requires:
+  - host
+inputs:
+  - forge/
+  - evidence/FORM0/
+  - tests/run_forge_form_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["form0"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 10m
+exactness: EXACT
+cache_scope: machine
+cache: never

@@ -1,0 +1,24 @@
+# tests/gates/physics-gate34-writer.gate
+# Mirrors hosted: host-gates.yml matrix gate34-writer 'tests/test_forge_gates_receipt.sh $OMEGA_DIR' (hosted ~47 s)
+# cache: never because digests are cross-checked with the sibling omega checkout.
+gate: PHYSICS-GATE34-WRITER
+manifest_version: 2
+owner: physics
+requires:
+  - host
+inputs:
+  - forge/
+  - tests/test_forge_gates_receipt.sh
+  - tests/run_forge_gates.sh
+  - tools/
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["gate34-writer"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 10m
+exactness: EXACT
+cache_scope: machine
+cache: never
