@@ -15,6 +15,8 @@ name: Host gates
 #                 receipt reproduced byte for byte; oracle gate compares against omega main
 #   gate34-writer tests/test_forge_gates_receipt.sh      Gate 3/4 receipt writer (no GPU),
 #                 digests cross-checked with omega tools/json_canon.c
+#   forge-aegis   tests/run_forge_aegis_host_gates.sh    AEGIS verifier binds a result to its
+#                 request; submit-side refusals before any NVRM call (no GPU)
 #   m2            run_m2_gates.sh                        M2 PHYSICS_BOOT, 15 gates (QEMU)
 #   m3            m3/tests/run_m3_gates.sh               M3 PHYSICS_EFFECTS, 19 gates (QEMU)
 #   SKIP jobs (shown grey, never green): GB10-only runners
@@ -49,6 +51,8 @@ jobs:
             cmd: tests/run_forge_form_gates.sh
           - gate: gate34-writer
             cmd: tests/test_forge_gates_receipt.sh "$GITHUB_WORKSPACE/omega"
+          - gate: forge-aegis
+            cmd: tests/run_forge_aegis_host_gates.sh
           - gate: m2
             cmd: ./run_m2_gates.sh
           - gate: m3

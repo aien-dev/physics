@@ -22,8 +22,13 @@ static void sha256_bytes(const uint8_t *data, size_t len, uint8_t out[32]) {
     }
 }
 
-/* Secret domain key for AEGIS contract verification token to prevent caller fabrication */
-static const uint8_t AEGIS_SECRET[16] = {
+/*
+ * Domain-separation constant for the AEGIS verification token. It is compiled
+ * into public source, so it is not a secret: the token is an integrity check
+ * that a ForgeVerifiedRealization left aegis_verify_realization() unmodified,
+ * not authentication against a caller that can compute it.
+ */
+static const uint8_t AEGIS_TOKEN_DOMAIN[16] = {
     0xae, 0x91, 0x50, 0x24, 0x76, 0x65, 0x72, 0x69,
     0x66, 0x69, 0x65, 0x64, 0x63, 0x6f, 0x64, 0x65
 };
@@ -33,11 +38,20 @@ static void compute_verification_token(const uint8_t real_id[32],
                                        const uint8_t code_hash[32],
                                        uint8_t out_token[32]) {
     uint8_t buf[16 + 32 + 32 + 32];
-    memcpy(buf, AEGIS_SECRET, 16);
+    memcpy(buf, AEGIS_TOKEN_DOMAIN, 16);
     memcpy(buf + 16, real_id, 32);
     memcpy(buf + 16 + 32, desc_digest, 32);
     memcpy(buf + 16 + 64, code_hash, 32);
     sha256_bytes(buf, sizeof(buf), out_token);
+}
+
+/* SHA-256 over program_digest[32] | opcode_count(4, host order) | target_descriptor_digest[32]. */
+static void compute_request_digest(const ForgeRealizationRequest *req, uint8_t out[32]) {
+    uint8_t req_buf[32 + 4 + 32];
+    memcpy(req_buf, req->program_digest, 32);
+    memcpy(req_buf + 32, &req->opcode_count, 4);
+    memcpy(req_buf + 36, req->target_descriptor_digest, 32);
+    sha256_bytes(req_buf, sizeof(req_buf), out);
 }
 
 int forge_realize(const ForgeRealizationRequest *req, ForgeRealizationResult *out_res) {
@@ -59,11 +73,7 @@ int forge_realize(const ForgeRealizationRequest *req, ForgeRealizationResult *ou
     memcpy(out_res->target_descriptor_digest, expected_desc_digest, 32);
 
     /* Compute request digest over the request payload */
-    uint8_t req_buf[32 + 4 + 32];
-    memcpy(req_buf, req->program_digest, 32);
-    memcpy(req_buf + 32, &req->opcode_count, 4);
-    memcpy(req_buf + 36, req->target_descriptor_digest, 32);
-    sha256_bytes(req_buf, sizeof(req_buf), out_res->request_digest);
+    compute_request_digest(req, out_res->request_digest);
 
     /* Lowering simulation: allocate and align machine code */
     size_t code_len = (req->ir_size + 127ULL) & ~127ULL;
@@ -145,6 +155,15 @@ int aegis_verify_realization(const ForgeRealizationRequest    *req,
         return FORGE_SEAM_ERR_STALE_IDENTITY;
     }
 
+    /* Invariant 8: the result must belong to this request. Without this, a valid
+     * result realized for one request also verifies against any other request. */
+    uint8_t expected_req_digest[32];
+    compute_request_digest(req, expected_req_digest);
+    if (memcmp(expected_req_digest, res->request_digest, 32) != 0 ||
+        memcmp(req->target_descriptor_digest, res->target_descriptor_digest, 32) != 0) {
+        return FORGE_SEAM_ERR_VERIFY_FAILED;
+    }
+
     /* All AEGIS contract invariants pass: seal into immutable ForgeVerifiedRealization */
     out_verified->realization = *res;
     memcpy(out_verified->sealed_code, res->machine_code, res->machine_code_size);
@@ -170,7 +189,8 @@ int forge_submit_realization(Nvrm                            *rm,
         return FORGE_SEAM_ERR_UNVERIFIED;
     }
 
-    /* 2. Verification token must be authentic (verifies secret signature over ID + descriptor + code) */
+    /* 2. Verification token must match (integrity check over ID + descriptor + code;
+     *    its key is public, see AEGIS_TOKEN_DOMAIN) */
     uint8_t expected_token[32];
     compute_verification_token(verified_real->realization.realization_id,
                                verified_real->verified_descriptor_digest,

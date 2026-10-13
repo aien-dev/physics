@@ -37,6 +37,7 @@ case "$step" in
     "$tool/tools/crumb/crumb" verify .
     ;;
   forge-v2)        tests/run_forge_v2_gates.sh ;;
+  forge-aegis)     tests/run_forge_aegis_host_gates.sh ;;
   analog-sim)      need_sibling omega; tests/run_forge_analog_sim_gates.sh ;;
   form0)           need_sibling omega; tests/run_forge_form_gates.sh ;;
   gate34-writer)   need_sibling omega; tests/test_forge_gates_receipt.sh "$OMEGA_DIR" ;;

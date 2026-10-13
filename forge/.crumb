@@ -24,7 +24,7 @@
         },
         {
           "digest": "843298f1f241ac4785662d45297410b3aaedb3dccb713c0ac02c490ac5c6751a",
-          "last_commit": "7aba0b9",
+          "last_commit": "dcc7c21",
           "name": "form",
           "purpose": "FORGE REALIZATION FORM V1: substrate-neutral physical-form realization IR (LINEAR_OPERATOR), can"
         },
@@ -36,14 +36,14 @@
         }
       ],
       "children_root": "sha256:aff3f6326f95820eac28aa51dd874024e5b82e29625cc4f8afe4d69672832ca6",
-      "compiled_at": "2026-10-04T16:07:57Z",
+      "compiled_at": "2026-10-13T02:30:56Z",
       "compiler": "crumb-compile/1",
-      "digest": "sha256:bf1be2f8b458c9343fdebbef9f8906cfe850fdd53e4a8b481737889dbacc0584",
+      "digest": "sha256:e9840bb520ed61ee6faf886770b4f51ee876c657493ecbcaa72e9e49eabf6053",
       "evidence_files": 0,
       "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "files": 12,
-      "generated_at_commit": "7aba0b9597b9163a3890a266abb87c293cb396db",
-      "source_tree": "sha256:48b820b426c003ecfac780b72fbcdc965ce4c7680f13b037a4ef608483a2b57d"
+      "generated_at_commit": "57aafa0d69d5d768e46164ff0963ffd87355ab0d",
+      "source_tree": "sha256:51864b622f180e8731d8f0d0ae15e6f8003b7d9784a66ef85abd7d7826aff4bd"
     },
     "owner_lane": "",
     "provenance": {
