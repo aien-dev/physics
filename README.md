@@ -14,7 +14,7 @@ Research-grade and pre-alpha.
 
 - **FORGE:** the realize/verify seam (Gates 3 and 4) and the substrate-neutral descriptor contract (V1 and V2) pass their gates. The analog provider is a simulation checked against a digital oracle; no analog hardware is involved. Status and receipts: [CURRENT_EXECUTION_PLAN.md](https://github.com/aien-dev/aien-architecture/blob/main/CURRENT_EXECUTION_PLAN.md) and [doctrine/ROADMAP.md](https://github.com/aien-dev/aien-architecture/blob/main/doctrine/ROADMAP.md) in aien-architecture.
 - **Atlas boot, PHYSICS boot and PHYSICS effects (Milestones 1 to 3):** qualified in QEMU only (AArch64 virt). Native DGX Spark qualification of PHYSICS (`PHYSICS_BOOT_NATIVE_PASS`) has not been done and is never inferred from an emulator pass. The committed `qualification_receipt.json` is historical evidence from a retired Python harness and is kept unchanged ([TRANSITION_PLAN_M2.md](TRANSITION_PLAN_M2.md)).
-- **Physics Zero** (a clean-room scientific discovery program, distinct from this repository's PHYSICS) and **DIRAC-0** are documents in aien-architecture only. No code here implements them.
+- **Physics Zero** (a clean-room scientific discovery program, distinct from this repository's PHYSICS) is specified here as documents: the overview and benchmark specs are in `docs/` (`PHYSICS0_DISCOVERY_ENGINE.md`, `PD0_HIDDEN_EQUATION_BENCHMARK.md`, `PD0B_SEALED_BENCHMARK.md`, `PD1_MACHINE_LAW_BENCHMARK.md`) and the sealed-benchmark receipts are in `evidence/PD0B/` (the seal-1 verdict there is FAIL). No code here implements it; the learner and harness behind those receipts are in omega. **DIRAC-0** is documents in aien-architecture only.
 
 ## How this fits with the other repositories
 
@@ -26,11 +26,14 @@ Per ADR 0024 (aien-architecture, accepted 2026-10-01): Rust is scaffolding, Omeg
 
 ## Build and verify
 
-Needs gcc, QEMU for AArch64 and `socat` (the QEMU inspector uses QMP). Host and emulator gates:
+Needs host gcc, the AArch64 binutils and compiler (`aarch64-linux-gnu-gcc`, `-ld` and `-objcopy` by default; override with `CC`, `LD`, `OBJCOPY`, or `CROSS` for the M3 build), QEMU for AArch64 and `socat` (the QEMU inspector uses QMP). Host and emulator gates:
 
 ```bash
 tests/run_forge_v2_gates.sh          # FORGE V2 known-answer tests
 tests/run_forge_analog_sim_gates.sh  # simulated analog provider vs digital oracle
+tests/run_forge_form_gates.sh        # FORM0 realization-form gates (simulated results only)
+tests/run_forge_aegis_host_gates.sh  # AEGIS verifier binds a result to its request; submit refusals before any GPU call
+tests/test_forge_gates_receipt.sh    # Gate 3/4 receipt writer, no GPU (needs jq)
 ./run_m2_gates.sh                    # M2 PHYSICS_BOOT, 15 gates in QEMU, rebuilt from source
 m3/tests/run_m3_gates.sh             # M3 PHYSICS_EFFECTS, 19 gates in QEMU
 ```
