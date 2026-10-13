@@ -46,7 +46,8 @@ typedef struct {
  * The typed proof that AEGIS invariant verification succeeded.
  * Only instances constructed by aegis_verify_realization() with
  * verified == true and valid verification_token are accepted
- * by forge_submit_realization().
+ * by forge_submit_realization(). The token is an integrity check, not
+ * authentication: its key is a public constant in forge_realize.c.
  * Contains an immutable sealed copy and hash of the verified machine code
  * to prevent post-verification code mutation attacks.
  */
