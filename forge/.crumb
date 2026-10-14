@@ -29,21 +29,21 @@
           "purpose": "FORGE REALIZATION FORM V1: substrate-neutral physical-form realization IR (LINEAR_OPERATOR), can"
         },
         {
-          "digest": "ccbca195c2d8d5e78ab7326fc75a72c6ecd4c7c0e76afa98b7e99cbd5c1bc766",
-          "last_commit": "5497705",
+          "digest": "fc4c0f18901b991499e4332c3b3bd75a3797b15f83c17b659aa5af5dccb81d91",
+          "last_commit": "57d14f0",
           "name": "v2",
           "purpose": "Directory forge/v2. Purpose not yet described by a human."
         }
       ],
-      "children_root": "sha256:aff3f6326f95820eac28aa51dd874024e5b82e29625cc4f8afe4d69672832ca6",
-      "compiled_at": "2026-10-13T02:30:56Z",
+      "children_root": "sha256:7665c3ed77e0cefc41c351050ca587653390e9355cccb84436397bf3c63988c3",
+      "compiled_at": "2026-10-14T01:16:51Z",
       "compiler": "crumb-compile/1",
-      "digest": "sha256:e9840bb520ed61ee6faf886770b4f51ee876c657493ecbcaa72e9e49eabf6053",
+      "digest": "sha256:957aafdcf49b5e013235254017b4c2984ca8e3b0bb2f7877eabff493e765c246",
       "evidence_files": 0,
       "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "files": 12,
-      "generated_at_commit": "57aafa0d69d5d768e46164ff0963ffd87355ab0d",
-      "source_tree": "sha256:51864b622f180e8731d8f0d0ae15e6f8003b7d9784a66ef85abd7d7826aff4bd"
+      "generated_at_commit": "57d14f0b66026eb3dda439933eb5dddb8ac4345f",
+      "source_tree": "sha256:e54d100fa90619b8f0822bfd50db8d788953abc832b471593e44471dad6e0064"
     },
     "owner_lane": "",
     "provenance": {
