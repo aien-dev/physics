@@ -22,6 +22,24 @@ need_sibling() {
 }
 export OMEGA_DIR="${OMEGA_DIR:-$ROOT/../omega}"
 
+# Gates that regenerate tracked receipts or evidence files (m3, m15, m16-requal)
+# run in a private temporary copy of the repository so concurrent gates never
+# observe a transiently dirty worktree.
+run_in_temp_copy() {
+  local tmp
+  tmp=$(mktemp -d /tmp/physics-gate.XXXXXX)
+  trap "rm -rf \"$tmp\"" EXIT
+  mkdir -p "$tmp/physics"
+  git -C "$ROOT" archive HEAD | tar -C "$tmp/physics" -xf -
+  ln -s "$ROOT/.git" "$tmp/physics/.git"
+  for sib in aien-architecture omega; do
+    if [ -d "$ROOT/../$sib" ]; then
+      ln -s "$(cd "$ROOT/../$sib" && pwd -P)" "$tmp/$sib"
+    fi
+  done
+  (cd "$tmp/physics" && "$@")
+}
+
 case "$step" in
   crumb-verify)
     # Hosted crumb.yml: crumb tool built from the aien-architecture commit in crumb.lock.
@@ -44,21 +62,16 @@ case "$step" in
   m2)              ./run_m2_gates.sh ;;
   m3)
     need_sibling aien-architecture
-    # run_m3_gates.sh rewrites the tracked m3/m3_qualification_receipt.json (new generated_at and
-    # git_commit) on every run. A gate must leave the tree as it found it, and gates run in parallel,
-    # so keep the fresh receipt in the log and put the tracked file back, whatever the exit status.
-    receipt=m3/m3_qualification_receipt.json
-    saved=$(mktemp)
-    trap 'cp "$saved" "$receipt"; rm -f "$saved"' EXIT
-    cp "$receipt" "$saved"
-    rc=0; m3/tests/run_m3_gates.sh || rc=$?
-    echo "run.sh: receipt written by this run (tracked copy restored):"; cat "$receipt"
-    exit "$rc" ;;
+    run_in_temp_copy sh -c '
+      rc=0; m3/tests/run_m3_gates.sh || rc=$?
+      echo "run.sh: receipt written by this run (isolated copy):"; cat m3/m3_qualification_receipt.json
+      exit "$rc"
+    ' ;;
   # The five jobs below are SKIP on GitHub (if: false, never green). Their manifests declare
   # the real requirement (gb10 or nvrm) and the commands are the scripts those jobs name.
   forge-gate34)    tests/run_forge_gates.sh ;;
-  m15)             tests/run_m15_gates.sh ;;
-  m16-requal)      tests/run_m16_requalification.sh ;;
+  m15)             run_in_temp_copy tests/run_m15_gates.sh ;;
+  m16-requal)      run_in_temp_copy tests/run_m16_requalification.sh ;;
   nvrm-lifecycle)  tests/run_nvrm_lifecycle_gates.sh ;;
   submission-visibility) tests/run_submission_visibility_gates.sh ;;
   zero-disk-secrets)
