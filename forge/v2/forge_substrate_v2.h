@@ -2,7 +2,7 @@
  *
  * Specification: docs/FORGE_SUBSTRATE_V2_SPEC.md
  * Architecture decision: ARCH-0018 "Substrate-Neutral Physical Realization"
- * (PROPOSED, aien-dev/aien-architecture docs/adr/0018-...).
+ * (PROPOSED, aien-spark/aien-architecture docs/adr/0018-...).
  *
  * This is a host-only reference: canonical serializer, SHA-256 digest and
  * strict decoder/validator. It touches no hardware and allocates no memory.

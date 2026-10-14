@@ -64,12 +64,12 @@ jobs:
           path: physics
       - uses: actions/checkout@v4
         with:
-          repository: aien-dev/omega
+          repository: aien-spark/omega
           ref: main
           path: omega
       - uses: actions/checkout@v4
         with:
-          repository: aien-dev/aien-architecture
+          repository: aien-spark/aien-architecture
           ref: main
           path: aien-architecture
       - name: Install toolchain

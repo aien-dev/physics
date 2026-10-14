@@ -418,7 +418,7 @@
       "git": {
         "branch": "docs/crumb-seed",
         "head": "62bd2c5",
-        "remote": "git@github.com:aien-dev/physics.git"
+        "remote": "git@github.com:aien-spark/physics.git"
       },
       "purpose_auto": "Repository root cs-physics. Purpose not yet described by a human."
     }

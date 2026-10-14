@@ -1,12 +1,12 @@
 # Sovereign Tooling Transition Plan: Milestone 2 (PHYSICS)
-Tracking: aien-dev/aien-architecture#12, aien-dev/physics#8
+Tracking: aien-spark/aien-architecture#12, aien-spark/physics#8
 
 ## Context & Sovereignty Rule
 Per the Sovereign Machine doctrine, qualification and build tooling must be local, in-house, and offline, with zero Python in the trusted path.
 Milestone 2 previously relied on Python for canonical binary generation, variant matrix builds, static audits, QEMU dynamic harnesses, and gate orchestration (`build.py`, `run_milestone2_gates.py`, `seam1_static_audit.py`, `seam2_dynamic_harness.py`, `verify_golden.py`, `verify_unit.py`, `verify_trap.py`, `verify_no_auth.py`, `generate_canary.py`, `generate_snippet.py`, `generate_audit_ledger.py`).
 
 ## Implementation Summary
-A complete, pure C (C11) and POSIX shell replacement suite has been designed and implemented in `aien-dev/physics`:
+A complete, pure C (C11) and POSIX shell replacement suite has been designed and implemented in `aien-spark/physics`:
 1. `tools/m2tool.c`: Pure C host qualification tool compiled via host `gcc -O2` and linked directly with audited `sha256_clean.c`.
    - Subcommands: `sha256`, `hexfield`, `bytes`, `pin-inc`, `gen-canary`, `gen-snippet`, `audit-verify`, `verify-golden`, `verify-unit`, `verify-trap`, `verify-no-auth`, `get-symbol`.
 2. `tools/qemu_inspect.sh`: Sovereign POSIX shell QEMU inspection harness using QMP socket `pmemsave` to inspect bare-metal execution state directly from physical memory.
