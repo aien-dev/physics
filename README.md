@@ -12,13 +12,13 @@ Historical `PHYSICS_*` milestone names (for example `PHYSICS_BOOT`) are unchange
 
 Research-grade and pre-alpha.
 
-- **FORGE:** the realize/verify seam (Gates 3 and 4) and the substrate-neutral descriptor contract (V1 and V2) pass their gates. The analog provider is a simulation checked against a digital oracle; no analog hardware is involved. Status and receipts: [CURRENT_EXECUTION_PLAN.md](https://github.com/aien-dev/aien-architecture/blob/main/CURRENT_EXECUTION_PLAN.md) and [doctrine/ROADMAP.md](https://github.com/aien-dev/aien-architecture/blob/main/doctrine/ROADMAP.md) in aien-architecture.
+- **FORGE:** the realize/verify seam (Gates 3 and 4) and the substrate-neutral descriptor contract (V1 and V2) pass their gates. The analog provider is a simulation checked against a digital oracle; no analog hardware is involved. Status and receipts: [CURRENT_EXECUTION_PLAN.md](https://github.com/aien-spark/aien-architecture/blob/main/CURRENT_EXECUTION_PLAN.md) and [doctrine/ROADMAP.md](https://github.com/aien-spark/aien-architecture/blob/main/doctrine/ROADMAP.md) in aien-architecture.
 - **Atlas boot, PHYSICS boot and PHYSICS effects (Milestones 1 to 3):** qualified in QEMU only (AArch64 virt). Native DGX Spark qualification of PHYSICS (`PHYSICS_BOOT_NATIVE_PASS`) has not been done and is never inferred from an emulator pass. The committed `qualification_receipt.json` is historical evidence from a retired Python harness and is kept unchanged ([TRANSITION_PLAN_M2.md](TRANSITION_PLAN_M2.md)).
 - **Physics Zero** (a clean-room scientific discovery program, distinct from this repository's PHYSICS) is specified here as documents: the overview and benchmark specs are in `docs/` (`PHYSICS0_DISCOVERY_ENGINE.md`, `PD0_HIDDEN_EQUATION_BENCHMARK.md`, `PD0B_SEALED_BENCHMARK.md`, `PD1_MACHINE_LAW_BENCHMARK.md`) and the sealed-benchmark receipts are in `evidence/PD0B/` (the seal-1 verdict there is FAIL). No code here implements it; the learner and harness behind those receipts are in omega. **DIRAC-0** is documents in aien-architecture only.
 
 ## How this fits with the other repositories
 
-[omega](https://github.com/aien-dev/omega) pins this repository by commit (`physics.lock`) and uses `nvrm/` and `m16/` for the native GB10 path. [aienos](https://github.com/aien-dev/aienos) is the kernel. [aien-architecture](https://github.com/aien-dev/aien-architecture) owns status.
+[omega](https://github.com/aien-spark/omega) pins this repository by commit (`physics.lock`) and uses `nvrm/` and `m16/` for the native GB10 path. [aienos](https://github.com/aien-spark/aienos) is the kernel. [aien-architecture](https://github.com/aien-spark/aien-architecture) owns status.
 
 ## Standing rules
 
@@ -52,5 +52,5 @@ Open a pull request with the command you ran and its output. Do not edit committ
 ## Crumbs
 
 This repo uses the Crumb Protocol (RFC-0001). Each directory carries a `.crumb` file (what the directory is for, its rules, and a backfilled history). Live coordination between agents goes in `.crumb.local`, which is never committed.
-Before editing a directory, read its `.crumb`. Rules and the `crumb` tool: https://github.com/aien-dev/aien-architecture/blob/main/docs/CRUMB_PROTOCOL.md
+Before editing a directory, read its `.crumb`. Rules and the `crumb` tool: https://github.com/aien-spark/aien-architecture/blob/main/docs/CRUMB_PROTOCOL.md
 Backfilled history (marked as such, not live whispers) is in `docs/crumbs/BACKFILL.md`.

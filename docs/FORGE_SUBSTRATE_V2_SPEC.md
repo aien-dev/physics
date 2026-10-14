@@ -1,7 +1,7 @@
 # FORGE SUBSTRATE V2
 
 **Status:** DRAFT. Depends on ARCH-0018 "Substrate-Neutral Physical Realization"
-(**PROPOSED**, `aien-dev/aien-architecture` `docs/adr/0018-substrate-neutral-physical-realization.md`).
+(**PROPOSED**, `aien-spark/aien-architecture` `docs/adr/0018-substrate-neutral-physical-realization.md`).
 Nothing here is binding until ARCH-0018 is accepted by the operator and this document is merged.
 **Workstream gate:** AR1 (FORGE substrate-neutral descriptor contract) of ARCH-0018 §12.
 **Reference code:** `forge/v2/forge_substrate_v2.{h,c}`, `forge/v2/forge_sha256.h`.
