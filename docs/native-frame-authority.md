@@ -4,6 +4,9 @@ Status: **DESIGN ONLY.** Governing issue: physics#2. Nothing here changes the
 Milestone 2 QEMU artifacts (`physics.bin`, `*.s`, `machine_contract.json`,
 gate scripts, `qualification_receipt.json`). `PHYSICS_BOOT_NATIVE_PASS`
 remains **pending**; nothing in this document is a hardware result.
+Revised 2026-10-16: section 11 re-checks every figure against a receipt and
+records what changed since 2026-09-26; section 12 freezes the first
+implementation cut.
 
 Companion draft contract: [`contracts/native-dgx-spark-draft.json`](../contracts/native-dgx-spark-draft.json)
 (DRAFT, not canonical).
@@ -36,6 +39,7 @@ Every fact is labelled. Classes:
 | `measured_linux` | Observed read-only under Linux 7.0.0-1019-nvidia on Machine 1 (`/proc/iomem`, `dmesg`, `/proc/meminfo`, aienos `evidence/gb10_linux_readonly_2026-09-25.md`), collected 2026-09-26. Linux's view, **not** a native proof. |
 | `assumed` | Not measured by this project. Public-spec knowledge or engineering assumption. Must be confirmed before native qualification. |
 | `derived` | Arithmetic over the above. |
+| `vendor_doc` | Stated in NVIDIA public documentation, quoted with its URL (section 11.2). A vendor statement, not a measurement by this project. |
 
 ### 1.1 Facts relevant to frame authority
 
@@ -56,7 +60,7 @@ Every fact is labelled. Classes:
 | MMIO above DRAM | PCI windows from `0x3D00000000`, ECAM from `0xF300000000` | `measured_linux` |
 | SMMUv3 | 3 instances, OAS 40-bit, 2-level stream table, 25 SID bits | `measured_linux` |
 | GIC ITS tables | allocated by Linux in DRAM (`0x100520000`..) | `measured_linux` (OS-allocated, not firmware) |
-| LPDDR5x is one coherent pool shared by CPU and GPU; no discrete VRAM/HBM | n/a | `assumed` (public product description; not measured) |
+| LPDDR5x is one pool shared by CPU and GPU; no discrete VRAM/HBM; no fixed GPU carve-out | n/a | `vendor_doc` since 2026-10-16 (NVIDIA DGX Spark User Guide and Porting Guide, section 11.2); coherence still `assumed` |
 | Physical address size (ID_AA64MMFR0_EL1.PARange) | at least 40 bits | `assumed` (only SMMU OAS measured) |
 | Secure-world / TF-A carve-outs | exist, not described as RAM | `assumed` |
 | Per-descriptor UEFI types (runtime code/data, ACPI reclaim/NVS, reserved) | not captured in any receipt yet | **unknown** |
@@ -230,8 +234,10 @@ total         = 64 + 8,192 + 6,144 + 1,088 + 65,600 + 4,196,352 = 4,277,440 B
 metadata region = align_up(4,277,440, 4096) = 4,280,320 B = 1,045 frames (about 4.08 MiB)
 ```
 
-That is 0.0032% of 128 GiB, under META_MAX (8 MiB) with about 2x margin.
-The flat bitmap alone is 4 MiB; the hierarchy and tables cost 86,016 B more
+Every figure in this block is re-derived with a receipt in section 11.1.
+
+That is 0.0031% of 128 GiB (calc:ad669fc92acfd2d5d95b7c0999dd52fe63546c17efcbfba73b2220854be91904), under META_MAX (8 MiB) with 1.96x margin (calc:93389c0b542543ee8bc95579531c509cbacffbbe5eadf39618f2e7fee5a9114d).
+The flat bitmap alone is 4 MiB; the hierarchy and tables cost 86,016 B more (calc:f64b164ed9ff40a8d039084029d3369475484e937c431a43a822bb447497e644)
 (about 2%) and buy a bounded, fragmentation-independent grant path.
 
 Illustrative only (not a qualification value): over the 8 Linux-observed
@@ -491,3 +497,214 @@ scheduling).
 8. Does the per-frame authority need a contiguous multi-frame grant
    (`grant_extent(n, align)`), or do all large contiguous needs go through the
    boot-time pools?
+
+## 11. Revision 2026-10-16: receipts, public figures, and what changed
+
+This section re-checks the document against today's ground truth. It changes
+no design decision. Two small rounding statements in section 3.3 were
+corrected (11.4).
+
+### 11.1 Receipts for every figure
+
+Each figure below was computed with the `aien-calc` exact calculator. The id
+is the receipt; `aien-calc verify <id>` recomputes it from its own inputs.
+
+| Figure | Expression | Result | Receipt |
+| --- | --- | --- | --- |
+| DRAM envelope size, bytes | `0x2080000000 - 0x80000000` | 137438953472 (exact) | `calc:42b1e2179d0163e2e6c3c11196d9d48750c8a1d341b3ffd09621677092dcf7ce` |
+| Envelope frames at 4 KiB | `(0x2080000000 - 0x80000000) / 4096` | 33554432 (exact) | `calc:a1a0fdf69d12928baecb0cef6e7d0e2cc761ce5cdf8412b531ea45c108c15671` |
+| Envelope as GiB | `137438953472 B -> GiB` | 128 GiB (exact) | `calc:2d1c4d89a34ea08a172fdae68c8ce50457b518521f811c3bd077c3c3c56a0496` |
+| Linux memory blocks spanning the envelope (blocks 16..1039, 128 MiB each), bytes | `(1040 - 16) * 0x8000000` | 137438953472 (exact) | `calc:ec9d481e8d067d6ab0dd451eb17d5e0c7cab541a1c5554290e98f5dd2292e692` |
+| Linux memory blocks present today (1023 of 1024) | `1023 * 128 MiB -> GiB` | 127.875 GiB (exact) | `calc:23f1f90a2f0e851f2bb0b44d0e6ba1cd33b24896548cd87bd338e139d8662cbb` |
+| Missing Linux memory block 22 starts at | `22 * 0x8000000` | 2952790016 (exact) | `calc:d30dfb0e7b1165777e5b721df784fae4070ff7be03d7bcde5a6ee5036412e1a4` |
+| NVIDIA "128 GB" read as decimal | `128 GB -> GiB` | 119.20928955078125 GiB (exact) | `calc:a74722f586f990919c4aac835887e696c08dca3efe6cb377ceebbe2e5f113ee4` |
+| Linux MemTotal today | `127598752 KiB -> GiB` | 121.687652587890625 GiB (exact) | `calc:484726a4a8f3e8d697dca54cd2ed177c0c8c00ac74eaad0cc957a96b76625acc` |
+| MemTotal minus decimal 128 GB, bytes | `127598752 * 1024 - 128 * 10^9` | 2661122048 (exact) | `calc:bf0483f7bd71d71aee9501eb9c9bac99692eea137a0bd660a09bc72b93187983` |
+| Flat 1-bit bitmap over the envelope, bytes | `2^25 / 8` | 4194304 (exact) | `calc:6343705f58b13da1cc490263dccb42d1698c897c559cb9582c659b8d25dc3010` |
+| Leaf words W (worst case) | `2^25 / 64 + 256` | 524544 (exact) | `calc:820717e2fd5d59547005049c34980c208c35ee1f926f9365ed4b66b242c2c6ff` |
+| Leaf bitmap bytes | `8 * 524544` | 4196352 (exact) | `calc:aad0265f0b4e07c88b50503b30e26a80adb0be8bc48a7467e6a4c2b73ff05f3b` |
+| L1 summary words | `ceil(524544 / 64)` | 8196 (exact) | `calc:102d47ac04596209dca011d1f3ac40795659db9a36edebb3c22cdcf9c41b533e` |
+| L1 bytes, 64-byte aligned | `ceil(8196 * 8 / 64) * 64` | 65600 (exact) | `calc:c112af981aa75defc5b571e2c6f31f613a50a4cc64e582567e1fce4dbb9dad85` |
+| L2 summary words | `ceil(8196 / 64)` | 129 (exact) | `calc:8a1b9c6d1f70641f9c09ec74f4a5fc3f6b552617c8019f8b7b4cf8f957c8d46f` |
+| L2 bytes, 64-byte aligned | `ceil(129 * 8 / 64) * 64` | 1088 (exact) | `calc:b520660fc00e303457ededdfce31dbbc7889e11193c049d5288f7cabc78f9f01` |
+| Metadata total before page rounding, bytes | `64 + 256*32 + 192*32 + 1088 + 65600 + 4196352` | 4277440 (exact) | `calc:5a9d9da5a5e94c14d86337760cde4ee31a434be672de5fa1388731905d7f0e56` |
+| Metadata frames | `ceil(4277440 / 4096)` | 1045 (exact) | `calc:cd0be622ed3418c777724f9a4984e29c7d50ca52ef0b6be7cacbba3cca95257c` |
+| Metadata region, bytes | `1045 * 4096` | 4280320 (exact) | `calc:b44459565740784c3162ec8d2b2286e9caa2adb84b4b4ca64264da092185db6f` |
+| Metadata region as MiB | `4280320 B -> MiB` | 4.082 MiB (rounded to 4 significant digits) | `calc:338da895a4b4f92c7db40b4498b403ec6fdc917d3c7f71cec2bff395fbd925bc` |
+| Metadata as percent of 128 GiB | `4280320 / 137438953472 * 100` | 0.003114 (rounded to 4 significant digits) | `calc:ad669fc92acfd2d5d95b7c0999dd52fe63546c17efcbfba73b2220854be91904` |
+| Hierarchy and tables cost over the flat bitmap, bytes | `4280320 - 4194304` | 86016 (exact) | `calc:f64b164ed9ff40a8d039084029d3369475484e937c431a43a822bb447497e644` |
+| Overhead over the flat bitmap, percent | `86016 / 4194304 * 100` | 2.051 (rounded to 4 significant digits) | `calc:d09a298aaffab97ec55f448fa47db192a90e16abd8b5ff4e6a55c34d0b326b7b` |
+| META_MAX margin (8 MiB / region) | `8388608 / 4280320` | 1.96 (rounded to 4 significant digits) | `calc:93389c0b542543ee8bc95579531c509cbacffbbe5eadf39618f2e7fee5a9114d` |
+| Metadata region versus the one 4 KiB M2 PHYSICS_STATIC_DATA page | `4280320 / 4096` | 1045 (exact) | `calc:e3e37a04cb5da3658a21bd4d9c37e6f9f55bde734db9fee6dbd26081cc113a85` |
+| Largest conventional UEFI region end check (0 = matches 0x207D3FE000) | `0x323800000 + 30776318 * 4096 - 0x207D3FE000` | 0 (exact) | `calc:602b7252771f058617a631df9854c977aca1ea9b59289e716e19ee380a2a2dd1` |
+| Linux System RAM frames (133,297,463,296 B) | `133297463296 / 4096` | 32543326 (exact) | `calc:168264390113509a53977d295b253f6dea42c8af3e29cf53872302cfe8dceaa7` |
+| M2 QEMU managed frames | `(0x48000000 - 0x40208000) / 4096` | 32248 (exact) | `calc:1fb454ab44218d97e0e2d1519d12660348dcd76d83c61eec4d1e1bb4624efafb` |
+| M2 header plus bitmap bytes (limit 4,096) | `ceil(32248 / 8) + 32` | 4063 (exact) | `calc:740dc8fb1588bd0ff039efecf556874b3b180c66e3f8e1b0bc1aa7e5cc24a87c` |
+| M3 QEMU managed frames | `(0x48000000 - 0x40210000) / 4096` | 32240 (exact) | `calc:aa89e2bf7a732af602871d651258eeed0dc64bcdc1d3993055c27393b80e2207` |
+| M3 header plus bitmap bytes (limit 12,288) | `ceil(32240 / 8) + 32` | 4062 (exact) | `calc:9d98bcde0682354cefc90d2664df48e6fd46ef12bcef380769beb7d5b84b099b` |
+| QEMU M2 contract RAM, MiB | `0x08000000 B -> MiB` | 128 MiB (exact) | `calc:dd9d2a63498337ac4c72543fb7ace946e249423c49c4a31255085d3088fd7150` |
+
+### 11.2 Public NVIDIA figures
+
+- DGX Spark User Guide, Hardware Overview
+  (<https://docs.nvidia.com/dgx/dgx-spark/hardware.html>, read 2026-10-16),
+  component table, memory row: "128 GB LPDDR5x unified system memory, 256-bit
+  interface, 4266 MHz, 273 GB/s bandwidth".
+- DGX Spark Porting Guide, System Overview
+  (<https://docs.nvidia.com/dgx/dgx-spark-porting-guide/overview.html>, read
+  2026-10-16): "The CPU is a 20-core ARM64-based chip, sharing 128GB of
+  LPDDR5x memory with the integrated GPU (iGPU)" and "In UMA, both CPU and GPU
+  share the same physical memory space without a fixed carve-out."
+
+What this settles:
+
+- **"128 GB" means 128 GiB here.** Read as decimal, 128 GB is 119.21 GiB
+  (calc:a74722f586f990919c4aac835887e696c08dca3efe6cb377ceebbe2e5f113ee4).
+  Linux already reports 121.69 GiB usable
+  (calc:484726a4a8f3e8d697dca54cd2ed177c0c8c00ac74eaad0cc957a96b76625acc),
+  2,661,122,048 B more than decimal 128 GB
+  (calc:bf0483f7bd71d71aee9501eb9c9bac99692eea137a0bd660a09bc72b93187983).
+  The installed memory is therefore the binary 128 GiB that the measured
+  envelope shows (`derived`).
+- **No discrete VRAM or HBM, and no fixed GPU carve-out.** NVIDIA's own pages
+  now back the section 1.1 row that was labelled `assumed`. The row moves from
+  `assumed` to `vendor_doc`. The class table of section 4 already forbids any
+  VRAM/HBM class; the vendor text confirms that rule.
+- **Cache coherence of that shared memory is not stated on the two pages
+  read.** NVIDIA product marketing describes the memory as "coherent unified
+  system memory" according to a web-search summary; the page was not read
+  verbatim. UNVERIFIED, confidence medium-high. Section 9's coherence note
+  stays labelled `assumed`.
+
+### 11.3 Re-measurement on Machine 1 (`measured_linux`, 2026-10-16)
+
+Read-only, without root, under Linux 7.0.0-1019-nvidia:
+
+- `/sys/devices/system/memory/block_size_bytes` = `0x8000000` (128 MiB).
+- Memory blocks 16 through 1039 exist, except block 22. Block 16 starts at
+  `0x80000000` and block 1039 ends at `0x2080000000`, so the envelope of
+  section 1.1 is confirmed again: 128 GiB
+  (calc:2d1c4d89a34ea08a172fdae68c8ce50457b518521f811c3bd077c3c3c56a0496),
+  2^25 = 33,554,432 frames
+  (calc:a1a0fdf69d12928baecb0cef6e7d0e2cc761ce5cdf8412b531ea45c108c15671).
+- The missing block 22 starts at `0xB0000000`
+  (calc:d30dfb0e7b1165777e5b721df784fae4070ff7be03d7bcde5a6ee5036412e1a4),
+  inside the hole `[0xB0000000, 0xB9600000)` already listed in section 1.1.
+- `MemTotal` = 127,598,752 kB.
+
+### 11.4 Corrections to this document
+
+- Section 3.3 said "0.0032% of 128 GiB". The exact value is 0.003114%
+  (calc:ad669fc92acfd2d5d95b7c0999dd52fe63546c17efcbfba73b2220854be91904),
+  now written as 0.0031%.
+- Section 3.3 said "about 2x margin" under META_MAX. The exact margin is 1.96x
+  (calc:93389c0b542543ee8bc95579531c509cbacffbbe5eadf39618f2e7fee5a9114d).
+- Every other figure of sections 1.1 and 3.3 reproduces exactly (11.1).
+- The illustrative Linux-range figures of section 3.3 (W = 508,492, about
+  1,010 frames) could not be re-derived: they need the eight per-range sizes,
+  which are not in this repository. Only their total, 32,543,326 frames,
+  reproduces (calc:168264390113509a53977d295b253f6dea42c8af3e29cf53872302cfe8dceaa7).
+  UNVERIFIED, confidence medium. They were never qualification values.
+
+### 11.5 What changed since the issue was filed (2026-09-26)
+
+- **The design is merged.** This document and
+  `contracts/native-dgx-spark-draft.json` landed in physics#4 (commit
+  `ff13208`, 2026-09-26). On 2026-10-04 the issue was narrowed to
+  implementation (issue comment). Its four remaining items are: capture the
+  UEFI memory map with per-descriptor types on the Spark; promote the native
+  contract out of DRAFT; metadata sizing and reservation code under a QEMU
+  native-profile contract; `PHYSICS_BOOT_NATIVE_PASS` on silicon. This
+  revision closes none of them.
+- **The issue's QEMU facts still hold for M2.** `memory_alloc.s` keeps one
+  4 KiB `PHYSICS_STATIC_DATA` page at `0x40207000`: 32,248 frames
+  (calc:1fb454ab44218d97e0e2d1519d12660348dcd76d83c61eec4d1e1bb4624efafb),
+  4,063 header and bitmap bytes against a 4,096-byte limit
+  (calc:740dc8fb1588bd0ff039efecf556874b3b180c66e3f8e1b0bc1aa7e5cc24a87c).
+- **M3 now exists beside M2.** `m3/` carries `CONTRACT-QEMU-VIRT-AARCH64-M3`:
+  a 12 KiB `PHYSICS_STATIC_DATA` at `0x4020D000`, free frames from
+  `0x40210000`, 32,240 frames
+  (calc:aa89e2bf7a732af602871d651258eeed0dc64bcdc1d3993055c27393b80e2207),
+  4,062 bitmap bytes against 12,288
+  (calc:9d98bcde0682354cefc90d2664df48e6fd46ef12bcef380769beb7d5b84b099b),
+  and new `release_frame` and `allocate_frame_in_range` routines. M3 is still a
+  flat bitmap pinned to the QEMU constant `CONTRACT_DRAM_END = 0x48000000`; it
+  does not scale to the Spark either. The native design keeps both M2 and M3
+  untouched.
+- **M2 cannot boot natively as built.** The issue comment of the M3 audit
+  (aien-architecture#11) shows the M2 image takes an alignment fault at
+  CAP_ROOT genesis on real hardware. Native frame authority therefore lands in
+  a new native image, never as a patch to M2. Section 7 already requires this.
+- **No native frame-authority code exists in this repository.** On
+  2026-10-16, `PHYSMEM1` appears only in this document and the draft contract.
+- **AIENOS has its own native allocators (cross-repo discrepancy).** On
+  aienos-mv `main` (`4bd49ca`), `native/kernel/mm/frames.h` (added in
+  `89cccf4`, 2026-10-01) is a list of at most 128 free ranges built from
+  `EfiConventionalMemory`, with a counter of "ranges lost because the table
+  was full". `crates/aienos-kernel/src/mem/frame_allocator.rs` is a
+  fixed-size bitmap allocator. These serve the AIENOS kernel, not PHYSICS. The
+  lost-ranges counter is a silent truncation, which section 2.2 forbids for
+  PHYSICS (refuse, never truncate). Recorded here only; this revision changes
+  nothing in aienos.
+- **The typed UEFI map is still not captured.** A search of aienos-mv file
+  names on 2026-10-16 found no evidence file for a typed memory map. File
+  contents were not searched. UNVERIFIED, confidence medium.
+
+### 11.6 Where the metadata region lives in the native layout
+
+By the carve order of section 5.3, the metadata region (1,045 frames,
+calc:cd0be622ed3418c777724f9a4984e29c7d50ca52ef0b6be7cacbba3cca95257c) is the
+first 1,045 frames of the lowest-address managed range that is large enough,
+after every profile reservation and the low table carves are removed. Its
+base address is an output of the profile, never a constant. Today it cannot
+be named: DRAM starts at `0x80000000`, firmware boot tables sit near
+`0x84AF....`, `0x86DC....` and `0x8706....` (`measured_linux`), and holes
+begin at `0xB0000000`. Which low range survives the carves depends on the
+typed UEFI map that 11.5 says is still missing. The M2 address `0x40207000`
+is below the start of DRAM on the Spark (section 1.1), so the M2 location
+cannot be reused.
+
+Scale against M2: the native worst-case region is 4,280,320 B
+(calc:b44459565740784c3162ec8d2b2286e9caa2adb84b4b4ca64264da092185db6f),
+1,045 times the single 4 KiB M2 page
+(calc:e3e37a04cb5da3658a21bd4d9c37e6f9f55bde734db9fee6dbd26081cc113a85).
+
+### 11.7 How the QEMU contract keeps working unchanged
+
+- Native work never edits `physics.bin`, the M2 `*.s` files,
+  `machine_contract.json`, `qualification_receipt.json`, or anything in `m3/`.
+- On 2026-10-16 `sha256sum physics.bin` gives
+  `4b22a08cd408b5cf90258af13b833b97a5211b4d2480fa74be357228f4aed3bd`, identical to
+  `physics.sha256` on `main` (`6207d51`). This revision changes only this
+  document.
+- Native code gets its own contract id and its own receipt namespace
+  (section 7). A QEMU receipt can never satisfy a native gate, and the reverse.
+- `PHYSICS_QEMU_M2_REGRESSION_PASS` (section 8) checks the M2 hash and suite on
+  every native change.
+- The native grant order (lowest free frame first) is a strict
+  generalisation of M2's next-free scan (section 6.2), so the semantics M2
+  qualified stay true.
+
+## 12. First cut (frozen 2026-10-16)
+
+The first implementation cut is **profile ingress validation (section 2.3)
+and metadata sizing (section 5.4), and nothing else.** It is written as
+AArch64 assembly routines in a new native directory of this repository and
+runs in QEMU against synthetic `PHYSMEM1` profiles under a new contract id,
+`CONTRACT-QEMU-VIRT-AARCH64-NATIVE-PROFILE-1`, with
+`evidence_class = emulation_native_profile`. It writes only into
+`PHYSICS_STATE` scratch; it carves nothing, builds no bitmap, and grants or
+releases no frame. An independent recomputation written in C under `tools/`
+(no Python) checks every output. Its gates, added under `tests/gates/` so the
+Spark pipeline judges them, are `PHYSICS_METADATA_SIZING_PASS` (the synthetic
+2^25-frame, 256-range profile yields exactly 4,280,320 B, and each
+overflow-crafted input is refused at its named checked step),
+`PHYSICS_NATIVE_PROFILE_CORRUPTION_REFUSAL_PASS` (every refusal case listed
+in section 8), and `PHYSICS_QEMU_M2_REGRESSION_PASS` (`physics.bin` hash
+unchanged, M2 and M3 files untouched). Out of scope: carving, bitmap
+initialisation, grant and release, MMU setup, and any silicon run. The cut is
+done when the three gates pass on the Spark pipeline and a native-profile
+receipt is committed under `receipts/native/CONTRACT-QEMU-VIRT-AARCH64-NATIVE-PROFILE-1/`.
+Separately, and outside this repository, the typed UEFI memory map must be
+captured on Machine 1; that capture is the input for promoting the draft
+contract out of DRAFT.
