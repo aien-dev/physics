@@ -72,8 +72,10 @@ case "$step" in
   forge-gate34)    tests/run_forge_gates.sh ;;
   m15)             run_in_temp_copy tests/run_m15_gates.sh ;;
   m16-requal)      run_in_temp_copy tests/run_m16_requalification.sh ;;
-  nvrm-lifecycle)  tests/run_nvrm_lifecycle_gates.sh ;;
-  submission-visibility) tests/run_submission_visibility_gates.sh ;;
+  # The two nvrm scripts compile into nvrm/ (lifecycle_gates is a tracked
+  # binary); in the shared worktree that is a concurrent gate's dirty_after.
+  nvrm-lifecycle)  run_in_temp_copy tests/run_nvrm_lifecycle_gates.sh ;;
+  submission-visibility) run_in_temp_copy tests/run_submission_visibility_gates.sh ;;
   zero-disk-secrets)
     # Not a hosted step in this repository; the same invariant the Rust repos enforce.
     echo "Auditing repository for prohibited plaintext secret files..."

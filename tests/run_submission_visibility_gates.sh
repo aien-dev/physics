@@ -28,7 +28,16 @@ if [ ! -e /dev/nvidia0 ]; then
   exit 0
 fi
 
-echo -e "\n[*] Running submission_visibility_gates under GPU lock ($LOCK_FILE)..."
-flock "$LOCK_FILE" ./nvrm/submission_visibility_gates
+# Under aien-test the runner already holds $LOCK_FILE for this gate (ADR 0033:
+# gb10 is serialized by the trusted side) and says so with AIEN_GB10_LOCK_HELD=1.
+# Taking it again would fail as aien-run (cannot open the worker's file) or
+# block forever as the same user. By hand, without the marker, take it here.
+if [ "${AIEN_GB10_LOCK_HELD:-0}" = 1 ]; then
+  echo -e "\n[*] Running submission_visibility_gates (GPU lock $LOCK_FILE held by the caller)..."
+  ./nvrm/submission_visibility_gates
+else
+  echo -e "\n[*] Running submission_visibility_gates under GPU lock ($LOCK_FILE)..."
+  flock "$LOCK_FILE" ./nvrm/submission_visibility_gates
+fi
 
 echo -e "\n=== GB10 Submission Visibility Gates: done ==="

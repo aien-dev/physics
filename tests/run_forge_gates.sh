@@ -289,8 +289,16 @@ forge_main() {
     echo "Host: $(uname -n) ($(uname -m))"
     echo "Run: $run_id"
 
-    exec 9> "$FORGE_LOCK" || { echo "cannot open $FORGE_LOCK" >&2; exit 1; }
-    flock -x 9 || { echo "cannot take $FORGE_LOCK" >&2; exit 1; }
+    # Under aien-test the runner already holds $FORGE_LOCK for this gate
+    # (ADR 0033) and says so with AIEN_GB10_LOCK_HELD=1; as aien-run this
+    # script cannot open the worker's lock file, and as the same user it
+    # would block behind the runner. By hand, without the marker, take it.
+    if [ "${AIEN_GB10_LOCK_HELD:-0}" = 1 ]; then
+        echo "GPU lock $FORGE_LOCK held by the caller (AIEN_GB10_LOCK_HELD=1)"
+    else
+        exec 9> "$FORGE_LOCK" || { echo "cannot open $FORGE_LOCK" >&2; exit 1; }
+        flock -x 9 || { echo "cannot take $FORGE_LOCK" >&2; exit 1; }
+    fi
     ts=$(date -u +%Y-%m-%dT%H:%M:%S.%6NZ)
     forge_run_section "$rd" 2>&1 | tee "$log"
     # hash the binaries that ran before another run can rebuild them
