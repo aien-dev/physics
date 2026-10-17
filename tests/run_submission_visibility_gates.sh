@@ -12,6 +12,7 @@ echo "=== GB10 Submission Visibility Gates ==="
 echo "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "Host: $(uname -n) ($(uname -m))"
 
+mkdir -p build
 echo -e "\n[*] Building submission_visibility_gates..."
 gcc -O2 -Wall -Wextra -Werror \
   -I./nvrm -I./m16 \
@@ -19,7 +20,7 @@ gcc -O2 -Wall -Wextra -Werror \
   -I./third_party/nvidia-open-580.173.02/kernel-open/common/inc \
   -I./third_party/nvidia-open-580.173.02/kernel-open/nvidia-uvm \
   -I./third_party/nvidia-open-580.173.02/src/nvidia/arch/nvalloc/unix/include \
-  nvrm/nvrm.c m16/m16_native.c nvrm/submission_visibility_gates.c -o nvrm/submission_visibility_gates
+  nvrm/nvrm.c m16/m16_native.c nvrm/submission_visibility_gates.c -o build/submission_visibility_gates
 
 echo "    submission_visibility_gates built cleanly."
 
@@ -29,6 +30,11 @@ if [ ! -e /dev/nvidia0 ]; then
 fi
 
 echo -e "\n[*] Running submission_visibility_gates under GPU lock ($LOCK_FILE)..."
-flock "$LOCK_FILE" ./nvrm/submission_visibility_gates
+# Open the lock read-only when it exists: fs.protected_regular=2 refuses the O_CREAT
+# open that `flock FILE` does on another user's file in sticky /tmp, and flock(2)
+# locks whatever the open mode (sc#627).
+if [ -e "$LOCK_FILE" ]; then exec 9<"$LOCK_FILE"; else exec 9>>"$LOCK_FILE"; fi
+flock 9
+./build/submission_visibility_gates
 
 echo -e "\n=== GB10 Submission Visibility Gates: done ==="
