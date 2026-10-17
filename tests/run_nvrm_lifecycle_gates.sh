@@ -12,6 +12,7 @@ echo "=== M19R NVRM Lifecycle Gates ==="
 echo "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "Host: $(uname -n) ($(uname -m))"
 
+mkdir -p build
 echo -e "\n[*] Building lifecycle_gates..."
 gcc -O2 -Wall -Wextra -Werror \
   -I./nvrm -I./m16 \
@@ -19,11 +20,16 @@ gcc -O2 -Wall -Wextra -Werror \
   -I./third_party/nvidia-open-580.173.02/kernel-open/common/inc \
   -I./third_party/nvidia-open-580.173.02/kernel-open/nvidia-uvm \
   -I./third_party/nvidia-open-580.173.02/src/nvidia/arch/nvalloc/unix/include \
-  nvrm/nvrm.c m16/m16_native.c nvrm/lifecycle_gates.c -o nvrm/lifecycle_gates
+  nvrm/nvrm.c m16/m16_native.c nvrm/lifecycle_gates.c -o build/lifecycle_gates
 
 echo "    lifecycle_gates built cleanly."
 
 echo -e "\n[*] Running lifecycle_gates under GPU lock ($LOCK_FILE)..."
-flock "$LOCK_FILE" ./nvrm/lifecycle_gates
+# Open the lock read-only when it exists: fs.protected_regular=2 refuses the O_CREAT
+# open that `flock FILE` does on another user's file in sticky /tmp, and flock(2)
+# locks whatever the open mode (sc#627).
+if [ -e "$LOCK_FILE" ]; then exec 9<"$LOCK_FILE"; else exec 9>>"$LOCK_FILE"; fi
+flock 9
+./build/lifecycle_gates
 
 echo -e "\n=== M19R NVRM Lifecycle Gates: done ==="

@@ -289,7 +289,10 @@ forge_main() {
     echo "Host: $(uname -n) ($(uname -m))"
     echo "Run: $run_id"
 
-    exec 9> "$FORGE_LOCK" || { echo "cannot open $FORGE_LOCK" >&2; exit 1; }
+    # Read-only when it exists: fs.protected_regular=2 refuses an O_CREAT open of
+    # another user's file in sticky /tmp; flock(2) locks whatever the open mode (sc#627).
+    if [ -e "$FORGE_LOCK" ]; then exec 9< "$FORGE_LOCK"; else exec 9>> "$FORGE_LOCK"; fi \
+        || { echo "cannot open $FORGE_LOCK" >&2; exit 1; }
     flock -x 9 || { echo "cannot take $FORGE_LOCK" >&2; exit 1; }
     ts=$(date -u +%Y-%m-%dT%H:%M:%S.%6NZ)
     forge_run_section "$rd" 2>&1 | tee "$log"
